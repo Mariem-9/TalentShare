@@ -9,10 +9,11 @@ import { authInterceptor } from './app/interceptors/auth.interceptor';
 import { errorInterceptor } from './app/interceptors/error.interceptor';
 import { loggingInterceptor } from './app/interceptors/logging.interceptor';
 
+
 export const appConfig: ApplicationConfig = {
     providers: [
         provideRouter(appRoutes, withInMemoryScrolling({ anchorScrolling: 'enabled', scrollPositionRestoration: 'enabled' }), withEnabledBlockingInitialNavigation()),
-        provideHttpClient(withFetch(), withInterceptors([authInterceptor ,loggingInterceptor ])),
+        provideHttpClient(withFetch(), withInterceptors([authInterceptor , loggingInterceptor ])),
         // , errorInterceptor
         provideAnimationsAsync(),
         providePrimeNG({ theme: { preset: Aura, options: { darkModeSelector: '.app-dark' } } })

@@ -110,7 +110,8 @@ export class AuthService {
                 return throwError(() => error);
             })
         );
-    }
+}
+
     getRefreshToken(): string | null {
         return sessionStorage.getItem('refreshToken');
     }
@@ -121,28 +122,11 @@ export class AuthService {
     resetPassword(token: string, newPassword: string) {
         return this.http.post(`${this.apiUrl}/reset-password`, { token, newPassword });
     }
+    getUserProfile(): Observable<any> {
+        return this.http.get('http://localhost:8080/api/utilisateur/me');
+    }
+
 
 }
 
-//   saveToken(token: string): void {
-//         localStorage.setItem('token', token);
-//     }
-
-//   isAuthenticated(): boolean {
-//     return this.getToken() !== null;
-//   }
-
-//   isAdmin(): boolean {
-//     return this.getRole() === 'ROLE_ADMIN';
-//   }
-
-// auth.service.ts
-// isAdmin(): boolean {
-//   return this.getRole() === 'ROLE_ADMIN';
-// }
-
-// isTokenValid(): boolean {
-//   const tokenTime = sessionStorage.getItem('token_init');
-//   return tokenTime && (Date.now() - parseInt(tokenTime)) < 3600000; // 1 hour expiry
-// }
 
