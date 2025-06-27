@@ -13,6 +13,10 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(loggingInterceptor);
+        registry.addInterceptor(loggingInterceptor).excludePathPatterns(
+                "/api/auth/**",         // éviter les logs sur login, refresh, etc.
+                "/api/audit-logs/**",   // éviter les logs circulaires
+                "/error"                // ne pas loguer les appels vers la page d’erreur
+        );
     }
 }

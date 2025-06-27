@@ -3,6 +3,7 @@ package com.talentshare.backend.controller;
 import com.talentshare.backend.model.*;
 import com.talentshare.backend.repository.PasswordResetTokenRepository;
 import com.talentshare.backend.repository.UserRepository;
+import com.talentshare.backend.repository.UtilisateurRepository;
 import com.talentshare.backend.service.EmailService;
 import com.talentshare.backend.service.JwtUtil;
 import io.jsonwebtoken.Jwts;
@@ -48,6 +49,10 @@ public class AuthController {
 
     @Autowired
     private EmailService emailService;
+
+    @Autowired
+    private UtilisateurRepository utilisateurRepository;
+
 
 
     @PostMapping("/authenticate")
@@ -96,6 +101,13 @@ public class AuthController {
         user.setAuthorities(Set.of(authority));
 
         userRepository.save(user);
+
+        Utilisateur utilisateur = new Utilisateur();
+        utilisateur.setUser(user);
+        utilisateur.setNom(request.getUsername());
+        utilisateur.setEmail(request.getEmail());
+        utilisateur.setAvatarUrl("");
+        utilisateurRepository.save(utilisateur);
 
         // Generate token after registration
         UserDetails userDetails = new org.springframework.security.core.userdetails.User(

@@ -15,8 +15,7 @@ public class LoggingInterceptor implements HandlerInterceptor {
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response,
                                 Object handler, Exception ex) {
-        if (request.getMethod().equals("GET")) return; // Ne loguez pas les GET
-
+        if (request.getMethod().equals("GET")) return;
         String action = request.getMethod() + " " + request.getRequestURI();
         String details = "Status: " + response.getStatus();
 

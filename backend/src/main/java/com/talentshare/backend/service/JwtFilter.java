@@ -1,5 +1,6 @@
 package com.talentshare.backend.service;
 
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -51,10 +52,23 @@ public class JwtFilter extends OncePerRequestFilter {
         String token = null;
         String username = null;
 
+//        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+//            token = authHeader.substring(7);
+//            username = jwtUtil.extractUsername(token);
+//            System.out.println("JWT Username = " + username);
+//        }
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             token = authHeader.substring(7);
-            username = jwtUtil.extractUsername(token);
-            System.out.println("JWT Username = " + username);
+
+            // 🔒 Vérifie que le token n'est pas vide
+            if (!token.isEmpty()) {
+                try {
+                    username = jwtUtil.extractUsername(token);
+                    System.out.println("JWT Username = " + username);
+                } catch (JwtException e) {
+                    System.out.println("Invalid JWT: " + e.getMessage());
+                }
+            }
         }
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {

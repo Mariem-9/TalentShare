@@ -17,9 +17,11 @@ public class AuditLogController {
     @Autowired
     private AuditLogService auditLogService;
 
+
     @PostMapping
     public ResponseEntity<?> logFromFrontend(@RequestBody Map<String, String> payload,
                                              HttpServletRequest request) {
+
         String action = payload.get("action");
         String details = payload.get("details");
         auditLogService.log(action, details, request);

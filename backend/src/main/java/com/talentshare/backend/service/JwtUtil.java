@@ -1,9 +1,6 @@
 package com.talentshare.backend.service;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.JwtException;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
@@ -85,13 +82,28 @@ public class JwtUtil {
     public boolean isTokenExpired(String token) {
         return extractClaims(token).getExpiration().before(new Date());
     }
-    public String extractUsername(String token) {
+//    public String extractUsername(String token) {
+//        try {
+//            return extractClaimsRefreshToken(token).getSubject();
+//        } catch (JwtException e) {
+//            return extractClaims(token).getSubject();
+//        }
+//    }
+public String extractUsername(String token) {
+    if (token == null || !token.contains(".") || token.split("\\.").length != 3) {
+        throw new MalformedJwtException("Token malformed or empty: " + token);
+    }
+    try {
+        return extractClaimsRefreshToken(token).getSubject();
+    } catch (JwtException e1) {
         try {
-            return extractClaimsRefreshToken(token).getSubject();
-        } catch (JwtException e) {
             return extractClaims(token).getSubject();
+        } catch (ExpiredJwtException e2) {
+            return null; // token expiré : retourne null proprement
         }
     }
+}
+
     private Claims extractClaims(String token) {
         return Jwts.parser()
                 .setSigningKey(SECRET_KEY)

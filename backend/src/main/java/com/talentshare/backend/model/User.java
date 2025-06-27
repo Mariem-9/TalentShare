@@ -1,4 +1,6 @@
 package com.talentshare.backend.model;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -35,6 +37,14 @@ public class User implements UserDetails {
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "user")
     private Set<Authority> authorities = new HashSet<>();
+
+    @OneToMany(mappedBy = "createur")
+//    @JsonBackReference
+    @JsonIgnore
+    private Set<Groupe> groupesCrees = new HashSet<>();
+
+    @OneToMany(mappedBy = "user")
+    private Set<GroupeMembre> groupesRejoints = new HashSet<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
