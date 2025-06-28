@@ -69,15 +69,16 @@ import { FileUploadModule } from 'primeng/fileupload';
             </div>
                 <hr class="my-4 border-t border-gray-300" />
                 <div class="font-semibold text-xl mb-4" style="padding: 0.5rem;">Group Photo</div>
-                <p-fileupload name="demo[]" (onUpload)="onUpload($event)" [multiple]="true" accept="image/*" maxFileSize="1000000" mode="advanced" url="https://www.primefaces.org/cdn/api/upload.php" >
-                    <ng-template #empty>
+                <!-- url="https://www.primefaces.org/cdn/api/upload.php" -->
+                <p-fileupload name="demo[]" (onUpload)="onUpload($event)" [multiple]="true" accept="image/*" maxFileSize="1000000" mode="advanced" url="http://localhost:8080/upload" >
+                    <!-- <ng-template #empty>
                             <div>Drag and drop files to here to upload.</div>
-                        </ng-template>
-                        <ng-template #content>
+                        </ng-template> -->
+                        <!-- <ng-template #content>
                             <ul *ngIf="uploadedFiles.length">
                                 <li *ngFor="let file of uploadedFiles">{{ file.name }} - {{ file.size }} bytes</li>
                             </ul>
-                    </ng-template>
+                    </ng-template> -->
                 </p-fileupload>
             <ng-template pTemplate="footer">
                 <div class="flex justify-end gap-2 w-full">
@@ -265,8 +266,7 @@ export class NestedMenuComponent implements OnInit {
         }
         //Upload Photo
         uploadedFiles: any[] = [];
-
-            onUpload(event: any) {
+        onUpload(event: any) {
                 for (const file of event.files) {
                     this.uploadedFiles.push(file);
                 }
