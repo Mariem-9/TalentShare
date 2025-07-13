@@ -10,7 +10,7 @@ import { Router } from '@angular/router';
 export class AuthService {
     private apiUrl = 'http://localhost:8080/api/auth'; // Spring Boot backend URL
     constructor(private http: HttpClient, private router: Router) { }
-    private setAuthData(token: string, role: string, refreshToken?: string): void {
+    private setAuthData(token: string, role: string, refreshToken?: string ,username?: string): void {
         sessionStorage.setItem('token', token);
         sessionStorage.setItem('role', role);
         // Additional security: Set timestamp for token validation
@@ -18,6 +18,9 @@ export class AuthService {
         if (refreshToken) {
             sessionStorage.setItem('refreshToken', refreshToken);
         }
+        if (username) {
+        sessionStorage.setItem('username', username);
+    }
     }
 
     private clearAuthData(): void {
@@ -25,6 +28,7 @@ export class AuthService {
         sessionStorage.removeItem('role');
         sessionStorage.removeItem('token_init');
         sessionStorage.removeItem('refreshToken');
+        sessionStorage.removeItem('username');
     }
 
     getToken(): string | null {
@@ -40,7 +44,8 @@ export class AuthService {
                 if (!response?.jwtToken || !response?.refreshToken) {
                 throw new Error('Invalid token received');
                 }
-                this.setAuthData(response.jwtToken, response.role, response.refreshToken);
+                this.setAuthData(response.jwtToken, response.role, response.refreshToken, response.username);
+
             }),
             catchError(error => {
             this.clearAuthData();
@@ -58,7 +63,7 @@ export class AuthService {
         return this.http.post(`${this.apiUrl}/register`, registerData).pipe(
             tap((response: any) => {
             if (response?.jwtToken && response?.refreshToken) {
-                this.setAuthData(response.jwtToken, response.role, response.refreshToken);
+                this.setAuthData(response.jwtToken, response.role, response.refreshToken, response.username);
             } else {
                 throw new Error('Missing token(s) in response');
             }
@@ -122,11 +127,6 @@ export class AuthService {
     resetPassword(token: string, newPassword: string) {
         return this.http.post(`${this.apiUrl}/reset-password`, { token, newPassword });
     }
-    getUserProfile(): Observable<any> {
-        return this.http.get('http://localhost:8080/api/utilisateur/me');
-    }
-
-
 }
 
 

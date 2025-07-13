@@ -13,11 +13,11 @@ export const loggingInterceptor: HttpInterceptorFn = (req, next) => {
     return next(req).pipe(
         tap({
             next: (event) => {
-                console.log('[INTERCEPT SUCCESS]', req.url);
+                // console.log('[INTERCEPT SUCCESS]', req.url);
                 auditLogService.log(action, 'Success');
             },
             error: (err) => {
-                console.log('[INTERCEPT ERROR]', req.url);
+                // console.log('[INTERCEPT ERROR]', req.url);
                 auditLogService.log(action, `Error: ${err.message}`);
             }
     })

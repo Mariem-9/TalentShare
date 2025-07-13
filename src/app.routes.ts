@@ -9,6 +9,7 @@ import { Access } from './app/auth/access';
 import { PasswordWidget } from './app/auth/forgetpassword';
 import { Login } from './app/auth/login';
 import { Register } from './app/auth/register';
+import { PendingGroupListComponent } from './app/components/PendingGroupListComponent';
 
 
 export const appRoutes: Routes = [
@@ -20,6 +21,8 @@ export const appRoutes: Routes = [
     // Protected routes
     { path: 'home', component: Home , canActivate: [AuthGuard, RoleGuard],data: { roles: ['ROLE_USER', 'ROLE_ADMIN']}},
     { path: 'admin', component: AdminDashboardComponent, canActivate: [AuthGuard, RoleGuard],data: { roles: ['ROLE_ADMIN'] }},
+    { path: 'group/:id', loadComponent: () => import('./app/group/GroupComponent').then(m => m.GroupComponent),canActivate: [AuthGuard], },
+    { path: 'admin/pending-groups', component: PendingGroupListComponent, canActivate: [RoleGuard], data: { roles: ['ROLE_ADMIN'] }},
     // Fallbacks
     { path: 'unauthorized', component: Access },
     { path: 'notfound', component: Notfound },
