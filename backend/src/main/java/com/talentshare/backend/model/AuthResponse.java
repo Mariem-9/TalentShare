@@ -13,5 +13,6 @@ public class AuthResponse {
     private String jwtToken;
     private String refreshToken;
     private String role;
+    private String username;
 }
 

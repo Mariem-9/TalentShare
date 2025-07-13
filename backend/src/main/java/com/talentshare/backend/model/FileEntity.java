@@ -1,10 +1,8 @@
 package com.talentshare.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Table(name = "files")
@@ -19,16 +17,20 @@ public class FileEntity {
     private Long id;
 
     private String fileName;
-
+    private String storagePath;
     private String fileType;
     private Long size;
-    private String url;
+    private boolean isPrivate = false;
 
     @ManyToOne
     @JoinColumn(name = "groupe_id")
     private Groupe groupe;
-    @ManyToOne
-    @JoinColumn(name = "utilisateur_id")
-    private Utilisateur utilisateur;
-}
 
+    @OneToOne(mappedBy = "avatar")
+    @JsonIgnore
+    private Utilisateur utilisateur;
+
+    @OneToOne(mappedBy = "avatar")
+    @JsonIgnore
+    private Groupe groupeAvatar;
+}

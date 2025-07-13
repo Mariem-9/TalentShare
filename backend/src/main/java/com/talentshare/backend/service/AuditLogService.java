@@ -40,7 +40,13 @@ public class AuditLogService {
             log.setUser(user);
             log.setAction(action);
             log.setDetails(details);
-            log.setIpAddress(request.getRemoteAddr());
+//            log.setIpAddress(request.getRemoteAddr());
+            if (request != null) {
+                log.setIpAddress(request.getRemoteAddr());
+            } else {
+                log.setIpAddress("SYSTEM");
+            }
+
             log.setCreatedAt(LocalDateTime.now());
 
             auditLogRepository.save(log);

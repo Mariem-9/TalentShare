@@ -39,7 +39,6 @@ public class User implements UserDetails {
     private Set<Authority> authorities = new HashSet<>();
 
     @OneToMany(mappedBy = "createur")
-//    @JsonBackReference
     @JsonIgnore
     private Set<Groupe> groupesCrees = new HashSet<>();
 

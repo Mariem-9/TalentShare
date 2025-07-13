@@ -34,6 +34,13 @@ public class GroupeController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    @GetMapping("/{id}/is-creator")
+    public ResponseEntity<Boolean> isUserGroupCreator(@PathVariable Long id, Principal principal) {
+        boolean isCreator = groupeService.isUserCreator(id, principal.getName());
+        return ResponseEntity.ok(isCreator);
+    }
+
+
     @PutMapping("/{id}")
     public ResponseEntity<Groupe> updateGroupe(@PathVariable Long id, @RequestBody Groupe groupe, Principal principal) {
         return ResponseEntity.ok(groupeService.updateGroupe(id, groupe, principal.getName()));
@@ -53,6 +60,12 @@ public class GroupeController {
     public ResponseEntity<List<Groupe>> getGroupesRejoints(Principal principal) {
         return ResponseEntity.ok(groupeService.getGroupesRejointsPar(principal.getName()));
     }
+
+    @GetMapping("/pending")
+    public List<Groupe> getPendingGroupsForCurrentUser(Principal principal) {
+        return groupeService.getPendingGroupsForUser(principal.getName());
+    }
+
 
 }
 

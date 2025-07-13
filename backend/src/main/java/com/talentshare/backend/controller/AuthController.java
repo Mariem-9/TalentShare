@@ -70,7 +70,7 @@ public class AuthController {
         final String refreshToken = jwtUtil.generateRefreshToken(userDetails);
 
         String role = userDetails.getAuthorities().stream().findFirst().get().getAuthority();
-        return ResponseEntity.ok(new AuthResponse(jwt,refreshToken, role));
+        return ResponseEntity.ok(new AuthResponse(jwt,refreshToken, role,request.getUsername()));
 
     }
     @PostMapping("/register")
@@ -106,7 +106,7 @@ public class AuthController {
         utilisateur.setUser(user);
         utilisateur.setNom(request.getUsername());
         utilisateur.setEmail(request.getEmail());
-        utilisateur.setAvatarUrl("");
+        utilisateur.setAvatar(null);
         utilisateurRepository.save(utilisateur);
 
         // Generate token after registration
