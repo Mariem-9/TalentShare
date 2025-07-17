@@ -9,11 +9,15 @@ import { FileUploadModule } from "primeng/fileupload";
 import { Treewidget } from "./treewidget";
 import { GroupDetailsWidget } from "./group-details-widget";
 import { GroupChatComponent } from "../components/GroupChatComponent";
+import { PollDisplayComponent } from "../components/PollDisplayComponent";
+import { PollResponse } from "../services/poll.service";
+import { PollListComponent } from "../components/PollListComponent";
 
 @Component({
     selector: 'app-group',
     standalone: true,
-    imports: [CommonModule,SplitterModule,FormsModule,DialogModule,FileUploadModule,ButtonModule,Treewidget,GroupDetailsWidget,GroupChatComponent],
+    imports: [CommonModule,SplitterModule,FormsModule,DialogModule,FileUploadModule,ButtonModule,Treewidget,GroupDetailsWidget,
+        GroupChatComponent,PollDisplayComponent,PollListComponent],
     template: `
     <div class="card" style="height: 100vh; width: 100vw;">
     <p-splitter [style]="{ height: '100%', width: '100%' }" [panelSizes]="[33, 67]" [minSizes]="[10, 0]" styleClass="mb-8 h-full">
@@ -24,13 +28,23 @@ import { GroupChatComponent } from "../components/GroupChatComponent";
         </ng-template>
         <ng-template pTemplate="panel">
         <div class="flex flex-col h-full min-h-0 w-full"> <!-- Added min-h-0 -->
-            <app-group-chat-widget [groupId]="groupId" class="flex-grow w-full"></app-group-chat-widget>
+            <app-group-chat-widget [groupId]="groupId" class="flex-grow w-full" (pollCreated)="onPollCreated($event.poll, $event.type)"></app-group-chat-widget>
         </div>
         </ng-template>
         <ng-template pTemplate="panel">
                 <p-splitter layout="vertical" [panelSizes]="[50, 50]">
                     <ng-template pTemplate="panel">
-                        <div style="flex-grow: 1;" class="flex items-center justify-center">Panel 2</div>
+                        <!-- <div style="flex-grow: 1;" class="flex items-center justify-center">Panel 2</div> -->
+                        <div class="flex flex-col h-full min-h-0 w-full p-4">
+                            <app-poll-list [groupId]="groupId"></app-poll-list>
+<app-poll-display
+  *ngIf="selectedPollId && selectedPollType"
+  [pollId]="selectedPollId"
+  [pollType]="selectedPollType"
+  [groupId]="groupId">
+</app-poll-display>
+
+</div>
                     </ng-template>
                     <ng-template pTemplate="panel">
                         <p-splitter [panelSizes]="[50, 50]">
@@ -56,6 +70,14 @@ import { GroupChatComponent } from "../components/GroupChatComponent";
 })
 export class GroupComponent implements OnInit {
     groupId!: number;
+    selectedPollId?: number;
+selectedPollType?: string;
+
+onPollCreated(poll: PollResponse, type: string) {
+  this.selectedPollId = poll.id;
+  this.selectedPollType = type;
+}
+
     @ViewChild('treeWidget') treeWidget!: Treewidget;
     constructor(private route: ActivatedRoute) {}
     ngOnInit() {

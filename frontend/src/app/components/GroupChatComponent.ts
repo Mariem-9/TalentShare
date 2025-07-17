@@ -1,16 +1,21 @@
-import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ChatMessage, ChatService } from '../services/ChatService';
 import { PickerModule } from '@ctrl/ngx-emoji-mart';
 import { ActionLogService } from '../services/action-log.service';
+import { GroupeService } from '../services/GroupeService';
+
+import { PollRequest, PollResponse, PollService } from '../services/poll.service';
+import { PollTypeSelectorComponent } from './PollTypeSelectorComponent';
+import { PollPopupComponent } from './PollPopupComponent ';
 
 
 
 @Component({
     selector: 'app-group-chat-widget',
     standalone: true,
-    imports: [CommonModule, FormsModule,PickerModule],
+    imports: [CommonModule, FormsModule,PickerModule,PollTypeSelectorComponent,PollPopupComponent ],
     template: `
 <div class="flex flex-col h-full min-h-0">
     <div class="flex-grow min-h-0 overflow-y-auto p-4 space-y-3">
@@ -21,7 +26,6 @@ import { ActionLogService } from '../services/action-log.service';
             }"
             class="flex flex-col w-full">
 
-        <!-- Nom toujours aligné à gauche -->
         <div class="text-sm font-semibold text-gray-500 mb-1 text-left">
             <strong>{{ msg.senderUsername }}</strong>
         </div>
@@ -53,6 +57,17 @@ import { ActionLogService } from '../services/action-log.service';
         <div class="absolute right-6 top-1/2 transform -translate-y-1/2 flex items-center space-x-3">
 
         <button
+        *ngIf="canCreatePoll"
+        type="button"
+        (click)="onCreatePoll()"
+        class="text-purple-600 hover:text-purple-800 focus:outline-none"
+        style="background: transparent; border: none; padding: 0; cursor: pointer;"
+        aria-label="Créer un sondage"
+        >
+        <i class="pi pi-chart-bar text-2xl"></i>
+        </button>
+
+        <button
         type="button"
         (click)="toggleEmojiPicker()"
         class="text-yellow-500 hover:text-yellow-600 focus:outline-none"
@@ -81,6 +96,23 @@ import { ActionLogService } from '../services/action-log.service';
         ></emoji-mart>
         </div>
     </form>
+
+    <app-poll-type-selector
+    *ngIf="showPollTypeSelector"
+    (cancel)="onPollTypeCancel()"
+    (nextStep)="onPollTypeNext($event)"
+    ></app-poll-type-selector>
+    <app-poll-popup
+    *ngIf="selectedPollType"
+    [pollType]="selectedPollType"
+    [groupId]="groupId"
+    (cancel)="onPollPopupCancel()"
+(created)="onPollCreated($event)"
+    ></app-poll-popup>
+
+
+
+
 </div>
 `,
 encapsulation: ViewEncapsulation.None,
@@ -145,14 +177,22 @@ styles: [`
 `]
 })
 export class GroupChatComponent implements OnInit {
-  @Input() groupId!: number; // get groupId from parent
+    @Input() groupId!: number;
     messages: ChatMessage[] = [];
     newMessage: string = '';
     websocketReady = false;
     currentUsername = sessionStorage.getItem('username') || '';
     showEmojiPicker = false;
 
-    constructor(private chatService: ChatService, private actionLogService: ActionLogService) {}
+    canCreatePoll: boolean = false;
+    showPollTypeSelector = false;
+    selectedPollType: string | null = null;
+    //////
+    @Output() pollCreated = new EventEmitter<{ poll: PollResponse; type: string }>();
+
+
+    constructor(private chatService: ChatService, private actionLogService: ActionLogService ,
+                private groupeService: GroupeService , private pollService: PollService) {}
 
     ngOnInit() {
     if (!this.groupId) return;
@@ -165,7 +205,29 @@ export class GroupChatComponent implements OnInit {
     }, () => {
         this.websocketReady = true;
     });
+
+    this.checkUserRole();
     }
+
+    checkUserRole() {
+        this.groupeService.getGroupMembersByRole(this.groupId).subscribe({
+            next: rolesMap => {
+            const moderators = rolesMap.moderateur?.map((u: any) => u.username) || [];
+            const creators = rolesMap.createur?.map((u: any) => u.username) || [];
+
+            this.canCreatePoll = [...moderators, ...creators].includes(this.currentUsername);
+            // console.log('Current user:', this.currentUsername);
+            // console.log('Moderators:', moderators);
+            // console.log('Creators:', creators);
+            // console.log('canCreatePoll:', this.canCreatePoll);
+            },
+            error: err => {
+            console.error('Failed to fetch group roles', err);
+            this.canCreatePoll = false;
+            }
+        });
+    }
+
 
     onSendMessage(event?: Event) {
     if (event) event.preventDefault(); // Prevent default form submission
@@ -197,5 +259,31 @@ export class GroupChatComponent implements OnInit {
     this.showEmojiPicker = false;
     }
 
+    onCreatePoll() {
+    this.showPollTypeSelector = true;
+    this.selectedPollType = null;
+    }
+
+    onPollTypeCancel() {
+    this.showPollTypeSelector = false;
+    this.selectedPollType = null;
+    }
+
+    onPollTypeNext(type: string) {
+    this.selectedPollType = type;
+    this.showPollTypeSelector = false;
+    }
+
+    onPollPopupCancel() {
+    this.selectedPollType = null;
+    this.showPollTypeSelector = true;
+    }
+    // onPollCreated() {
+    //     this.selectedPollType = null;
+    // }
+onPollCreated(poll: PollResponse) {
+  this.pollCreated.emit({ poll, type: this.selectedPollType! });
+  this.selectedPollType = null;
+}
 
 }

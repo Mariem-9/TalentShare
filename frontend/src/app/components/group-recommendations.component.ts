@@ -9,16 +9,21 @@ import { ProfileService } from '../services/profileService';
     standalone: true,
     imports: [CommonModule, FormsModule, RouterModule],
     template: `
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div class="flex items-center justify-center mb-8">
+            <h1 class="text-4xl font-extrabold text-emerald-400 tracking-wide">
+                Discover Your Next Favorite Group
+            </h1>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 gap-4">
         <a
             *ngFor="let group of recommendedGroups"
             [routerLink]="['/group', group.id]"
-            class="p-4 rounded shadow bg-white hover:shadow-lg transition block"
+            class="p-12 rounded shadow bg-white hover:shadow-lg transition block"
         >
-            <h2 class="font-bold text-lg">{{ group.nom }}</h2>
-            <p class="text-sm text-gray-600">{{ group.description }}</p>
-            <p class="text-xs text-primary mt-2">Tags: {{ group.tags?.join(', ') }}</p>
-            <p class="text-xs text-gray-400">Created by: {{ group.createur.username }}</p>
+            <h2 class="font-bold text-2xl">{{ group.nom }}</h2>
+            <p class="text-lg text-gray-800">{{ group.description }}</p>
+            <p class="text-base text-primary mt-2">Tags :  {{ group.tags?.join(', ')  }}</p>
+            <p class="text-base text-gray-600">Created by: {{ group.createur.username }}</p>
         </a>
         </div>
     `
