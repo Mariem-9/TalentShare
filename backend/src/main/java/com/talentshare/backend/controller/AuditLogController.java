@@ -1,12 +1,8 @@
 package com.talentshare.backend.controller;
 
-import com.talentshare.backend.model.ActionLog;
-import com.talentshare.backend.repository.ActionLogRepository;
-import com.talentshare.backend.service.ActionLogService;
 import com.talentshare.backend.service.AuditLogService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,9 +14,6 @@ import java.util.Map;
 public class AuditLogController {
     @Autowired
     private AuditLogService auditLogService;
-    @Autowired
-    private ActionLogRepository actionLogRepository;
-
 
     @PostMapping
     public ResponseEntity<?> logFromFrontend(@RequestBody Map<String, String> payload,

@@ -1,5 +1,6 @@
 package com.talentshare.backend.service;
 
+import com.talentshare.backend.exception.BusinessException;
 import com.talentshare.backend.model.Groupe;
 import com.talentshare.backend.model.User;
 import com.talentshare.backend.model.Utilisateur;
@@ -21,8 +22,9 @@ public class UtilisateurService {
     private final GroupeRepository groupeRepository;
 
     public Map<String, Object> getCurrentUserProfile(String username) {
+
         Utilisateur utilisateur = utilisateurRepository.findByUser_Username(username)
-                .orElseThrow(() -> new RuntimeException("Utilisateur introuvable"));
+                .orElseThrow(() -> new BusinessException("Utilisateur introuvable"));
 
         Map<String, Object> profile = new HashMap<>();
         profile.put("nom", utilisateur.getNom());
@@ -37,11 +39,12 @@ public class UtilisateurService {
         profile.put("languages", utilisateur.getLanguages());
 
         return profile;
+
     }
 
     public void updateCurrentUserProfile(String username, Utilisateur updatedUser) {
         Utilisateur utilisateur = utilisateurRepository.findByUser_Username(username)
-                .orElseThrow(() -> new RuntimeException("Utilisateur introuvable"));
+                .orElseThrow(() -> new BusinessException("Utilisateur introuvable"));
 
         if (updatedUser.getNom() != null) utilisateur.setNom(updatedUser.getNom());
         if (updatedUser.getLocation() != null) utilisateur.setLocation(updatedUser.getLocation());
@@ -56,9 +59,9 @@ public class UtilisateurService {
 
     public List<Groupe> getGroupRecommendations(String username) {
         User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new BusinessException("User not found"));
         Utilisateur utilisateur = utilisateurRepository.findByUser(user)
-                .orElseThrow(() -> new RuntimeException("User profile not found"));
+                .orElseThrow(() -> new BusinessException("User profile not found"));
 
         Set<String> userTalents = utilisateur.getTalents();
         Set<String> userSkills = utilisateur.getSkills();
@@ -76,7 +79,6 @@ public class UtilisateurService {
                 .filter(g -> !g.getCreateur().getUsername().equals(username))
                 .collect(Collectors.toList());
 
-        // Si mots-clés renseignés, tenter des recommandations
         if (!allUserKeywords.isEmpty()) {
             List<Groupe> recommended = allGroups.stream()
                     .filter(g -> g.getTags() != null &&

@@ -1,5 +1,6 @@
 package com.talentshare.backend.service;
 
+import com.talentshare.backend.exception.BusinessException;
 import com.talentshare.backend.model.*;
 import com.talentshare.backend.repository.GroupeRepository;
 import com.talentshare.backend.repository.MessageRepository;
@@ -21,14 +22,12 @@ public class ChatService {
     private final UtilisateurRepository utilisateurRepository;
     private final AuditLogService auditLogService;
 
-    // Handle new messages
     public ChatMessage processIncomingMessage(String username, Long groupId, String content ) {
         User sender = userRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() ->  new BusinessException("User not found"));
         Groupe groupe = groupeRepository.findById(groupId)
-                .orElseThrow(() -> new RuntimeException("Group not found"));
+                .orElseThrow(() -> new BusinessException("Group not found"));
 
-        // 1. Save to database
         Message message = new Message();
         message.setContent(content);
         message.setSender(sender);
@@ -39,22 +38,19 @@ public class ChatService {
         auditLogService.log("SEND_CHAT_MESSAGE",
                 "User " + username + " sent message in group " + groupId,
                 null);
-        
-        // 2. Convert to DTO
+
         return mapToChatMessage(savedMessage);
     }
 
-    // Fetch message history
     public List<ChatMessage> getGroupMessages(Long groupId) {
         Groupe groupe = groupeRepository.findById(groupId)
-                .orElseThrow(() -> new RuntimeException("Group not found"));
+                .orElseThrow(() -> new BusinessException("Group not found"));
 
         return messageRepository.findByGroupeOrderByTimestampAsc(groupe).stream()
                 .map(this::mapToChatMessage)
                 .toList();
     }
 
-    // Reusable mapping logic
     private ChatMessage mapToChatMessage(Message message) {
         ChatMessage chatMessage = new ChatMessage();
         chatMessage.setGroupId(message.getGroupe().getId());
@@ -62,7 +58,6 @@ public class ChatService {
         chatMessage.setContent(message.getContent());
         chatMessage.setTimestamp(message.getTimestamp());
 
-        // Set avatar URL if exists
         utilisateurRepository.findByUser(message.getSender())
                 .map(Utilisateur::getAvatar)
                 .ifPresent(avatar ->

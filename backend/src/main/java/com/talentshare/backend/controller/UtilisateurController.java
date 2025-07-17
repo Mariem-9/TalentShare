@@ -1,7 +1,6 @@
 package com.talentshare.backend.controller;
 
 import com.talentshare.backend.model.Utilisateur;
-import com.talentshare.backend.repository.UtilisateurRepository;
 import com.talentshare.backend.service.UtilisateurService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -20,8 +19,6 @@ import java.util.Map;
 @RequestMapping("/api/utilisateur")
 public class UtilisateurController {
 
-    @Autowired
-    private UtilisateurRepository utilisateurRepository;
     @Autowired
     private  UtilisateurService utilisateurService;
 

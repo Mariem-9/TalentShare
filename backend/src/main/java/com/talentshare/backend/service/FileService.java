@@ -1,5 +1,6 @@
 package com.talentshare.backend.service;
 
+import com.talentshare.backend.exception.BusinessException;
 import com.talentshare.backend.model.FileEntity;
 import com.talentshare.backend.model.Groupe;
 import com.talentshare.backend.model.Utilisateur;
@@ -43,7 +44,7 @@ public class FileService {
 
     public FileEntity uploadUserAvatar(MultipartFile file,boolean isPrivate, Principal principal, HttpServletRequest request) throws IOException {
         Utilisateur utilisateur = utilisateurRepository.findByUser_Username(principal.getName())
-                .orElseThrow(() -> new RuntimeException("Utilisateur introuvable"));
+                .orElseThrow(() ->  new BusinessException("Utilisateur introuvable"));
 
 
         String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
@@ -77,10 +78,10 @@ public class FileService {
 
     public FileEntity uploadGroupAvatar(MultipartFile file, Long groupId, Principal principal ,HttpServletRequest request) throws IOException {
         Groupe groupe = groupeRepository.findById(groupId)
-                .orElseThrow(() -> new RuntimeException("Groupe introuvable"));
+                .orElseThrow(() ->  new BusinessException("Groupe introuvable"));
 
         if (!groupe.getCreateur().getUsername().equals(principal.getName())) {
-            throw new RuntimeException("Non autorisé à modifier cet avatar");
+            throw  new BusinessException("Non autorisé à modifier cet avatar");
         }
 
         String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
@@ -124,16 +125,19 @@ public class FileService {
     }
 
 public FileWithResource getFile(Long id, Principal principal) throws IOException {
+    System.out.println("Recherche fichier avec id: " + id);
 
     FileEntity file = fileRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Fichier introuvable"));
+            .orElseThrow(() ->  new BusinessException("Fichier introuvable"));
 
     System.out.println("Principal: " + (principal != null ? principal.getName() : "null"));
     System.out.println("Fichier user: " + (file.getUtilisateur() != null ? file.getUtilisateur().getUser().getUsername() : "null"));
 
     if (file.isPrivate()) {
+        System.out.println("Fichier est privé, vérification de l'utilisateur...");
         if (principal == null) {
-            throw new RuntimeException("Accès interdit (utilisateur non connecté)");
+            throw  new BusinessException("Accès interdit (utilisateur non connecté)");
+
         }
 
         String currentUser = principal.getName();
@@ -148,24 +152,26 @@ public FileWithResource getFile(Long id, Principal principal) throws IOException
         if (!isAdmin) {
             if (file.getUtilisateur() != null) {
                 if (!file.getUtilisateur().getUser().getUsername().equals(currentUser)) {
-                    throw new RuntimeException("Accès interdit (utilisateur)");
+                    throw  new BusinessException("Accès interdit (utilisateur)");
                 }
             } else if (file.getGroupeAvatar() != null) {
                 if (!file.getGroupeAvatar().getCreateur().getUsername().equals(currentUser)) {
-                    throw new RuntimeException("Accès interdit (groupe)");
+                    throw  new BusinessException("Accès interdit (groupe)");
                 }
             } else {
-                throw new RuntimeException("Fichier privé sans propriétaire connu");
+                throw  new BusinessException("Fichier privé sans propriétaire connu");
             }
         }
+        System.out.println("Utilisateur autorisé: " + principal.getName());
     }
     // fichier public : accès libre
-
+    System.out.println("Tentative récupération objet S3: " + file.getStoragePath());
     GetObjectRequest getObjectRequest = GetObjectRequest.builder()
             .bucket(bucketName)
             .key(file.getStoragePath())
             .build();
 
+    System.out.println("Objet S3 récupéré avec succès.");
     ResponseInputStream<GetObjectResponse> s3Object = s3Client.getObject(getObjectRequest);
 
     Resource resource = new InputStreamResource(s3Object);

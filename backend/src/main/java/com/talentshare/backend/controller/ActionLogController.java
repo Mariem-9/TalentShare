@@ -27,7 +27,7 @@ public class ActionLogController {
 
     @GetMapping
     public List<ActionLog> getAllLogs() {
-        return actionLogService.getAllLogs(); // Add this method in service if missing
+        return actionLogService.getAllLogs();
     }
 }
 
