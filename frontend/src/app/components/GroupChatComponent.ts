@@ -7,8 +7,8 @@ import { ActionLogService } from '../services/action-log.service';
 import { GroupeService } from '../services/GroupeService';
 
 import { PollRequest, PollResponse, PollService } from '../services/poll.service';
-import { PollTypeSelectorComponent } from './PollTypeSelectorComponent';
-import { PollPopupComponent } from './PollPopupComponent ';
+import { PollTypeSelectorComponent } from '../group/Poll/PollTypeSelectorComponent';
+import { PollPopupComponent } from '../group/Poll/PollPopupComponent ';
 
 
 

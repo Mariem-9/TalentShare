@@ -19,12 +19,21 @@ import { ActionLogService } from '../services/action-log.service';
     template: `
     <p-tree [value]="treeValue">
         <ng-template let-node pTemplate="default">
-            <div class="flex align-items-center" style="height: 28px;">
+            <div  class="flex items-center" style="height: 28px;">
+                <i *ngIf="!node.data"
+         class="pi"
+         [ngClass]="{
+  'pi-star': node.label.startsWith('Group Owner'),
+  'pi-shield': node.label.startsWith('Group Moderators'),
+  'pi-users': node.label.startsWith('Active Members'),
+  'pi-clock': node.label.startsWith('Review Pending Requests')
+}"
+         [ngStyle]="{'color': '#74726eff', 'font-size': '1.2rem', 'margin-right': '0.5rem'}"></i>
                 <p-avatar *ngIf="node.data" [image]="node.data.avatarSafeUrl" [label]="!node.data.avatarSafeUrl ? node.data.initial : null" shape="circle" styleClass="bg-primary"
                 [style]="{ 'width': '24px', 'height': '24px', 'font-size': '12px', 'margin-right': '0.5rem', 'display': 'flex', 'align-items': 'center','justify-content': 'center'}"> </p-avatar>
                 <!-- Afficher l'image si avatarUrl existe -->
                 <div class="flex items-center gap-2" style="line-height: 24px;">
-                    <span class="text-sm" style="line-height: 24px;">{{ node.label }}</span>
+                    <span class="font-semibold text-base" style="line-height: 24px;">{{ node.label }}</span>
                     <ng-container *ngIf="isCreator && node.data?.type === 'pending'">
                         <i class="pi pi-check" (click)="onAccept(node.data.id)" style="cursor:pointer; color:green; font-size:0.9rem; margin-left: 10px;" title="Accept Request"></i>
                         <i class="pi pi-times" (click)="onRefuse(node.data.id)" style="cursor:pointer; color:red; font-size:0.9rem; margin-left: 10px;" title="Reject Request"></i>
@@ -100,23 +109,23 @@ export class Treewidget implements OnInit {
 
         this.treeValue = [
             {
-            label: `Creator ${formatCount(data.createur?.length || 0)}`,
+            label: `Group Owner ${formatCount(data.createur?.length || 0)}`,
             expanded: true,
             children: data.createur?.map((u: any) => this.toNode(mapUserToNode(u, 'creator'), 'creator')) ?? []
 
             },
             {
-            label: `Moderators ${formatCount(data.moderateur?.length || 0)}`,
+            label: `Group Moderators ${formatCount(data.moderateur?.length || 0)}`,
             expanded: true,
             children: data.moderateur?.map((u: any) => this.toNode(mapUserToNode(u, 'moderator'), 'moderator')) ?? []
             },
             {
-            label: `Members ${formatCount(data.membre?.length || 0)}`,
+            label: `Active Members ${formatCount(data.membre?.length || 0)}`,
             expanded: true,
             children: data.membre?.map((u: any) => this.toNode(mapUserToNode(u, 'member'), 'member')) ?? []
             },
             ...(this.isCreator ? [{
-            label: `Pending Requests ${formatCount(data.en_attente?.length || 0)}`,
+            label: `Review Pending Requests ${formatCount(data.en_attente?.length || 0)}`,
             expanded: true,
             children: data.en_attente?.map((u: any) => ({
                 label: u.username,
