@@ -100,21 +100,30 @@ public class PollService {
         messagingTemplate.convertAndSend("/topic/poll/" + pollId + "/results", mapToDto(updatedPoll));
     }
 
-    public PollResponse getPollWithResults(Long pollId) {
+    public PollResponse getPollWithResults(Long pollId, String username) {
         Poll poll = pollRepo.findById(pollId)
                 .orElseThrow(() -> new BusinessException("Poll not found"));
-        return mapToDto(poll);
+        PollVote vote = voteRepo.findByPollAndUser(poll, userRepo.findByUsername(username)
+                .orElseThrow(() -> new BusinessException("User not found")))
+            .orElse(null);
+
+        Long votedChoiceId = vote != null ? vote.getChoice().getId() : null;
+        return mapToDto(poll, votedChoiceId);
 
     }
-
     private PollResponse mapToDto(Poll poll) {
+        return mapToDto(poll, null);
+    }
+
+    private PollResponse mapToDto(Poll poll, Long votedChoiceId) {
         return new PollResponse(
                 poll.getId(),
                 poll.getQuestion(),
                 poll.getEndDate(),
                 poll.getChoices().stream()
                         .map(c -> new PollChoiceDTO(c.getId(), c.getText(), c.getVoteCount()))
-                        .toList()
+                        .toList(),
+                votedChoiceId
         );
     }
     public PollResponse editPoll(Long pollId, PollRequest updatedRequest, String username) {

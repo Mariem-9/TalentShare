@@ -38,8 +38,8 @@ public class PollController {
     }
 
     @GetMapping("/{pollId}")
-    public ResponseEntity<PollResponse> getResults(@PathVariable Long pollId) {
-        PollResponse pollResponse = pollService.getPollWithResults(pollId);
+    public ResponseEntity<PollResponse> getResults(@PathVariable Long pollId, Principal principal) {
+        PollResponse pollResponse = pollService.getPollWithResults(pollId, principal.getName());
         return ResponseEntity.ok(pollResponse);
     }
 

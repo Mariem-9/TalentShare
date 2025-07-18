@@ -7,6 +7,7 @@ public record PollResponse(
         Long id,
         String question,
         LocalDateTime endDate,
-        List<PollChoiceDTO> choices
+        List<PollChoiceDTO> choices,
+        Long votedChoiceId
 ) {}
 
