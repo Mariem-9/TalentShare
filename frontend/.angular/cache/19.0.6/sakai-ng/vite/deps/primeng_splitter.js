@@ -1,13 +1,13 @@
 import {
   BaseComponent
-} from "./chunk-NDOH3XVI.js";
+} from "./chunk-HEDAPZGF.js";
 import {
   BaseStyle
-} from "./chunk-ST33SX5I.js";
+} from "./chunk-ZVODFJRR.js";
 import {
   PrimeTemplate,
   SharedModule
-} from "./chunk-6TSMVDG5.js";
+} from "./chunk-HGXSYKDT.js";
 import {
   addClass,
   getHeight,
@@ -18,6 +18,8 @@ import {
   isRTL,
   removeClass
 } from "./chunk-5PLF4MFL.js";
+import "./chunk-PUQ7QXU5.js";
+import "./chunk-KGZ7KM4L.js";
 import {
   CommonModule,
   NgClass,
@@ -78,8 +80,6 @@ import {
   ɵɵviewQuery
 } from "./chunk-XO6GGWRL.js";
 import "./chunk-ZSY7TSMJ.js";
-import "./chunk-XZINNT2E.js";
-import "./chunk-I4GRS3VG.js";
 import "./chunk-3OV72XIM.js";
 
 // node_modules/primeng/fesm2022/primeng-splitter.mjs

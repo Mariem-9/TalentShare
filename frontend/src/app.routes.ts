@@ -9,7 +9,7 @@ import { Access } from './app/auth/access';
 import { PasswordWidget } from './app/auth/forgetpassword';
 import { Login } from './app/auth/login';
 import { Register } from './app/auth/register';
-import { PendingGroupListComponent } from './app/components/PendingGroupListComponent';
+import { PendingGroupListComponent } from './app/group/Dashboard/PendingGroupListComponent';
 
 
 export const appRoutes: Routes = [

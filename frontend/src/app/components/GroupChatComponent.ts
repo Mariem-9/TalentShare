@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ChatMessage, ChatService } from '../services/ChatService';
@@ -6,7 +6,7 @@ import { PickerModule } from '@ctrl/ngx-emoji-mart';
 import { ActionLogService } from '../services/action-log.service';
 import { GroupeService } from '../services/GroupeService';
 
-import { PollRequest, PollResponse, PollService } from '../services/poll.service';
+import { PollResponse, PollService } from '../services/poll.service';
 import { PollTypeSelectorComponent } from '../group/Poll/PollTypeSelectorComponent';
 import { PollPopupComponent } from '../group/Poll/PollPopupComponent ';
 
@@ -17,8 +17,11 @@ import { PollPopupComponent } from '../group/Poll/PollPopupComponent ';
     standalone: true,
     imports: [CommonModule, FormsModule,PickerModule,PollTypeSelectorComponent,PollPopupComponent ],
     template: `
-<div class="flex flex-col h-full min-h-0">
-    <div class="flex-grow min-h-0 overflow-y-auto p-4 space-y-3">
+
+<!-- <div class="flex flex-col h-full min-h-0">
+    <div #scrollContainer class="flex-grow min-h-0 overflow-y-auto p-4 space-y-3" style="max-height: 100%; overflow-y: auto;"> -->
+<div class="flex flex-col h-full">
+  <div #scrollContainer class="overflow-y-auto p-4 space-y-3" style="height: 100%; flex: 1 1 auto;">
         <div *ngFor="let msg of messages"
             [ngClass]="{
             'items-end text-right': msg.senderUsername === currentUsername,
@@ -177,6 +180,8 @@ styles: [`
 `]
 })
 export class GroupChatComponent implements OnInit {
+    @ViewChild('scrollContainer') scrollContainer!: ElementRef<HTMLDivElement>;
+
     @Input() groupId!: number;
     messages: ChatMessage[] = [];
     newMessage: string = '';
@@ -198,15 +203,27 @@ export class GroupChatComponent implements OnInit {
     if (!this.groupId) return;
     this.chatService.getMessageHistory(this.groupId).subscribe(messages => {
         this.messages = messages;
+        setTimeout(() => this.scrollToBottom(), 0);
     });
 
     this.chatService.connect(this.groupId, (msg) => {
         this.messages.push(msg);
+        setTimeout(() => this.scrollToBottom(), 0);
     }, () => {
         this.websocketReady = true;
     });
 
     this.checkUserRole();
+
+    }
+    scrollToBottom() {
+        try {
+            // console.log('Scrolling to bottom...');
+            const container = this.scrollContainer.nativeElement;
+            container.scrollTo({ top: container.scrollHeight, behavior: 'smooth' });
+        } catch (err) {
+            console.error('Failed to scroll', err);
+        }
     }
 
     checkUserRole() {
@@ -285,5 +302,7 @@ onPollCreated(poll: PollResponse) {
   this.pollCreated.emit({ poll, type: this.selectedPollType! });
   this.selectedPollType = null;
 }
+
+
 
 }

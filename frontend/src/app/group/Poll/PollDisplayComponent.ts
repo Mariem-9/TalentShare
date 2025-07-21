@@ -24,7 +24,7 @@ import { forkJoin, Observable } from 'rxjs';
     <div *ngIf="poll" class="card flex flex-col gap-4 p-4 shadow-md rounded-md max-w-md mx-auto">
     <div class="font-semibold text-xl mb-3 flex justify-between items-center">
         <span>Poll Question: {{ poll.question }}</span>
-        <div class="flex items-center gap-1">
+        <div class="flex items-center gap-1" *ngIf="!readonly">
             <button pButton icon="pi pi-pencil" class="p-button-text p-button-sm" #editBtn (click)="openEditPopup(); op.toggle($event)"></button>
             <button pButton class="p-button-text p-button-sm" (click)="confirmDelete()">
                 <i class="pi pi-trash" style="color: red;"></i>
@@ -32,14 +32,18 @@ import { forkJoin, Observable } from 'rxjs';
         </div>
     </div>
 
-    <div class="mb-2 text-sm font-normal text-gray-500">Make your choice below:</div>
+    <div class="mb-2 text-sm font-normal text-gray-500" *ngIf="!readonly">Make your choice below:</div>
 
     <div *ngIf="pollType !== 'rating'">
         <div class="flex flex-col gap-3">
             <div *ngFor="let choice of poll.choices; let i = index" class="flex items-center justify-between">
                 <div class="flex items-center">
-                    <p-radiobutton [inputId]="'option' + i" name="pollChoices" [value]="choice.id" [(ngModel)]="selectedChoice" [disabled]="!editing && voted"></p-radiobutton>
-                    <label [for]="'option' + i" class="ml-2">{{ choice.text }}</label>
+                    <p-radiobutton [inputId]="'option' + i" name="pollChoices" [value]="choice.id" [(ngModel)]="selectedChoice" [disabled]="readonly || (!editing && voted)"></p-radiobutton>
+                    <label [for]="'option' + i" class="ml-2">
+                        {{ isDateString(choice.text)
+                        ? (choice.text | date: 'fullDate') + ' – ' + (choice.text | date: 'shortTime')
+                        : choice.text
+                    }}</label>
                 </div>
                 <p-badge [value]="choice.voteCount" [severity]="getRandomSeverity(i)" class="ml-4"></p-badge>
             </div>
@@ -51,10 +55,13 @@ import { forkJoin, Observable } from 'rxjs';
     </div>
 
     <div class="flex justify-between items-center mt-4">
-        <div class="text-sm text-gray-500">
-            <i class="pi pi-calendar"></i> Closing Date: {{ poll.endDate | date: 'medium' }}
+        <div class="text-sm text-gray-500 text-center items-center ">
+            <i class="pi pi-calendar"></i>
+            {{ readonly ? 'Closed on :' : 'Closing Date :' }}
+            <ng-container *ngIf="readonly; else withLineBreak"> {{ poll.endDate | date: 'fullDate' }} – {{ poll.endDate | date: 'shortTime' }} </ng-container>
+            <ng-template #withLineBreak> <br /> {{ poll.endDate | date: 'fullDate' }} – {{ poll.endDate | date: 'shortTime' }} </ng-template>
         </div>
-        <button
+        <button *ngIf="!readonly"
             pButton type="button" icon="pi pi-inbox"
             class="p-button p-button-sm p-button-outlined p-button-success"
             (click)="
@@ -142,6 +149,7 @@ export class PollDisplayComponent implements OnInit {
     @Input() pollId!: number;
     @Input() pollType!: string;
     @Output() pollDeleted = new EventEmitter<void>();
+    @Input() readonly: boolean = false;
 
     poll?: PollResponse;
     voted = false;
@@ -164,6 +172,11 @@ export class PollDisplayComponent implements OnInit {
     ngOnInit() {
         this.loadPoll();
     }
+
+    isDateString(value: string): boolean {
+        return !isNaN(Date.parse(value));
+    }
+
 
     getRandomSeverity(index: number): 'info' | 'success' | 'warn' | 'danger' | 'secondary' | 'contrast' {
     return this.badgeSeverities[index % this.badgeSeverities.length];

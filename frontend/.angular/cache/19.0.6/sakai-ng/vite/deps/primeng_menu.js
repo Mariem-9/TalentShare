@@ -1,25 +1,17 @@
 import {
-  Badge,
-  BadgeModule
-} from "./chunk-D7OZH4FJ.js";
-import {
-  Ripple
-} from "./chunk-LQS6KMPZ.js";
-import {
-  Tooltip,
-  TooltipModule
-} from "./chunk-2XAMBQKQ.js";
-import {
-  RouterLink,
-  RouterLinkActive,
-  RouterModule
-} from "./chunk-3TV6XOL4.js";
-import {
   animate,
   style,
   transition,
   trigger
 } from "./chunk-SNRTQ2FG.js";
+import {
+  Badge,
+  BadgeModule
+} from "./chunk-E25LCXDM.js";
+import {
+  Tooltip,
+  TooltipModule
+} from "./chunk-7HFUMWRC.js";
 import {
   zindexutils
 } from "./chunk-KGCNUND3.js";
@@ -27,16 +19,19 @@ import {
   ConnectedOverlayScrollHandler
 } from "./chunk-5G7WYC4N.js";
 import {
+  Ripple
+} from "./chunk-CY7B2FVC.js";
+import {
   BaseComponent
-} from "./chunk-NDOH3XVI.js";
+} from "./chunk-HEDAPZGF.js";
 import {
   BaseStyle
-} from "./chunk-ST33SX5I.js";
+} from "./chunk-ZVODFJRR.js";
 import {
   OverlayService,
   PrimeTemplate,
   SharedModule
-} from "./chunk-6TSMVDG5.js";
+} from "./chunk-HGXSYKDT.js";
 import {
   absolutePosition,
   appendChild,
@@ -48,9 +43,16 @@ import {
   uuid
 } from "./chunk-5PLF4MFL.js";
 import {
+  RouterLink,
+  RouterLinkActive,
+  RouterModule
+} from "./chunk-3TV6XOL4.js";
+import {
   DomSanitizer
 } from "./chunk-AY5GO2BG.js";
 import "./chunk-BENUO3ZQ.js";
+import "./chunk-PUQ7QXU5.js";
+import "./chunk-KGZ7KM4L.js";
 import {
   CommonModule,
   NgClass,
@@ -125,8 +127,6 @@ import {
   ɵɵviewQuery
 } from "./chunk-XO6GGWRL.js";
 import "./chunk-ZSY7TSMJ.js";
-import "./chunk-XZINNT2E.js";
-import "./chunk-I4GRS3VG.js";
 import "./chunk-3OV72XIM.js";
 
 // node_modules/primeng/fesm2022/primeng-menu.mjs
