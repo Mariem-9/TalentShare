@@ -6,12 +6,16 @@ import com.talentshare.backend.DTOs.PollResponse;
 import com.talentshare.backend.exception.BusinessException;
 import com.talentshare.backend.model.*;
 import com.talentshare.backend.repository.*;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -24,6 +28,8 @@ public class PollService {
     private final GroupeRepository groupeRepo;
     private final SimpMessagingTemplate messagingTemplate;
     private final GroupeMembreRepository groupeMembreRepository;
+    private final MessageRepository messageRepo;
+
 
     public PollResponse createPoll(String question, LocalDateTime endDate, List<String> choices, Long groupId, String username) {
         User user = userRepo.findByUsername(username)
@@ -111,6 +117,20 @@ public class PollService {
         return mapToDto(poll, votedChoiceId);
 
     }
+    public List<PollResponse> getClosedPollsByGroup(Long groupId) {
+        List<Poll> polls = pollRepo.findByGroupeIdOrderByEndDateDesc(groupId);
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime oneWeekAgo = now.minusDays(7);
+
+        return polls.stream()
+            .filter(poll -> {
+                LocalDateTime end = poll.getEndDate();
+                return end.isBefore(now) && end.isAfter(oneWeekAgo);
+            })
+            .map(this::mapToDto)
+            .toList();
+    }
+
     private PollResponse mapToDto(Poll poll) {
         return mapToDto(poll, null);
     }
@@ -293,6 +313,55 @@ public class PollService {
                 .map(this::mapToDto)
                 .toList();
     }
+
+    @Transactional
+    @Scheduled(fixedRate = 60000) // every 60 seconds
+    public void announceClosedPolls() {
+        List<Poll> pollsToAnnounce = pollRepo.findByEndDateBeforeAndAnnouncedFalse(LocalDateTime.now());
+
+        for (Poll poll : pollsToAnnounce) {   // <--- here poll is declared
+            PollChoice topChoice = poll.getChoices().stream()
+                .max(Comparator.comparingInt(PollChoice::getVoteCount))
+                .orElse(null);
+
+            if (topChoice == null) continue;
+
+            String content = String.format(
+                "🎉 The poll \"%s\" has ended!\nThe most agreed-upon option is \"%s\" with %d vote(s).\nThanks to everyone for participating and sharing their views! 🙌",
+                poll.getQuestion(),
+                topChoice.getText(),
+                topChoice.getVoteCount()
+            );
+
+
+            Groupe group = poll.getGroupe();
+            User groupCreator = group.getCreateur();
+
+            if (groupCreator == null) {
+                throw new BusinessException("Group creator not found for group ID " + group.getId());
+            }
+
+            ChatMessage msg = new ChatMessage();
+            msg.setSenderUsername(groupCreator.getUsername());
+            msg.setGroupId(group.getId());
+            msg.setContent(content);
+            msg.setTimestamp(LocalDateTime.now());
+            msg.setSenderAvatarUrl(groupCreator.getAvatarUrl()); // Assuming getAvatarUrl() is available
+
+            // Create and save message entity
+            Message messageEntity = new Message();
+            messageEntity.setContent(msg.getContent());
+            messageEntity.setTimestamp(msg.getTimestamp());
+            messageEntity.setSender(groupCreator); // 👈 Use the group creator here
+            messageEntity.setGroupe(group);
+
+            messageRepo.save(messageEntity);
+
+            poll.setAnnounced(true);
+            pollRepo.save(poll);
+        }
+    }
+
 
 
 }

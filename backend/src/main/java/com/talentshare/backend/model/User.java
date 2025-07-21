@@ -35,6 +35,9 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private boolean enabled;
 
+    @Transient
+    private String avatarUrl;
+
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "user")
     private Set<Authority> authorities = new HashSet<>();
 

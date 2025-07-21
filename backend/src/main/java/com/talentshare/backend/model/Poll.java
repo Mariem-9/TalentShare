@@ -20,4 +20,6 @@ public class Poll {
 
     @OneToMany(mappedBy = "poll", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PollChoice> choices;
+
+    private boolean announced = false;
 }

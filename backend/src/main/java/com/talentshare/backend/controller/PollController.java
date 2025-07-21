@@ -43,6 +43,13 @@ public class PollController {
         return ResponseEntity.ok(pollResponse);
     }
 
+    @GetMapping("/group/{groupId}/closed")
+    public ResponseEntity<List<PollResponse>> getClosedPolls(@PathVariable Long groupId) {
+        List<PollResponse> closedPolls = pollService.getClosedPollsByGroup(groupId);
+        return ResponseEntity.ok(closedPolls);
+    }
+
+
     @PutMapping("/{pollId}/edit")
     public ResponseEntity<PollResponse> editPoll(@PathVariable Long pollId,
                                                  @RequestBody PollRequest updatedRequest,
