@@ -26,6 +26,7 @@ import { ToastModule } from 'primeng/toast';
 import { ActionLogService } from '../../services/action-log.service';
 import { UserProfileComponent } from './UserProfileComponent';
 import { CreateGroupComponent } from './CreateGroupComponent';
+import { GroupDetailsWidget } from '../GroupInfo/group-details-widget';
 
 
 
@@ -34,7 +35,7 @@ import { CreateGroupComponent } from './CreateGroupComponent';
     standalone: true,
     imports: [RouterModule,CommonModule,FormsModule,ButtonModule,BreadcrumbModule,IconFieldModule, MenubarModule,InputIconModule, MenuModule,
         DialogModule, FloatLabelModule,TextareaModule,InputTextModule,SkeletonModule, TagModule,ChipsModule,ListboxModule,FileUploadModule,
-        UserProfileComponent,CreateGroupComponent,ToastModule,ConfirmDialogModule],
+        UserProfileComponent,CreateGroupComponent,ToastModule,ConfirmDialogModule,GroupDetailsWidget],
     template: `
         <div class="col-span-12 xl:col-span-6 space-y-6">
             <div class="card p-4 min-h-32 rounded-lg shadow-md bg-white dark:bg-gray-800 animate-fadeIn">
@@ -53,12 +54,15 @@ import { CreateGroupComponent } from './CreateGroupComponent';
                 <div class="card flex flex-col gap-4 rounded-lg shadow-md bg-white dark:bg-gray-800 animate-fadeIn">
                     <div class="font-semibold text-xl">Search Results</div>
                     <p-listbox [(ngModel)]="selectedGroup" [options]="filteredGroups" optionLabel="nom" [filter]="false"
-                    [style]="{ width: '100%' }" (ngModelChange)="navigateToGroup($event)">
+                    [style]="{ width: '100%' }" (ngModelChange)="handleGroupNavigation($event)">
+                    <!-- (ngModelChange)="navigateToGroup($event)" -->
                     </p-listbox>
                 </div>
             </div>
         <app-create-group #createGroupDialog (groupCreated)="loadDynamicMenu()"></app-create-group>
+        <!-- show Profile Dialog Component -->
         <app-user-profile [visible]="showProfileDialog" (close)="showProfileDialog = false"></app-user-profile>
+        <!-- Pending Group Create Request -->
         <p-dialog [header]="selectedPendingGroup?.nom" [(visible)]="displayDialog" [modal]="true" [breakpoints]="{ '960px': '75vw' }" [style]="{ width: '40vw' }" (onHide)="closeGroupDialog()">
             <div *ngIf="selectedPendingGroup">
                 <div class="mb-2">
@@ -76,9 +80,9 @@ import { CreateGroupComponent } from './CreateGroupComponent';
             </ng-template>
         </p-dialog>
         <p-toast></p-toast>
-        <p-confirmDialog></p-confirmDialog>
-
-
+        <p-confirmDialog [style]="{width: '500px'}"></p-confirmDialog>
+        <!-- Pending Join Request  -->
+        <p-dialog [(visible)]="displayDialogDetails" [style]="{width: '40em'}"> <app-group-details-widget [group]="groupallowed" [groupId]="groupallowed?.id"></app-group-details-widget> </p-dialog>
     `,
     providers: [ConfirmationService, MessageService],
 
@@ -86,24 +90,35 @@ import { CreateGroupComponent } from './CreateGroupComponent';
 
 export class NestedMenuComponent implements OnInit {
     @ViewChild('createGroupDialog') createGroupDialog!: CreateGroupComponent;
-    showProfileDialog = false;
     nestedMenuItems: any[] = [];
     searchText = '';
     filteredGroups: any[] = [];
     selectedGroup: any;
+    // show Profile Dialog Component
+    showProfileDialog = false;
+    // Pending Join Request
+    displayDialogDetails: boolean = false;
+    groupallowed: any | null = null;
+    ///Pending Group Create Request
+    displayDialog = false;
+    selectedPendingGroup: any = null;
 
     constructor( private authService: AuthService, private groupeService: GroupeService, private router: Router,
         private confirmationService: ConfirmationService, private messageService: MessageService,private actionLogService: ActionLogService) {}
 
     ngOnInit() {
         this.loadDynamicMenu();
+        window.addEventListener('membershipChangedExternally', () => {
+            this.loadDynamicMenu();
+        });
+
     }
     loadDynamicMenu() {
     this.groupeService.getGroupesCrees().subscribe(createdGroups => {
         const createdGroupItems = createdGroups.map(g => ({
         label: g.nom,
         icon: 'pi pi-fw pi-users',
-        command: () => this.router.navigate(['/group', g.id]),
+        command: () => this.handleGroupNavigation(g)
         }));
 
         const createdSection = {
@@ -123,7 +138,7 @@ export class NestedMenuComponent implements OnInit {
         const joinedGroupItems = joinedGroups.map(g => ({
             label: g.nom,
             icon: 'pi pi-fw pi-users',
-            command: () => this.router.navigate(['/group', g.id]),
+            command: () => this.handleGroupNavigation(g)
         }));
 
         const joinedSection = {
@@ -187,13 +202,46 @@ export class NestedMenuComponent implements OnInit {
         });
     });
     }
-    navigateToGroup(group: any) {
-        console.log('Navigating to group:', group);
-        if (group?.id) {
-            this.router.navigate(['/group', group.id]);
+
+    handleGroupNavigation(group: any) {
+    const username = sessionStorage.getItem('username');
+    this.groupeService.getGroupMembersByRole(group.id).subscribe({
+        next: rolesMap => {
+        const userRoles = Object.entries(rolesMap)
+            .filter(([role, users]: [string, any]) =>
+            users.some((u: any) => u.username === username)
+            )
+            .map(([role]) => role);
+
+        const isPending = userRoles.includes('en_attente');
+
+        if (isPending) {
+            // this.groupallowed  = group;
+            // this.displayDialogDetails = true;
+            this.groupallowed = { ...group, id: group.id };
+            this.displayDialogDetails = false;
+            setTimeout(() => {
+            this.displayDialogDetails = true;
+            }, 0);
         } else {
-            console.warn('No group selected');
+            console.log('Navigating to group:', group);
+            this.router.navigate(['/group', group.id]);
         }
+            // console.log('Clicked group:', group);
+            // console.log('User roles:', userRoles);
+            // console.log('Is pending?', isPending);
+            // console.log('Opening dialog with groupallowed:', this.groupallowed);
+
+        },
+        error: err => {
+        console.error('Failed to fetch group roles', err);
+        this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: 'Unable to check access to group'
+        });
+        }
+    });
     }
 
     loadUserProfile() { this.showProfileDialog = true;}
@@ -215,10 +263,6 @@ export class NestedMenuComponent implements OnInit {
 
     handleLogout() { this.authService.logout();}
 
-    ///Pending Request code
-    displayDialog = false;
-    selectedPendingGroup: any = null;
-
     openGroupDialog(group: any) {
     this.selectedPendingGroup = group;
     this.displayDialog = true;
@@ -238,7 +282,12 @@ export class NestedMenuComponent implements OnInit {
         message: 'Are you sure you want to delete this group?',
         header: 'Delete Confirmation',
         icon: 'pi pi-exclamation-triangle',
-        accept: () => {
+        rejectLabel: 'Delete',
+        acceptLabel: 'Cancel',
+        acceptButtonStyleClass: 'p-button-danger',
+        closable: false,
+        dismissableMask: false,
+        reject: () => {
         this.groupeService.deleteGroupe(id).subscribe({
             next: () => {
             this.actionLogService.log('DELETE_GROUP_SUCCESS', `Group ID ${id} deleted successfully`).subscribe({

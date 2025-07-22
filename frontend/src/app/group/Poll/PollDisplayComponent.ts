@@ -126,7 +126,7 @@ import { forkJoin, Observable } from 'rxjs';
         </div>
     </p-popover>
 
-    <p-confirmDialog header="Confirm Deletion" icon="pi pi-exclamation-triangle"></p-confirmDialog>
+    <p-confirmDialog header="Confirm Deletion" icon="pi pi-exclamation-triangle" [style]="{width: '500px'}"></p-confirmDialog>
 
 `,
 styles: [`
@@ -375,10 +375,12 @@ export class PollDisplayComponent implements OnInit {
     confirmDelete() {
     this.confirmationService.confirm({
         message: 'Are you sure you want to delete this poll?',
-        acceptLabel: 'Delete',
-        rejectLabel: 'Cancel',
+        acceptLabel: 'Cancel',
+        rejectLabel: 'Delete',
         acceptButtonStyleClass: 'p-button-danger',
-        accept: () => {
+        closable: false,
+        dismissableMask: false,
+        reject: () => {
         this.pollService.deletePoll(this.pollId).subscribe(() => {
             this.messageService.add({
             severity: 'success',

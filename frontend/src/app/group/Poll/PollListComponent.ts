@@ -41,8 +41,7 @@ import { FormsModule } from '@angular/forms';
             </ng-template>
 
             <ng-template #noPolls>
-                <img src="https://thumbs.dreamstime.com/b/stick-figures-isolated-white-background-hand-drawn-doodle-line-art-cartoon-design-character-stick-figures-hand-drawn-doodle-279022106.jpg"
-                alt="No polls" class="max-h-64 max-w-6xl object-contain transition-transform duration-300 hover:scale-105 mx-auto block" />
+                <img src="assets/images/Nopolls.webp" alt="Nopolls" class="max-h-64 max-w-6xl object-contain transition-transform duration-300 hover:scale-105 mx-auto block" />
             </ng-template>
         </div>
     `,

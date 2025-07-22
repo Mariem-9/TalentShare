@@ -22,8 +22,7 @@ import { AuditLogListComponent } from '../../group/Dashboard/AuditLogListCompone
                         Join the hub where talents connect, collaborate, and create.
                     </p>
                 </div>
-                <img src="https://static.vecteezy.com/system/resources/previews/004/217/087/non_2x/stick-figures-smiley-signs-hand-drawn-doodle-line-art-cartoon-design-character-nr-3-free-vector.jpg"
-                    alt="Home" class="max-h-64 max-w-6xl object-contain transition-transform duration-300 hover:scale-105"/>
+                    <img src="assets/images/Home.jpg" alt="Home" class="max-h-64 max-w-6xl object-contain transition-transform duration-300 hover:scale-105 mx-auto block" />
             </div>
         </div>
 

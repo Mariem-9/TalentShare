@@ -21,8 +21,7 @@ import { AvatarModule } from 'primeng/avatar';
             <div class="bg-gradient-to-r from-orange-300 via-amber-300 to-yellow-200 text-white rounded-lg p-4 mb-6 font-extrabold text-2xl text-center drop-shadow-md">
                 Groups Awaiting Approval
             </div>
-            <img src="https://tse1.mm.bing.net/th/id/OIP.GBP0_t59aw9g5SyZ7XqOdQHaCe?w=600&h=200&rs=1&pid=ImgDetMain&o=7&rm=3" alt="pending_request"
-            class="mx-auto">
+            <img src="assets/images/pending_request.jpg" alt="pending_request" class="max-h-64 max-w-6xl object-contain transition-transform duration-300 hover:scale-105 mx-auto block" />
             <p-table [value]="groupes" [scrollable]="true" scrollHeight="400px" styleClass="mt-4">
                 <ng-template pTemplate="header">
                     <tr>
@@ -65,7 +64,7 @@ import { AvatarModule } from 'primeng/avatar';
             </p-table>
         </div>
         <p-toast></p-toast>
-    <p-confirmDialog></p-confirmDialog>
+    <p-confirmDialog [style]="{width: '500px'}"></p-confirmDialog>
     `,
     providers: [ConfirmationService, MessageService]
 })
@@ -137,10 +136,12 @@ export class PendingGroupListComponent implements OnInit {
             message: 'Are you sure you want to approve this group?',
             header: 'Confirm Approval',
             icon: 'pi pi-check',
-            acceptLabel: 'Approve',
-            rejectLabel: 'Cancel',
-            rejectButtonStyleClass: 'p-button-danger',
-            accept: () => {
+            acceptLabel: 'Cancel',
+            rejectLabel: 'Approve',
+            acceptButtonStyleClass: 'p-button-danger',
+            closable: false,
+            dismissableMask: false,
+            reject: () => {
                 this.groupeService.approveGroup(id).subscribe({
                     next: () => {
                         this.messageService.add({ severity: 'success', summary: 'Approved', detail: 'Group approved successfully' });
@@ -163,24 +164,24 @@ export class PendingGroupListComponent implements OnInit {
             message: 'Are you sure you want to reject this group?',
             header: 'Confirm Rejection',
             icon: 'pi pi-times',
-            acceptLabel: 'Reject',
-            rejectLabel: 'Cancel',
-            rejectButtonStyleClass: 'p-button-danger',
-            accept: () => {
+            acceptLabel: 'Cancel',
+            rejectLabel: 'Reject',
+            acceptButtonStyleClass: 'p-button-danger',
+            closable: false,
+            dismissableMask: false,
+            reject: () => {
                 this.groupeService.rejectGroup(id).subscribe({
-                    next: () => {
-                        this.messageService.add({ severity: 'warn', summary: 'Rejected', detail: 'Group rejected' });
-                        this.actionLogService.log('REJECT_GROUP_SUCCESS', `Group ID ${id} rejected`).subscribe({
-                            next: () => console.log('Reject log sent'),
-                            error: err => console.error('Error logging reject:', err)
-                        });
-                        this.loadPendingGroups();
-                    },
-                    error: () => {
-                        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to reject group' });
-                    }
+                next: () => {
+                    this.messageService.add({ severity: 'warn', summary: 'Rejected', detail: 'Group rejected' });
+                    this.actionLogService.log('REJECT_GROUP_SUCCESS', `Group ID ${id} rejected`).subscribe();
+                    this.loadPendingGroups();
+                },
+                error: () => {
+                    this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to reject group' });
+                }
                 });
             }
-        });
+            });
+
     }
 }

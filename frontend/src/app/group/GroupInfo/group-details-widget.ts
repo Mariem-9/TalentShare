@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { Component, Input, OnInit, Output, EventEmitter } from "@angular/core";
+import { Component, Input, OnInit, Output, EventEmitter, SimpleChanges, OnChanges } from "@angular/core";
 import { Router } from "@angular/router";
 import { ButtonModule } from "primeng/button";
 import { FormsModule } from "@angular/forms";
@@ -98,18 +98,19 @@ import { GroupeService } from "../../services/GroupeService";
                 <button (click)="leaveGroup()" title="Leave the group" class="text-orange-500 hover:text-orange-700"> <i class="pi pi-sign-out"></i> </button>
             </ng-container>
         </div>
-        <p-confirmDialog></p-confirmDialog>
+        <p-confirmDialog [style]="{width: '500px'}"></p-confirmDialog>
         <p-toast></p-toast>
 
     `,
     providers: [ConfirmationService, MessageService]
 })
-export class GroupDetailsWidget implements OnInit {
+export class GroupDetailsWidget implements OnInit, OnChanges {
+    @Input() group!: any; //////
     @Input() groupId!: number;
     @Output() membershipChanged = new EventEmitter<void>();
 
 
-    group: any;
+    // group: any;
     avatarSrc?: string;
     isCreator: boolean = false;
     isMember: boolean = false;
@@ -128,6 +129,14 @@ export class GroupDetailsWidget implements OnInit {
     messageText = 'Profile updated!';
     messageSeverity: 'success' | 'info' | 'warn' | 'error' = 'success';
 
+    ngOnChanges(changes: SimpleChanges): void {
+        if (changes['group'] && this.group) {
+        const groupId = this.group.id;
+        this.loadGroup(groupId);
+        this.checkUserMembership(groupId);
+        }
+    }
+
 
     ngOnInit() {
         if (this.groupId) {
@@ -139,10 +148,15 @@ export class GroupDetailsWidget implements OnInit {
     loadGroup(id: number) {
         this.groupeService.getGroupeById(id).subscribe(group => {
         this.group = group;
+        console.log('[loadGroup] Group loaded:', group);
         if (group.avatarUrl) {
             const avatarId = this.extractIdFromAvatarUrl(group.avatarUrl);
+            console.log('[loadGroup] Extracted avatarId:', avatarId);
             this.loadAvatarBlob(avatarId);
-        }
+
+        } else {
+      console.warn('[loadGroup] No avatarUrl present');
+    }
         });
 
         this.groupeService.isUserGroupCreator(id).subscribe({
@@ -160,8 +174,12 @@ export class GroupDetailsWidget implements OnInit {
     }
 
     loadAvatarBlob(id: number) {
+        console.log('[loadAvatarBlob] Trying to load avatar with ID:', id);
         this.groupeService.getUserAvatarBlob(id).subscribe({
-        next: blob => this.avatarSrc = URL.createObjectURL(blob),
+        next: blob => {
+      this.avatarSrc = URL.createObjectURL(blob);
+      console.log('[loadAvatarBlob] Blob loaded, avatarSrc set to:', this.avatarSrc);
+    },
         error: err => {
             console.error('Failed to load avatar blob:', err);
             this.avatarSrc = undefined;
@@ -174,10 +192,12 @@ export class GroupDetailsWidget implements OnInit {
         message: 'Are you sure you want to delete this group?',
         header: 'Delete Confirmation',
         icon: 'pi pi-exclamation-triangle',
-        acceptLabel: 'Delete',
-        rejectLabel: 'Cancel',
-        rejectButtonStyleClass: 'p-button-danger',
-        accept: () => {
+        rejectLabel: 'Delete',
+        acceptLabel: 'Cancel',
+        acceptButtonStyleClass: 'p-button-danger',
+        closable: false,
+        dismissableMask: false,
+        reject: () => {
         this.groupeService.deleteGroupe(this.groupId).subscribe({
             next: () => {
             this.actionLogService.log('DELETE_GROUP', `Group ID ${this.groupId} deleted`).subscribe({
@@ -219,24 +239,24 @@ export class GroupDetailsWidget implements OnInit {
 
     saveGroup() {
 
-    const cleanGroup = {
-        nom: this.editedGroup.nom,
-        description: this.editedGroup.description,
-        tags: Array.isArray(this.editedGroup.tags) ? this.editedGroup.tags : []
-    };
+        const cleanGroup = {
+            nom: this.editedGroup.nom,
+            description: this.editedGroup.description,
+            tags: Array.isArray(this.editedGroup.tags) ? this.editedGroup.tags : []
+        };
 
-    this.groupeService.updateGroupe(this.groupId, cleanGroup).subscribe({
-        next: updated => {
-            this.group = updated;
-            this.isEditing = false;
-            setTimeout(() => {
-                this.actionLogService.log('UPDATE_GROUP_SUCCESS', `Group ID ${this.groupId} updated`).subscribe({
-                    error: err => console.error('Logging error:', err)
-                });
-            }, 0);
-        },
-        error: err => console.error('Update failed:', err)
-    });
+        this.groupeService.updateGroupe(this.groupId, cleanGroup).subscribe({
+            next: updated => {
+                this.group = updated;
+                this.isEditing = false;
+                setTimeout(() => {
+                    this.actionLogService.log('UPDATE_GROUP_SUCCESS', `Group ID ${this.groupId} updated`).subscribe({
+                        error: err => console.error('Logging error:', err)
+                    });
+                }, 0);
+            },
+            error: err => console.error('Update failed:', err)
+        });
     }
 
     uploadGroupAvatar(event: any) {
@@ -297,6 +317,7 @@ export class GroupDetailsWidget implements OnInit {
                 error: err => console.error('Logging error:', err)
             });
             this.checkUserMembership(this.groupId);
+            this.membershipChanged.emit();
         },
         error: err => {
             console.error('Join error:', err);
@@ -309,10 +330,12 @@ export class GroupDetailsWidget implements OnInit {
         message: 'Are you sure you want to leave this group?',
         header: 'Leave Group',
         icon: 'pi pi-sign-out',
-        acceptLabel: 'Leave',
-        rejectLabel: 'Cancel',
-        rejectButtonStyleClass: 'p-button-danger',
-        accept: () => {
+        rejectLabel: 'Leave',
+        acceptLabel: 'Cancel',
+        acceptButtonStyleClass: 'p-button-danger',
+        closable: false,
+        dismissableMask: false,
+        reject: () => {
         this.groupeService.leaveGroup(this.groupId).subscribe({
             next: () => {
             this.actionLogService.log('LEAVE_GROUP', `Left group ID ${this.groupId}`).subscribe({
@@ -336,8 +359,8 @@ export class GroupDetailsWidget implements OnInit {
             }
         });
         }
+
     });
     }
-
 
 }

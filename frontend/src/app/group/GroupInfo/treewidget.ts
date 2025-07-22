@@ -54,7 +54,7 @@ import { GroupeService } from '../../services/GroupeService';
         </ng-template>
     </p-tree>
     <p-toast></p-toast>
-    <p-confirmDialog></p-confirmDialog>
+    <p-confirmDialog [style]="{width: '500px'}"></p-confirmDialog>
 
     `,
     providers: [NodeService,ConfirmationService, MessageService]
@@ -203,10 +203,12 @@ export class Treewidget implements OnInit {
         message: 'Are you sure you want to reject this join request?',
         header: 'Confirm Rejection',
         icon: 'pi pi-times',
-        acceptLabel: 'Refuse',
-        rejectLabel: 'Cancel',
-        rejectButtonStyleClass: 'p-button-danger',
-        accept: () => {
+        acceptLabel: 'Cancel',
+        rejectLabel: 'Refuse',
+        acceptButtonStyleClass: 'p-button-danger',
+        closable: false,
+        dismissableMask: false,
+        reject: () => {
         this.groupeService.validateJoinRequest(this.groupId, userId, false).subscribe({
             next: () => {
             this.actionLogService.log('ACCEPT_JOIN_REQUEST', `Accepted user ${userId} into group ${this.groupId}`).subscribe({
@@ -247,10 +249,12 @@ export class Treewidget implements OnInit {
         message: 'Are you sure you want to demote this moderator to a member?',
         header: 'Confirm Demotion',
         icon: 'pi pi-user-minus',
-        acceptLabel: 'Demote',
-        rejectLabel: 'Cancel',
-        rejectButtonStyleClass: 'p-button-danger',
-        accept: () => {
+        acceptLabel: 'Cancel',
+        rejectLabel: 'Demote',
+        acceptButtonStyleClass: 'p-button-danger',
+        closable: false,
+        dismissableMask: false,
+        reject: () => {
         this.groupeService.demoteModeratorToMember(this.groupId, userId).subscribe({
             next: () => {
                 this.actionLogService.log('DEMOTE_TO_MEMBER', `User ${userId} demoted in group ${this.groupId}`);

@@ -15,8 +15,7 @@ import { GroupeService } from '../../services/GroupeService';
         <div class="bg-gradient-to-r from-orange-300 via-amber-300 to-yellow-200 text-white rounded-lg p-4 mb-6 font-extrabold text-2xl text-center drop-shadow-md">
             Recent Activity Log
         </div>
-        <img src="https://tse1.mm.bing.net/th/id/OIP.2VjxEQIBmuYk_lvW7ren7AHaCA?w=1920&h=520&rs=1&pid=ImgDetMain&o=7&rm=3" alt="log_activity"
-        class="max-h-64 max-w-6xl object-contain transition-transform duration-300 hover:scale-105 mx-auto block">
+        <img src="assets/images/log_activity.webp" alt="log_activity" class="max-h-64 max-w-6xl object-contain transition-transform duration-300 hover:scale-105 mx-auto block" />
         <p-table [value]="logs" [paginator]="true" [rows]="5" [sortField]="'createdAt'" [sortOrder]="-1">
             <ng-template pTemplate="header">
             <tr>

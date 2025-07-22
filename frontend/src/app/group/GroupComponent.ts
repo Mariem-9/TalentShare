@@ -19,13 +19,12 @@ import { GroupeService } from "../services/GroupeService";
     imports: [CommonModule,SplitterModule,FormsModule,DialogModule,FileUploadModule,ButtonModule,Treewidget,GroupDetailsWidget,
         GroupChatComponent,PollListComponent],
     template: `
-    <div class="card" style="height: 100vh; width: 100vw;" *ngIf="canSee">
+    <div class="card" style="height: 100vh; width: 100vw;" >
     <p-splitter [style]="{ height: '100%', width: '100%' }" [panelSizes]="[40, 67]" [minSizes]="[40, 30]" styleClass="mb-8 h-full">
         <ng-template pTemplate="panel">
             <div class="flex flex-col h-full">
                 <app-group-details-widget [groupId]="groupId" (membershipChanged)="onMembershipChanged()"></app-group-details-widget>
-                <img src="https://img.myloview.com/murals/strichfiguren-strichmannchen-familie-teamwork-puzzle-nr-373-400-159980606.jpg" alt="groups"
-                class="max-h-64 max-w-6xl object-contain transition-transform duration-300 hover:scale-105">
+                <img src="assets/images/groups.jpg" alt="groups" class="max-h-64 max-w-6xl object-contain transition-transform duration-300 hover:scale-105" />
                 <div class="flex flex-col h-full justify-center items-center p-4 text-center">
                     <div class="flex items-center justify-center mb-6">
                         <div class="h-0.5 w-20 bg-gradient-to-r from-amber-200 to-orange-500 mr-4"></div>
@@ -61,9 +60,6 @@ import { GroupeService } from "../services/GroupeService";
         </ng-template>
         </p-splitter>
     </div>
-    <p-dialog [visible]="!canSee" [modal]="true" [closable]="false" [draggable]="false" header="Accès en attente" [style]="{ width: '40vw' }">
-        <app-group-details-widget [groupId]="groupId" (membershipChanged)="onMembershipChanged()"> </app-group-details-widget>
-    </p-dialog>
     `,
     styles: [`
 
@@ -96,30 +92,10 @@ export class GroupComponent implements OnInit {
     constructor(private route: ActivatedRoute , private groupeService: GroupeService) {}
     ngOnInit() {
     this.groupId = +this.route.snapshot.paramMap.get('id')!;
-    this.checkUserRole();
+    console.log('Group ID from route:', this.groupId);
     }
-    onMembershipChanged() { this.treeWidget.loadStatus();  // This reloads the tree to reflect the member list update
+    onMembershipChanged() { this.treeWidget.loadStatus();
     }
-
-    checkUserRole() {
-  this.groupeService.getGroupMembersByRole(this.groupId).subscribe({
-    next: rolesMap => {
-      console.log('Roles map:', rolesMap);
-      const allRoles = Object.entries(rolesMap)
-        .filter(([role, users]: [string, any]) =>
-          users.some((u: any) => u.username === sessionStorage.getItem('username'))
-        )
-        .map(([role]) => role);
-      console.log('User roles:', allRoles);
-      this.canSee = allRoles.length > 0 && allRoles.some(role => role !== 'en_attente')
-      console.log('canSee:', this.canSee);
-    },
-    error: err => {
-      console.error('Failed to fetch group roles', err);
-      this.canSee = false;
-    }
-  });
-}
 
     onPollCreated(poll: PollResponse, type: string) {
         this.pollListComponent?.loadPolls();
