@@ -1,19 +1,7 @@
 import {
-  Badge,
-  BadgeModule
-} from "./chunk-D7OZH4FJ.js";
-import {
-  Ripple
-} from "./chunk-LQS6KMPZ.js";
-import {
   Tooltip,
   TooltipModule
-} from "./chunk-2XAMBQKQ.js";
-import {
-  AngleDownIcon,
-  AngleRightIcon,
-  BarsIcon
-} from "./chunk-QE5A7KK5.js";
+} from "./chunk-E5BEN2FK.js";
 import {
   RouterLink,
   RouterLinkActive,
@@ -22,25 +10,45 @@ import {
 import {
   zindexutils
 } from "./chunk-KGCNUND3.js";
+import {
+  Ripple
+} from "./chunk-CB4ABDIP.js";
 import "./chunk-5G7WYC4N.js";
 import {
+  AngleDownIcon,
+  AngleRightIcon,
+  BarsIcon
+} from "./chunk-GUKAVWKZ.js";
+import {
+  Badge,
+  BadgeModule
+} from "./chunk-SM2QRW2E.js";
+import {
   BaseComponent
-} from "./chunk-NDOH3XVI.js";
+} from "./chunk-GAOGTOUX.js";
 import {
   BaseStyle
-} from "./chunk-ST33SX5I.js";
+} from "./chunk-BBVS67UK.js";
+import "./chunk-PUQ7QXU5.js";
+import "./chunk-AY5GO2BG.js";
+import "./chunk-BENUO3ZQ.js";
 import {
   PrimeTemplate,
   SharedModule
-} from "./chunk-6TSMVDG5.js";
+} from "./chunk-HGXSYKDT.js";
 import {
   findSingle,
   focus,
   isTouchDevice,
   uuid
-} from "./chunk-5PLF4MFL.js";
-import "./chunk-AY5GO2BG.js";
-import "./chunk-BENUO3ZQ.js";
+} from "./chunk-PW4W4WIX.js";
+import {
+  findLastIndex,
+  isEmpty,
+  isNotEmpty,
+  isPrintableCharacter,
+  resolve
+} from "./chunk-KGZ7KM4L.js";
 import {
   CommonModule,
   DOCUMENT,
@@ -123,14 +131,6 @@ import {
   filter,
   interval
 } from "./chunk-ZSY7TSMJ.js";
-import "./chunk-XZINNT2E.js";
-import {
-  findLastIndex,
-  isEmpty,
-  isNotEmpty,
-  isPrintableCharacter,
-  resolve
-} from "./chunk-I4GRS3VG.js";
 import {
   __spreadProps,
   __spreadValues
@@ -742,7 +742,7 @@ var theme = ({
     z-index: 1;
     background: ${dt("menubar.submenu.background")};
     border: 1px solid ${dt("menubar.submenu.border.color")};
-    border-radius: ${dt("menubar.border.radius")};
+    border-radius: ${dt("menubar.submenu.border.radius")};
     box-shadow: ${dt("menubar.submenu.shadow")};
     color: ${dt("menubar.submenu.color")};
     flex-direction: column;

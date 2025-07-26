@@ -30,7 +30,7 @@ import { MessageService } from 'primeng/api';
                 <h2 class="text-xl font-bold mb-6">Create {{ pollType | titlecase }} Poll</h2>
                 <p-floatLabel class="mb-6">
                     <input pInputText id="question" type="text" [(ngModel)]="question" class="w-full"/>
-                    <label for="question">Poll Question</label>
+                    <label for="question">Poll Question </label>
                 </p-floatLabel>
                 <p-floatLabel class="mb-6 w-full">
                     <p-calendar id="endDate" [(ngModel)]="endDate" [showIcon]="true" [showButtonBar]="true"
@@ -38,34 +38,37 @@ import { MessageService } from 'primeng/api';
                     <label for="endDate">Closing Date</label>
                 </p-floatLabel>
                 <div *ngIf="pollType === 'scheduling'">
-                    <div *ngFor="let opt of options; let i = index" class="mb-6">
+                    <div *ngFor="let opt of options; let i = index" class="flex items-center mb-6 gap-2">
                         <p-floatLabel class="w-full">
                             <p-calendar [attr.id]="'option' + i" [(ngModel)]="options[i]" [showIcon]="true" [showButtonBar]="true" [showTime]="true" hourFormat="24"
                             dateFormat="dd/mm/yy" inputStyleClass="w-full" styleClass="w-full"> </p-calendar>
                             <label [attr.for]="'option' + i">Option {{ i + 1 }}</label>
                         </p-floatLabel>
+                        <button *ngIf="options.length > 2" pButton type="button" icon="pi pi-times" class="p-button-rounded p-button-text p-button-danger"
+                            (click)="removeOption(i)" title="Remove option" ></button>
                     </div>
+                    <button pButton type="button" icon="pi pi-plus" label="Add another option" class="p-button-text p-button-sm mb-3" (click)="addOption()" ></button>
                 </div>
                 <div *ngIf="pollType === 'decision'" class="mb-6">
                     <div class="flex flex-col gap-6">
                         <p-floatLabel>
-                            <input pInputText id="option1" type="text" value="Yes" readonly class="w-full bg-gray-100"/>
+                            <input pInputText id="option1" type="text" value="Yes" readonly disabled class="w-full bg-gray-100"/>
                             <label for="option1">Option 1</label>
                         </p-floatLabel>
                         <p-floatLabel>
-                            <input pInputText id="option2" type="text" value="I don't know" readonly class="w-full bg-gray-100" />
+                            <input pInputText id="option2" type="text" value="I don't know" readonly disabled class="w-full bg-gray-100" />
                             <label for="option2">Option 2</label>
                         </p-floatLabel>
                         <p-floatLabel>
-                            <input pInputText id="option3" type="text" value="No" readonly class="w-full bg-gray-100" />
+                            <input pInputText id="option3" type="text" value="No" readonly disabled class="w-full bg-gray-100" />
                             <label for="option3">Option 3</label>
                         </p-floatLabel>
                     </div>
                 </div>
                 <div *ngIf="pollType === 'rating'" class="mb-6">
                     <p-floatLabel>
-                        <input pInputText id="ratingDisplay" type="text" [value]="'★★★★★'" readonly class="w-full bg-gray-100" />
-                        <label for="ratingDisplay">Rating : 5-star scale</label>
+                        <input pInputText id="ratingDisplay" type="text" [value]="'Rated on a 5-Star Scale : ★★★★★'" readonly disabled class="w-full bg-gray-100" />
+                        <label for="ratingDisplay">Rating </label>
                     </p-floatLabel>
                 </div>
                 <div *ngIf="pollType !== 'rating' && pollType !== 'decision' && pollType !== 'scheduling'">

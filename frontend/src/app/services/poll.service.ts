@@ -79,4 +79,9 @@ export class PollService {
     return this.http.get<PollResponse[]>(`${this.baseUrl}/group/${groupId}`);
     }
 
+    getClosedPollsByGroup(groupId: number): Observable<PollResponse[]> {
+    return this.http.get<PollResponse[]>(`${this.baseUrl}/group/${groupId}/closed`);
+    }
+
+
 }
