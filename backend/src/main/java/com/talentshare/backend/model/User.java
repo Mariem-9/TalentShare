@@ -35,11 +35,13 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private boolean enabled;
 
+    @Transient
+    private String avatarUrl;
+
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "user")
     private Set<Authority> authorities = new HashSet<>();
 
     @OneToMany(mappedBy = "createur")
-//    @JsonBackReference
     @JsonIgnore
     private Set<Groupe> groupesCrees = new HashSet<>();
 

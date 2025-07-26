@@ -1,8 +1,10 @@
 package com.talentshare.backend.service;
 
+import com.talentshare.backend.exception.BusinessException;
 import com.talentshare.backend.model.Groupe;
 import com.talentshare.backend.model.GroupeMembre;
 import com.talentshare.backend.model.User;
+import com.talentshare.backend.repository.GroupeMembreRepository;
 import com.talentshare.backend.repository.GroupeRepository;
 import com.talentshare.backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -17,16 +19,53 @@ public class GroupeService {
 
     private final GroupeRepository groupeRepository;
     private final UserRepository userRepository;
+    private final GroupeMembreRepository groupeMembreRepository;
 
     public Groupe createGroupe(Groupe groupe, String username) {
         User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("Utilisateur introuvable"));
+                .orElseThrow(() -> new BusinessException("Utilisateur introuvable"));
         groupe.setCreateur(user);
-        return groupeRepository.save(groupe);
+        groupe.setStatus(Groupe.GroupStatus.PENDING);
+        Groupe savedGroupe = groupeRepository.save(groupe);
+        GroupeMembre membre = new GroupeMembre();
+        membre.setGroupe(savedGroupe);
+        membre.setUser(user);
+        membre.setRole(GroupeMembre.RoleGroupe.CREATEUR);
+
+        groupeMembreRepository.save(membre);
+
+        return savedGroupe;
+    }
+
+    public boolean isUserCreator(Long groupId, String username) {
+        Groupe groupe = groupeRepository.findById(groupId).orElse(null);
+        return groupe != null && groupe.getCreateur().getUsername().equals(username);
     }
 
     public List<Groupe> getAllGroupes() {
-        return groupeRepository.findAll();
+        return groupeRepository.findByStatus(Groupe.GroupStatus.APPROVED);
+    }
+    public List<Groupe> getPendingGroups() {
+        return groupeRepository.findByStatus(Groupe.GroupStatus.PENDING);
+    }
+    public Groupe validerGroupe(Long groupeId) {
+        Groupe groupe = groupeRepository.findById(groupeId)
+                .orElseThrow(() -> new BusinessException("Groupe introuvable"));
+        groupe.setStatus(Groupe.GroupStatus.APPROVED);
+        return groupeRepository.save(groupe);
+    }
+
+    public Groupe refuserGroupe(Long groupeId) {
+        Groupe groupe = groupeRepository.findById(groupeId)
+                .orElseThrow(() -> new BusinessException("Groupe introuvable"));
+        groupe.setStatus(Groupe.GroupStatus.REJECTED);
+        return groupeRepository.save(groupe);
+    }
+
+    public List<Groupe> getPendingGroupsForUser(String username) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new BusinessException("User not found"));
+        return groupeRepository.findByCreateurAndStatus(user, Groupe.GroupStatus.PENDING);
     }
 
     public Optional<Groupe> getGroupeById(Long id) {
@@ -35,46 +74,44 @@ public class GroupeService {
 
     public Groupe updateGroupe(Long id, Groupe updatedGroupe, String username) {
         Groupe groupe = groupeRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Groupe introuvable"));
+                .orElseThrow(() -> new BusinessException("Groupe introuvable"));
 
         if (!groupe.getCreateur().getUsername().equals(username)) {
-            throw new RuntimeException("Vous n'êtes pas autorisé à modifier ce groupe");
+            throw new BusinessException("Vous n'êtes pas autorisé à modifier ce groupe");
         }
 
         groupe.setNom(updatedGroupe.getNom());
         groupe.setDescription(updatedGroupe.getDescription());
-        groupe.setImageUrl(updatedGroupe.getImageUrl());
         groupe.setTags(updatedGroupe.getTags());
-
 
         return groupeRepository.save(groupe);
     }
 
     public void deleteGroupe(Long id, String username) {
         Groupe groupe = groupeRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Groupe introuvable"));
+                .orElseThrow(() -> new BusinessException("Groupe introuvable"));
 
         if (!groupe.getCreateur().getUsername().equals(username)) {
-            throw new RuntimeException("Suppression non autorisée");
+            throw new BusinessException("Suppression non autorisée");
         }
 
         groupeRepository.delete(groupe);
     }
     public List<Groupe> getGroupesCreesPar(String username) {
-        return groupeRepository.findAll().stream()
-                .filter(g -> g.getCreateur().getUsername().equals(username))
-                .toList();
+        return groupeRepository.findByCreateurUsernameAndStatus(username, Groupe.GroupStatus.APPROVED);
     }
 
     public List<Groupe> getGroupesRejointsPar(String username) {
-        return userRepository.findByUsername(username)
-                .map(User::getGroupesRejoints)
-                .orElseThrow(() -> new RuntimeException("User not found"))
-                .stream()
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new BusinessException("User not found"));
+
+        return user.getGroupesRejoints().stream()
                 .map(GroupeMembre::getGroupe)
+                .filter(groupe -> !groupe.getCreateur().getUsername().equals(username))
                 .distinct()
                 .toList();
     }
+
 
 }
 
