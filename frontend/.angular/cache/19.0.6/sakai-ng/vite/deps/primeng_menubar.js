@@ -1,29 +1,37 @@
 import {
-  Badge,
-  BadgeModule
-} from "./chunk-E25LCXDM.js";
-import {
   Tooltip,
   TooltipModule
-} from "./chunk-7HFUMWRC.js";
+} from "./chunk-E5BEN2FK.js";
+import {
+  RouterLink,
+  RouterLinkActive,
+  RouterModule
+} from "./chunk-3TV6XOL4.js";
 import {
   zindexutils
 } from "./chunk-KGCNUND3.js";
+import {
+  Ripple
+} from "./chunk-CB4ABDIP.js";
 import "./chunk-5G7WYC4N.js";
 import {
   AngleDownIcon,
   AngleRightIcon,
   BarsIcon
-} from "./chunk-3XAKYBTT.js";
+} from "./chunk-GUKAVWKZ.js";
 import {
-  Ripple
-} from "./chunk-CY7B2FVC.js";
+  Badge,
+  BadgeModule
+} from "./chunk-SM2QRW2E.js";
 import {
   BaseComponent
-} from "./chunk-HEDAPZGF.js";
+} from "./chunk-GAOGTOUX.js";
 import {
   BaseStyle
-} from "./chunk-ZVODFJRR.js";
+} from "./chunk-BBVS67UK.js";
+import "./chunk-PUQ7QXU5.js";
+import "./chunk-AY5GO2BG.js";
+import "./chunk-BENUO3ZQ.js";
 import {
   PrimeTemplate,
   SharedModule
@@ -33,15 +41,7 @@ import {
   focus,
   isTouchDevice,
   uuid
-} from "./chunk-5PLF4MFL.js";
-import {
-  RouterLink,
-  RouterLinkActive,
-  RouterModule
-} from "./chunk-3TV6XOL4.js";
-import "./chunk-AY5GO2BG.js";
-import "./chunk-BENUO3ZQ.js";
-import "./chunk-PUQ7QXU5.js";
+} from "./chunk-PW4W4WIX.js";
 import {
   findLastIndex,
   isEmpty,
@@ -742,7 +742,7 @@ var theme = ({
     z-index: 1;
     background: ${dt("menubar.submenu.background")};
     border: 1px solid ${dt("menubar.submenu.border.color")};
-    border-radius: ${dt("menubar.border.radius")};
+    border-radius: ${dt("menubar.submenu.border.radius")};
     box-shadow: ${dt("menubar.submenu.shadow")};
     color: ${dt("menubar.submenu.color")};
     flex-direction: column;

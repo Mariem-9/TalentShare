@@ -17,11 +17,11 @@ import { AvatarModule } from 'primeng/avatar';
     standalone: true,
         imports: [CommonModule, FormsModule, TableModule,ButtonModule, ConfirmDialogModule, ToastModule,AvatarModule,TagModule],
     template: `
-        <div *ngIf="groupes.length > 0" class="card p-4 rounded-xl shadow-md bg-white dark:bg-gray-800">
-            <div class="bg-gradient-to-r from-orange-300 via-amber-300 to-yellow-200 text-white rounded-lg p-4 mb-6 font-extrabold text-2xl text-center drop-shadow-md">
+        <div *ngIf="groupes.length > 0" class="card p-4 rounded-xl shadow-md bg-white dark:bg-gray-800" (groupCreated)="loadPendingGroups()">
+            <div class="bg-gradient-to-r from-blue-300 via-blue-400 to-blue-200 text-white rounded-lg p-4 mb-6 font-extrabold text-2xl text-center drop-shadow-md">
                 Groups Awaiting Approval
             </div>
-            <img src="assets/images/pending_request.jpg" alt="pending_request" class="max-h-64 max-w-6xl object-contain transition-transform duration-300 hover:scale-105 mx-auto block" />
+            <img src="assets/images/pending_request.png" alt="pending_request" class="max-h-64 max-w-6xl object-contain transition-transform duration-300 hover:scale-105 mx-auto block" />
             <p-table [value]="groupes" [scrollable]="true" scrollHeight="400px" styleClass="mt-4">
                 <ng-template pTemplate="header">
                     <tr>
@@ -64,7 +64,7 @@ import { AvatarModule } from 'primeng/avatar';
             </p-table>
         </div>
         <p-toast></p-toast>
-    <p-confirmDialog [style]="{width: '500px'}"></p-confirmDialog>
+    <p-confirmDialog [style]="{width: '40em'}"></p-confirmDialog>
     `,
     providers: [ConfirmationService, MessageService]
 })

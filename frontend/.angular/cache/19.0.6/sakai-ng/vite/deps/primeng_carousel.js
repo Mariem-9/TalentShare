@@ -1,23 +1,24 @@
 import {
   Button,
   ButtonModule
-} from "./chunk-NERQPXPM.js";
-import "./chunk-OWTOXKFH.js";
-import "./chunk-E25LCXDM.js";
+} from "./chunk-QD5INZLK.js";
+import "./chunk-CB4ABDIP.js";
+import "./chunk-2U7QDZYR.js";
 import "./chunk-5G7WYC4N.js";
 import {
   ChevronDownIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
   ChevronUpIcon
-} from "./chunk-3XAKYBTT.js";
-import "./chunk-CY7B2FVC.js";
+} from "./chunk-GUKAVWKZ.js";
+import "./chunk-SM2QRW2E.js";
 import {
   BaseComponent
-} from "./chunk-HEDAPZGF.js";
+} from "./chunk-GAOGTOUX.js";
 import {
   BaseStyle
-} from "./chunk-ZVODFJRR.js";
+} from "./chunk-BBVS67UK.js";
+import "./chunk-PUQ7QXU5.js";
 import {
   Footer,
   Header,
@@ -30,8 +31,7 @@ import {
   getAttribute,
   setAttribute,
   uuid
-} from "./chunk-5PLF4MFL.js";
-import "./chunk-PUQ7QXU5.js";
+} from "./chunk-PW4W4WIX.js";
 import "./chunk-KGZ7KM4L.js";
 import {
   CommonModule,
@@ -984,8 +984,8 @@ var Carousel = class _Carousel extends BaseComponent {
     if (!this.carouselStyle) {
       this.carouselStyle = this.renderer.createElement("style");
       this.carouselStyle.type = "text/css";
-      setAttribute(this.carouselStyle, "nonce", this.config?.csp()?.nonce);
       this.renderer.appendChild(this.document.head, this.carouselStyle);
+      setAttribute(this.carouselStyle, "nonce", this.config?.csp()?.nonce);
     }
     let innerHTML = `
             #${this.id} .p-carousel-item {

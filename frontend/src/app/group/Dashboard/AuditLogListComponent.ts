@@ -12,46 +12,48 @@ import { GroupeService } from '../../services/GroupeService';
     imports: [CommonModule, TableModule,TagModule,AvatarModule],
     template: `
         <div *ngIf="logs.length > 0" class="card p-4 rounded-xl shadow-md bg-white dark:bg-gray-800">
-        <div class="bg-gradient-to-r from-orange-300 via-amber-300 to-yellow-200 text-white rounded-lg p-4 mb-6 font-extrabold text-2xl text-center drop-shadow-md">
-            Recent Activity Log
-        </div>
-        <img src="assets/images/log_activity.webp" alt="log_activity" class="max-h-64 max-w-6xl object-contain transition-transform duration-300 hover:scale-105 mx-auto block" />
-        <p-table [value]="logs" [paginator]="true" [rows]="5" [sortField]="'createdAt'" [sortOrder]="-1">
-            <ng-template pTemplate="header">
-            <tr>
-                <th style="width: 140px;">Performed By</th>
-                <th>Action Type</th>
-                <th>Action Details</th>
-                <th>IP Address</th>
-                <th>Timestamp</th>
-            </tr>
-            </ng-template>
-            <ng-template pTemplate="body" let-log>
-            <tr>
-                <td>
-                    <div class="flex items-center gap-2">
-                        <p-avatar *ngIf="log.user?.avatarSafeUrl; else defaultAvatar" [image]="log.user.avatarSafeUrl" shape="circle" styleClass="bg-primary"
-                        [style.width.px]="28" [style.height.px]="28" ></p-avatar>
-                    <ng-template #defaultAvatar>
-                        <p-avatar [label]="log.user?.username?.charAt(0).toUpperCase() || '?'" shape="circle" styleClass="bg-secondary"
-                        [style.width.px]="28" [style.height.px]="28"></p-avatar>
-                    </ng-template>
-                    <span>{{ log.user?.username || 'Anonymous' }}</span>
-                    </div>
-                </td>
-                <td>{{ getFriendlyAction(log.action) }}</td>
-                <td>{{ log.context  }}</td>
-                <td> <p-tag [value]="log.ipAddress" [severity]="getColorForText(log.ipAddress)" class="text-xs" /></td>
-                <td>{{ log.createdAt | date: 'medium' }}</td>
-            </tr>
-            </ng-template>
-        </p-table>
+            <div class="bg-gradient-to-r from-blue-300 via-blue-400 to-blue-200 text-white rounded-lg p-4 mb-6 font-extrabold text-2xl text-center drop-shadow-md">
+                Recent Activity Log
+            </div>
+            <img src="assets/images/log_activity.png" alt="log_activity" class="max-h-64 max-w-6xl object-contain transition-transform duration-300 hover:scale-105 mx-auto block" />
+            <p-table #dt [value]="logs" [paginator]="true" [rows]="5" [sortField]="'createdAt'"[sortOrder]="-1" >
+                <ng-template pTemplate="header">
+                <tr>
+                    <th style="width: 140px;">Performed By</th>
+                    <th>Action Type</th>
+                    <th>Action Details</th>
+                    <th>IP Address</th>
+                    <th>Timestamp</th>
+                </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-log>
+                <tr>
+                    <td>
+                        <div class="flex items-center gap-2">
+                            <p-avatar *ngIf="log.user?.avatarSafeUrl; else defaultAvatar" [image]="log.user.avatarSafeUrl" shape="circle" styleClass="bg-primary"
+                            [style.width.px]="28" [style.height.px]="28" ></p-avatar>
+                        <ng-template #defaultAvatar>
+                            <p-avatar [label]="log.user?.username?.charAt(0).toUpperCase() || '?'" shape="circle" styleClass="bg-secondary"
+                            [style.width.px]="28" [style.height.px]="28"></p-avatar>
+                        </ng-template>
+                        <span>{{ log.user?.username || 'Anonymous' }}</span>
+                        </div>
+                    </td>
+                    <td>{{ getFriendlyAction(log.action) }}</td>
+                    <td>{{ log.context  }}</td>
+                    <td> <p-tag [value]="log.ipAddress" [severity]="getColorForText(log.ipAddress)" class="text-xs" /></td>
+                    <td>{{ log.createdAt | date: 'medium' }}</td>
+                </tr>
+                </ng-template>
+            </p-table>
+            <div class="text-center text-gray-500"> Page {{ (dt?.first ?? 0) / (dt?.rows ?? 1) + 1 }} of {{ Math.ceil(logs.length / (dt?.rows ?? 1)) }} </div>
         </div>
     `,
     })
     export class AuditLogListComponent implements OnInit {
     logs: any[] = [];
     colors = ['success', 'info', 'warning', 'danger', 'secondary'];
+    Math = Math;
 
     constructor(private actionLogService: ActionLogService ,private groupeService: GroupeService ) {}
 
@@ -64,6 +66,7 @@ import { GroupeService } from '../../services/GroupeService';
         error: err => console.error('Error loading logs:', err)
         });
     }
+
     getFriendlyAction(action: string): string {
         switch (action) {
             case 'ACCEPT_JOIN_REQUEST': return 'Accepted Join Request';

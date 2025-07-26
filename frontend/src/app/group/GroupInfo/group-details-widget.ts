@@ -21,7 +21,7 @@ import { GroupeService } from "../../services/GroupeService";
     imports: [CommonModule, FormsModule, DialogModule, FileUploadModule, ButtonModule,TagModule,InputTextModule,
         TextareaModule, MessageModule, ConfirmDialogModule, ToastModule],
     template: `
-        <div class="col flex items-start justify-center h-full gap-4 p-4">
+        <div class="col flex items-start justify-center h-full gap-2 p-2">
             <!-- Image or fallback icon -->
             <div (click)="isEditing && (showAvatarUpload = true)"
                 class="w-36 h-36 flex-shrink-0 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center text-gray-400 text-4xl">
@@ -60,11 +60,12 @@ import { GroupeService } from "../../services/GroupeService";
                         <input type="text" placeholder="Add tag" [(ngModel)]="newTag" (keydown.enter)="addTag()" class="border rounded px-2 py-1" style="border:none; outline:none;"/>
                     </div>
 
-                    <!-- Save / Cancel icons now moved under tags -->
-                    <div class="flex gap-4 mt-2 justify-end">
-                        <i class="pi pi-check text-green-600 cursor-pointer text-xl" title="Save" (click)="saveGroup()"></i>
-                        <i class="pi pi-times text-gray-600 cursor-pointer text-xl" title="Cancel" (click)="cancelEditGroup()"></i>
+                    <!-- Save / Cancel buttons -->
+                    <div class="flex gap-2 mt-4 justify-end">
+                        <button pButton type="button" icon="pi pi-check" class="p-button p-button-sm p-button-outlined p-button-success" (click)="saveGroup()" title="Save">save</button>
+                        <button pButton type="button" icon="pi pi-times" class="p-button p-button-sm p-button-outlined p-button-secondary" (click)="cancelEditGroup()" title="Cancel">cancel</button>
                     </div>
+
                 </div>
                 <!-- View mode -->
                 <ng-template #viewMode>
@@ -86,17 +87,29 @@ import { GroupeService } from "../../services/GroupeService";
 
             </div>
             <!-- Actions -->
-            <ng-container *ngIf="isCreator">
-                <button (click)="startEditGroup()" title="Editer" class="text-green-500 hover:text-green-700"> <i class="pi pi-pencil"></i> </button>
-                <button (click)="onDeleteGroup()" title="Delete Group" class="text-red-500 hover:text-red-700"> <i class="pi pi-trash"></i> </button>
-            </ng-container>
+            <div class="flex flex-wrap gap-2 mt-4 justify-start items-center">
+                <div class="flex gap-2 w-full">
+                    <ng-container *ngIf="isCreator">
+                        <button pButton type="button" icon="pi pi-pencil" class="p-button p-button-sm p-button-outlined p-button-secondary"
+                        (click)="startEditGroup()" title="Edit Group" > Edit </button>
+                        <button pButton type="button" icon="pi pi-trash" class="p-button p-button-sm p-button-outlined p-button-danger"
+                        (click)="onDeleteGroup()" title="Delete Group" > Delete </button>
+                    </ng-container>
+                </div>
             <ng-container *ngIf="!isCreator && !isMember && !isPending">
-                <button (click)="joinGroup()" title="Join the group" class="text-blue-500 hover:text-blue-700"> <i class="pi pi-user-plus"></i> </button>
+                <button pButton type="button" icon="pi pi-user-plus" class="p-button p-button-sm p-button-outlined p-button-info"
+                (click)="joinGroup()" title="Join Group" > Join </button>
             </ng-container>
-            <ng-container *ngIf="isPending"> <span class="text-gray-400 italic">Pending Request</span> </ng-container>
+
+            <ng-container *ngIf="isPending">
+                <span class="text-gray-400 italic">Pending Request</span>
+            </ng-container>
+
             <ng-container *ngIf="!isCreator && isMember">
-                <button (click)="leaveGroup()" title="Leave the group" class="text-orange-500 hover:text-orange-700"> <i class="pi pi-sign-out"></i> </button>
+                <button pButton type="button" icon="pi pi-sign-out" class="p-button p-button-sm p-button-outlined p-button-warning"
+                (click)="leaveGroup()" title="Leave Group" > Leave </button>
             </ng-container>
+            </div>
         </div>
         <p-confirmDialog [style]="{width: '500px'}"></p-confirmDialog>
         <p-toast></p-toast>
@@ -349,6 +362,7 @@ export class GroupDetailsWidget implements OnInit, OnChanges {
             });
             this.checkUserMembership(this.groupId);
             this.membershipChanged.emit();
+            this.router.navigate(['/home']);
             },
             error: err => {
             this.messageService.add({

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RadioButtonModule } from 'primeng/radiobutton';
@@ -21,7 +21,7 @@ import { RadioButtonModule } from 'primeng/radiobutton';
                 [inputId]="t.id"
                 name="pollType"
                 [value]="t.id"
-                [(ngModel)]="selectedType"
+                [(ngModel)]="selectedType" [styleClass]="'p-radiobutton-info'"
                 ></p-radiobutton>
                 <i [class]="t.icon + ' ml-2 mr-1'"></i>
                 <label [for]="t.id" class="cursor-pointer">{{ t.label }}</label>

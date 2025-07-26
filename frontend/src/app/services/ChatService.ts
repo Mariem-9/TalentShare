@@ -6,6 +6,7 @@ import { Client, IMessage } from '@stomp/stompjs';
 
 
 export interface ChatMessage {
+    id: number;
     groupId: number;
     senderUsername: string;
     senderAvatarUrl: string | null;
@@ -63,6 +64,17 @@ export class ChatService {
     });
     console.log('Message published:', content);
     }
+
+    editMessage(messageId: number, newContent: string): Observable<ChatMessage> {
+    return this.http.put<ChatMessage>(`http://localhost:8080/api/message/${messageId}`, newContent, {
+        headers: { 'Content-Type': 'text/plain' }
+    });
+    }
+
+    deleteMessage(messageId: number): Observable<void> {
+    return this.http.delete<void>(`http://localhost:8080/api/message/${messageId}`);
+    }
+
     getMessageHistory(groupId: number): Observable<ChatMessage[]> {
     if (!groupId) {
         throw new Error('Group ID is required');

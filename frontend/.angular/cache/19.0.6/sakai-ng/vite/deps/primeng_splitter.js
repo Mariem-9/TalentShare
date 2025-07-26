@@ -1,9 +1,10 @@
 import {
   BaseComponent
-} from "./chunk-HEDAPZGF.js";
+} from "./chunk-GAOGTOUX.js";
 import {
   BaseStyle
-} from "./chunk-ZVODFJRR.js";
+} from "./chunk-BBVS67UK.js";
+import "./chunk-PUQ7QXU5.js";
 import {
   PrimeTemplate,
   SharedModule
@@ -17,8 +18,7 @@ import {
   hasClass,
   isRTL,
   removeClass
-} from "./chunk-5PLF4MFL.js";
-import "./chunk-PUQ7QXU5.js";
+} from "./chunk-PW4W4WIX.js";
 import "./chunk-KGZ7KM4L.js";
 import {
   CommonModule,

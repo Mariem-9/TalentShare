@@ -80,7 +80,7 @@ import { GroupDetailsWidget } from '../GroupInfo/group-details-widget';
             </ng-template>
         </p-dialog>
         <p-toast></p-toast>
-        <p-confirmDialog [style]="{width: '500px'}"></p-confirmDialog>
+        <p-confirmDialog [style]="{width: '40em'}"></p-confirmDialog>
         <!-- Pending Join Request  -->
         <p-dialog [(visible)]="displayDialogDetails" [style]="{width: '40em'}"> <app-group-details-widget [group]="groupallowed" [groupId]="groupallowed?.id"></app-group-details-widget> </p-dialog>
     `,
@@ -113,6 +113,7 @@ export class NestedMenuComponent implements OnInit {
         });
 
     }
+
     loadDynamicMenu() {
     this.groupeService.getGroupesCrees().subscribe(createdGroups => {
         const createdGroupItems = createdGroups.map(g => ({

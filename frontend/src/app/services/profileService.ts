@@ -15,5 +15,15 @@ export class ProfileService {
 
     getGroupRecommendations(): Observable<any> {
     return this.http.get(`${this.apiUrl}/recommendations`);
-  }
+    }
+        getTalentOptions() {
+    return this.http.get<string[]>(`${this.apiUrl}/talents`);
+    }
+
+    getSkillOptions() {
+    return this.http.get<string[]>(`${this.apiUrl}/skills`);
+    }
+    getLanguageOptions() {
+    return this.http.get<string[]>(`${this.apiUrl}/languages`);
+    }
 }

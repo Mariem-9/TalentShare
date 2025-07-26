@@ -63,7 +63,7 @@ import { forkJoin, Observable } from 'rxjs';
         </div>
         <button *ngIf="!readonly"
             pButton type="button" icon="pi pi-inbox"
-            class="p-button p-button-sm p-button-outlined p-button-success"
+            class="p-button p-button-sm p-button-outlined p-button-info"
             (click)="
                 editing
                     ? submitEditedVote()
@@ -126,7 +126,7 @@ import { forkJoin, Observable } from 'rxjs';
         </div>
     </p-popover>
 
-    <p-confirmDialog header="Confirm Deletion" icon="pi pi-exclamation-triangle" [style]="{width: '500px'}"></p-confirmDialog>
+    <p-confirmDialog header="Confirm Deletion"  icon="pi pi-exclamation-triangle" [style]="{width: '40em'}" ></p-confirmDialog>
 
 `,
 styles: [`

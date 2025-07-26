@@ -155,7 +155,6 @@ import { Country } from '../service/customer.service';
                             <label for="checkOption3" class="ml-2">New York</label>
                         </div>
                     </div>
-
                     <div class="font-semibold text-xl">ToggleSwitch</div>
                     <p-toggleswitch [(ngModel)]="switchValue" />
                 </div>

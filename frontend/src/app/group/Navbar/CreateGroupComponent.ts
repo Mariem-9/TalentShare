@@ -27,7 +27,7 @@ import { GroupeService } from '../../services/GroupeService';
             <label for="groupTags">Add Tags</label>
             </p-floatlabel>
             <p-floatlabel>
-            <textarea pTextarea id="Description" [(ngModel)]="newGroup.description" [autoResize]="true" rows="3" cols="30" style="width: 100%;"></textarea>
+            <textarea pTextarea id="Description" [(ngModel)]="newGroup.description" [autoResize]="true" rows="5" cols="30" style="width: 100%;" maxlength="200"></textarea>
             <label for="Description">Description</label>
             </p-floatlabel>
         </div>

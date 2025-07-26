@@ -4,7 +4,7 @@ import { TreeModule } from 'primeng/tree';
 import { FormsModule } from '@angular/forms';
 import { TreeTableModule } from 'primeng/treetable';
 import { CommonModule } from '@angular/common';
-import { NodeService } from '../../pages/service/node.service';
+import { NodeService } from '../../services/node.service'
 import { AvatarModule } from 'primeng/avatar';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ToastModule } from 'primeng/toast';
@@ -54,9 +54,30 @@ import { GroupeService } from '../../services/GroupeService';
         </ng-template>
     </p-tree>
     <p-toast></p-toast>
-    <p-confirmDialog [style]="{width: '500px'}"></p-confirmDialog>
+    <p-confirmDialog [style]="{width: '40em'}" styleClass="custom-confirm-dialog"></p-confirmDialog>
 
     `,
+    styles: [`
+//     ::ng-deep .custom-confirm-dialog .p-confirm-dialog-message,
+// ::ng-deep .custom-confirm-dialog .p-confirm-dialog-header {
+//   font-size: 3rem !important; /* increase this for larger text */
+// }
+
+// ::ng-deep .custom-confirm-dialog .p-button {
+//   font-size: 1rem !important; /* make buttons text larger too */
+// }
+.p-confirm-dialog .p-confirm-dialog-message {
+  font-size: 1.2rem;
+  font-style: italic;
+}
+
+.p-confirm-dialog .p-dialog-header {
+  font-size: 1.3rem;
+  color: #003366;
+}
+
+
+    `],
     providers: [NodeService,ConfirmationService, MessageService]
 })
 export class Treewidget implements OnInit {

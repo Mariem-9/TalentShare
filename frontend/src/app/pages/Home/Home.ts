@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { NestedMenuComponent } from '../../group/Navbar/nested-menu-items.component';
 import {GroupRecommendationsComponent} from '../../group/Dashboard/group-recommendations.component';
 import { PendingGroupListComponent } from '../../group/Dashboard/PendingGroupListComponent';
@@ -13,16 +13,16 @@ import { AuditLogListComponent } from '../../group/Dashboard/AuditLogListCompone
     template: `
     <div class="min-h-screen bg-gray-50 dark:bg-gray-900 p-4">
         <div class="card min-h-32 p-4 pl-16 pr-16 rounded-lg shadow-md text-center bg-white dark:bg-gray-800 ">
-            <div class=" border-2 border-amber-200 rounded-lg p-2 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+            <div class=" border-2 border-blue-300 rounded-lg p-2 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                 <div class="animate-fadeIn px-16 w-[700px]">
-                    <h1 class="text-7xl font-extrabold tracking-tight text-amber-500 select-none leading-tight text-left">
+                    <h1 class="text-7xl font-extrabold tracking-tight text-blue-400 select-none leading-tight text-left">
                         TalentShare
                     </h1>
-                    <p class="text-base font-medium text-gray-600 dark:text-gray-300 tracking-wide text-right">
+                    <p class="text-base font-medium text-slate-500 dark:text-slate-300  tracking-wide text-right">
                         Join the hub where talents connect, collaborate, and create.
                     </p>
                 </div>
-                    <img src="assets/images/Home.jpg" alt="Home" class="max-h-64 max-w-6xl object-contain transition-transform duration-300 hover:scale-105 mx-auto block" />
+                    <img src="assets/images/Home.png" alt="Home" class="max-h-64 max-w-6xl object-contain transition-transform duration-300 hover:scale-105 mx-auto block" />
             </div>
         </div>
 
@@ -30,7 +30,7 @@ import { AuditLogListComponent } from '../../group/Dashboard/AuditLogListCompone
             <div class="col-span-12 xl:col-span-6 order-3 xl:order-2 space-y-6 overflow-auto">
                 <app-nested-menu></app-nested-menu>
                 <div *ngIf="roleAdmin">
-                    <app-pending-group-list></app-pending-group-list>
+                    <app-pending-group-list #pendingList></app-pending-group-list>
                     <app-audit-log-list></app-audit-log-list>
                 </div>
             </div>
