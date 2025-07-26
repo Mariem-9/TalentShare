@@ -13,8 +13,7 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.List;
@@ -42,5 +41,24 @@ public class ChatController {
     @GetMapping("/api/group/{groupId}/messages")
     public ResponseEntity<List<ChatMessage>> getGroupMessages(@PathVariable Long groupId) {
         return ResponseEntity.ok(chatService.getGroupMessages(groupId));
+    }
+
+    @PutMapping("/api/message/{messageId}")
+    public ResponseEntity<ChatMessage> editMessage(
+        @PathVariable Long messageId,
+        @RequestBody String newContent,
+        Principal principal) {
+
+        ChatMessage updatedMessage = chatService.editMessage(messageId, principal.getName(), newContent);
+        return ResponseEntity.ok(updatedMessage);
+    }
+
+    @DeleteMapping("/api/message/{messageId}")
+    public ResponseEntity<Void> deleteMessage(
+        @PathVariable Long messageId,
+        Principal principal) {
+
+        chatService.deleteMessage(messageId, principal.getName());
+        return ResponseEntity.noContent().build();
     }
 }
