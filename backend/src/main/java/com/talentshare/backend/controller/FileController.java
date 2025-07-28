@@ -51,6 +51,16 @@ public class FileController {
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
+    @PostMapping("/upload/moment")
+    public ResponseEntity<FileEntity> uploadMomentMedia(
+        @RequestParam("file") MultipartFile file,
+        Principal principal,
+        HttpServletRequest request
+    ) throws IOException {
+        FileEntity saved = fileService.uploadMomentMedia(file, principal, request);
+        return ResponseEntity.ok(saved);
+    }
+
 
 }
 

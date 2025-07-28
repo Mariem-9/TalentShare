@@ -182,4 +182,35 @@ public FileWithResource getFile(Long id, Principal principal) throws IOException
     public Optional<FileEntity> getFileEntity(Long id) {
         return fileRepository.findById(id);
     }
+
+
+    public FileEntity uploadMomentMedia(MultipartFile file, Principal principal, HttpServletRequest request) throws IOException {
+        Utilisateur utilisateur = utilisateurRepository.findByUser_Username(principal.getName())
+            .orElseThrow(() -> new BusinessException("Utilisateur introuvable"));
+
+        String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
+
+        PutObjectRequest putObjectRequest = PutObjectRequest.builder()
+            .bucket(bucketName)
+            .key(fileName)
+            .contentType(file.getContentType())
+            .build();
+
+        s3Client.putObject(putObjectRequest, RequestBody.fromInputStream(file.getInputStream(), file.getSize()));
+
+        FileEntity fileEntity = new FileEntity();
+        fileEntity.setFileName(file.getOriginalFilename());
+        fileEntity.setStoragePath(fileName);
+        fileEntity.setFileType(file.getContentType());
+        fileEntity.setSize(file.getSize());
+        fileEntity.setPrivate(false);
+        fileEntity.setUtilisateur(utilisateur);
+
+        fileRepository.save(fileEntity);
+
+        auditLogService.log("UPLOAD_MOMENT_MEDIA", "Media uploaded for moment by user " + utilisateur.getUser().getUsername(), request);
+
+        return fileEntity;
+    }
+
 }
