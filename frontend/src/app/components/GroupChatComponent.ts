@@ -13,13 +13,15 @@ import { TextareaModule } from 'primeng/textarea';
 import { AvatarModule } from 'primeng/avatar';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { MomentPublishComponent } from '../group/Moment/MomentPublishComponent';
 
 
 
 @Component({
     selector: 'app-group-chat-widget',
     standalone: true,
-    imports: [CommonModule, FormsModule,PickerModule,PollTypeSelectorComponent,PollPopupComponent,TextareaModule,AvatarModule, ConfirmDialogModule ],
+    imports: [CommonModule, FormsModule,PickerModule,PollTypeSelectorComponent,PollPopupComponent,TextareaModule,AvatarModule,
+        ConfirmDialogModule , MomentPublishComponent ],
     template: `
 
 <div class="flex flex-col h-full">
@@ -89,6 +91,9 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
                 <i class="pi pi-chart-bar text-2xl"></i>
                 </button>
 
+                <button type="button" (click)="toggleMomentPublish()" class="text-gray-500 hover:text-gray-600 focus:outline-none" style="background: transparent; border: none; padding: 0; cursor: pointer;"
+                aria-label="Publier un moment" > <i class="pi pi-paperclip text-2xl"></i></button>
+
                 <button
                 type="button"
                 (click)="toggleEmojiPicker()"
@@ -126,6 +131,8 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
     (nextStep)="onPollTypeNext($event)"
     ></app-poll-type-selector>
     <app-poll-popup *ngIf="selectedPollType" [pollType]="selectedPollType" [groupId]="groupId" (cancel)="onPollPopupCancel()"(created)="onPollCreated($event)"></app-poll-popup>
+    <app-moment-publish *ngIf="showMomentPublish" [groupeId]="groupId" (momentPublished)="onMomentPublished()"
+  (dialogClosed)="toggleMomentPublish()"></app-moment-publish>
 
 </div>
 <p-confirmDialog [style]="{width: '40em'}"></p-confirmDialog>
@@ -449,4 +456,17 @@ export class GroupChatComponent implements OnInit {
             this.newMessage = input.value;
         }
     }
+
+    showMomentPublish = false;
+    onMomentPublished() {
+  // Logic to refresh moments, show a success message, etc.
+  console.log('Moment published!');
+  this.toggleMomentPublish(); // Optionally hide the dialog after publishing
+}
+
+
+toggleMomentPublish() {
+  this.showMomentPublish = !this.showMomentPublish;
+}
+
 }

@@ -1,52 +1,49 @@
 import {
   Overlay
-} from "./chunk-6B67KQSK.js";
+} from "./chunk-AA3HJSD2.js";
 import {
   Scroller
-} from "./chunk-NL3N7JU4.js";
-import {
-  Chip
-} from "./chunk-YPCU45UC.js";
-import {
-  InputText
-} from "./chunk-PDJPXOHG.js";
-import "./chunk-SNRTQ2FG.js";
-import "./chunk-KGCNUND3.js";
+} from "./chunk-OOYSBZVF.js";
+import "./chunk-5BXJWBZI.js";
 import {
   Ripple
-} from "./chunk-CB4ABDIP.js";
+} from "./chunk-52XFHVSP.js";
+import {
+  Chip
+} from "./chunk-DDOPIIV5.js";
+import {
+  InputText
+} from "./chunk-PHTROHFN.js";
 import {
   AutoFocus
-} from "./chunk-2U7QDZYR.js";
-import "./chunk-5G7WYC4N.js";
+} from "./chunk-I6LAEDGY.js";
+import "./chunk-A77VGEMF.js";
+import "./chunk-ARGAFGVT.js";
 import {
   ChevronDownIcon,
   SpinnerIcon,
   TimesCircleIcon,
   TimesIcon
-} from "./chunk-GUKAVWKZ.js";
+} from "./chunk-OI3PJQRL.js";
 import {
   BaseComponent
-} from "./chunk-GAOGTOUX.js";
+} from "./chunk-VGW42CYQ.js";
 import {
   BaseStyle,
   PrimeNG
-} from "./chunk-BBVS67UK.js";
-import "./chunk-PUQ7QXU5.js";
-import {
-  NG_VALUE_ACCESSOR
-} from "./chunk-EQLVCSVF.js";
+} from "./chunk-EIU2ZUMI.js";
 import {
   OverlayService,
   PrimeTemplate,
   SharedModule,
   TranslationKeys
-} from "./chunk-HGXSYKDT.js";
+} from "./chunk-GYVKHKXY.js";
 import {
   findSingle,
   focus,
   uuid
 } from "./chunk-PW4W4WIX.js";
+import "./chunk-PUQ7QXU5.js";
 import {
   equals,
   findLastIndex,
@@ -55,13 +52,16 @@ import {
   resolveFieldData
 } from "./chunk-KGZ7KM4L.js";
 import {
+  NG_VALUE_ACCESSOR
+} from "./chunk-KKZBZWVY.js";
+import {
   CommonModule,
   NgClass,
   NgForOf,
   NgIf,
   NgStyle,
   NgTemplateOutlet
-} from "./chunk-YJMNELJC.js";
+} from "./chunk-DTN2HQ6V.js";
 import {
   ChangeDetectionStrategy,
   Component,
@@ -125,8 +125,8 @@ import {
   ɵɵtwoWayListener,
   ɵɵtwoWayProperty,
   ɵɵviewQuery
-} from "./chunk-XO6GGWRL.js";
-import "./chunk-ZSY7TSMJ.js";
+} from "./chunk-DLLQ2QWL.js";
+import "./chunk-OLYLR3PL.js";
 import "./chunk-3OV72XIM.js";
 
 // node_modules/primeng/fesm2022/primeng-autocomplete.mjs

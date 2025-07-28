@@ -13,12 +13,13 @@ import { PollResponse } from "../services/poll.service";
 import { PollListComponent } from "./Poll/PollListComponent";
 import { GroupeService } from "../services/GroupeService";
 import { PendingGroupListComponent } from "./Dashboard/PendingGroupListComponent";
+import { MomentCarouselComponent } from "./Moment/MomentListComponent";
 
 @Component({
     selector: 'app-group',
     standalone: true,
     imports: [CommonModule,SplitterModule,FormsModule,DialogModule,FileUploadModule,ButtonModule,Treewidget,GroupDetailsWidget,
-        GroupChatComponent,PollListComponent],
+        GroupChatComponent,PollListComponent,MomentCarouselComponent],
     template: `
     <div class="card" style="height: 100vh; width: 100vw;" >
     <p-splitter [style]="{ height: '100%', width: '100%' }" [panelSizes]="[40, 67]" [minSizes]="[40, 30]" styleClass="mb-8 h-full">
@@ -48,8 +49,15 @@ import { PendingGroupListComponent } from "./Dashboard/PendingGroupListComponent
                     <ng-template pTemplate="panel">
                         <div class="flex flex-col h-full min-h-0 w-full p-4">
                             <app-poll-list [groupId]="groupId"></app-poll-list>
+
                         </div>
                     </ng-template>
+                    <ng-template pTemplate="panel">
+  <div class="flex flex-col h-full min-h-0 w-full p-4">
+    <h3 class="mb-4 text-lg font-semibold">Moments</h3>
+    <app-moment-carousel [groupeId]="groupId"></app-moment-carousel>
+  </div>
+</ng-template>
                     <!-- <ng-template pTemplate="panel">
                         <p-splitter [panelSizes]="[50, 50]" >
                             <ng-template pTemplate="panel">
