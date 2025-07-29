@@ -13,12 +13,16 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MomentReaction {
+    public enum ReactionType {
+        LIKE, LOVE, WOW, SAD, ANGRY
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String type; // "like", "love", "wow"
+    @Enumerated(EnumType.STRING)
+    private ReactionType type;
 
     @ManyToOne
     @JoinColumn(name = "utilisateur_id")

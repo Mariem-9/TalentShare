@@ -1,5 +1,6 @@
 package com.talentshare.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -43,9 +44,11 @@ public class Moment {
     private LocalDateTime datePublication = LocalDateTime.now();
 
     @OneToMany(mappedBy = "moment", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private Set<MomentReaction> reactions = new HashSet<>();
 
     @OneToMany(mappedBy = "moment", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private Set<Commentaire> commentaires = new HashSet<>();
 }
 

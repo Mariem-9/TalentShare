@@ -1,5 +1,6 @@
 package com.talentshare.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -30,6 +31,7 @@ public class Commentaire {
 
     @ManyToOne
     @JoinColumn(name = "moment_id")
+    @JsonIgnore
     private Moment moment;
 }
 
