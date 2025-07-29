@@ -2,10 +2,8 @@ import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild, 
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ChatMessage, ChatService } from '../services/ChatService';
-import { PickerModule } from '@ctrl/ngx-emoji-mart';
 import { ActionLogService } from '../services/action-log.service';
 import { GroupeService } from '../services/GroupeService';
-
 import { PollResponse, PollService } from '../services/poll.service';
 import { PollTypeSelectorComponent } from '../group/Poll/PollTypeSelectorComponent';
 import { PollPopupComponent } from '../group/Poll/PollPopupComponent ';
@@ -14,14 +12,13 @@ import { AvatarModule } from 'primeng/avatar';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { MomentPublishComponent } from '../group/Moment/MomentPublishComponent';
-
-
+import { EmojiPickerComponent } from './EmojiPickerComponent';
 
 @Component({
     selector: 'app-group-chat-widget',
     standalone: true,
-    imports: [CommonModule, FormsModule,PickerModule,PollTypeSelectorComponent,PollPopupComponent,TextareaModule,AvatarModule,
-        ConfirmDialogModule , MomentPublishComponent ],
+    imports: [CommonModule, FormsModule,PollTypeSelectorComponent,PollPopupComponent,TextareaModule,AvatarModule,
+        ConfirmDialogModule , MomentPublishComponent,EmojiPickerComponent  ],
     template: `
 
 <div class="flex flex-col h-full">
@@ -94,15 +91,9 @@ import { MomentPublishComponent } from '../group/Moment/MomentPublishComponent';
                 <button type="button" (click)="toggleMomentPublish()" class="text-gray-500 hover:text-gray-600 focus:outline-none" style="background: transparent; border: none; padding: 0; cursor: pointer;"
                 aria-label="Publier un moment" > <i class="pi pi-paperclip text-2xl"></i></button>
 
-                <button
-                type="button"
-                (click)="toggleEmojiPicker()"
-                class="text-yellow-500 hover:text-yellow-600 focus:outline-none"
-                style="background: transparent; border: none; padding: 0; cursor: pointer;"
-                aria-label="Toggle emoji picker"
-                >
-                <i class="pi pi-thumbs-up text-2xl"></i>
-                </button>
+                <button type="button" (click)="showEmojiPicker = !showEmojiPicker" class="text-yellow-500 hover:text-yellow-600 focus:outline-none"
+                style="background: transparent; border: none; padding: 0; cursor: pointer;" aria-label="Toggle emoji picker" ><i class="pi pi-thumbs-up text-2xl"></i> </button>
+
                 <button
                 type="submit"
                 [disabled]="!websocketReady"
@@ -113,15 +104,7 @@ import { MomentPublishComponent } from '../group/Moment/MomentPublishComponent';
                 <i class="pi pi-send text-2xl"></i>
                 </button>
             </div>
-            <div *ngIf="showEmojiPicker" class="absolute bottom-16 right-4 z-10">
-                <emoji-mart
-                    *ngIf="showEmojiPicker"
-                    (emojiSelect)="addEmoji($event)"
-                    title="Pick an emoji"
-                    set="twitter"
-                    class="shadow-lg rounded-lg"
-                ></emoji-mart>
-            </div>
+            <div *ngIf="showEmojiPicker" class="absolute bottom-16 right-4 z-10"> <app-emoji-picker (emojiSelected)="addEmoji($event)"></app-emoji-picker></div>
             </div>
     </form>
 
@@ -132,76 +115,17 @@ import { MomentPublishComponent } from '../group/Moment/MomentPublishComponent';
     ></app-poll-type-selector>
     <app-poll-popup *ngIf="selectedPollType" [pollType]="selectedPollType" [groupId]="groupId" (cancel)="onPollPopupCancel()"(created)="onPollCreated($event)"></app-poll-popup>
     <app-moment-publish *ngIf="showMomentPublish" [groupeId]="groupId" (momentPublished)="onMomentPublished()"
-  (dialogClosed)="toggleMomentPublish()"></app-moment-publish>
+    (dialogClosed)="toggleMomentPublish()"></app-moment-publish>
 
 </div>
 <p-confirmDialog [style]="{width: '40em'}"></p-confirmDialog>
 
 `,
-encapsulation: ViewEncapsulation.None,
-styles: [`
-    /* Main container */
-    emoji-mart {
-        --bg-color: #f9fafb;
-        --text-color: #333;
-        --hover-color: #e0e7ff;
-        --border-color: #e5e7eb;
-    }
-
-    /* Override all emoji-mart elements */
-    emoji-mart .emoji-mart {
-        width: 280px !important;
-        background-color: var(--bg-color) !important;
-        border-radius: 10px !important;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.1) !important;
-        font-size: 14px !important;
-        border: 1px solid var(--border-color) !important;
-    }
-
-    /* Category labels (Frequently Used, Smileys & People, etc.) */
-    emoji-mart .emoji-mart-category-label {
-        background-color: var(--bg-color) !important;
-        color: var(--text-color) !important;
-    }
-
-    /* Individual emoji hover state */
-    emoji-mart .emoji-mart-emoji:hover::before {
-        background-color: var(--hover-color) !important;
-    }
-
-    /* Scroll area */
-    emoji-mart .emoji-mart-scroll {
-        background-color: var(--bg-color) !important;
-    }
-
-    /* All category sections */
-    emoji-mart .emoji-mart-category {
-        background-color: var(--bg-color) !important;
-    }
-
-    /* Emoji preview area */
-    emoji-mart .emoji-mart-preview {
-        background-color: var(--bg-color) !important;
-        border-top: 1px solid var(--border-color) !important;
-    }
-
-    /* Search bar */
-    emoji-mart .emoji-mart-search input {
-        background-color: var(--bg-color) !important;
-        color: var(--text-color) !important;
-        border: 1px solid var(--border-color) !important;
-    }
-
-    /* Fallback - remove any remaining dark backgrounds */
-    emoji-mart * {
-        background-color: var(--bg-color) !important;
-        color: var(--text-color) !important;
-    }
-`],
     providers: [ConfirmationService, MessageService]
 })
 export class GroupChatComponent implements OnInit {
     @ViewChild('scrollContainer') scrollContainer!: ElementRef<HTMLDivElement>;
+    @Output() momentPublishedEvent = new EventEmitter<void>();
 
     @Input() groupId!: number;
     messages: ChatMessage[] = [];
@@ -217,6 +141,7 @@ export class GroupChatComponent implements OnInit {
     editingMessageId: number | null = null;
     editingMessageContent: string = '';
     selectedMessageId: number | null = null;
+    showMomentPublish = false;
     @Output() pollCreated = new EventEmitter<{ poll: PollResponse; type: string }>();
 
 
@@ -414,14 +339,9 @@ export class GroupChatComponent implements OnInit {
     });
     }
 
-    toggleEmojiPicker() {
-    this.showEmojiPicker = !this.showEmojiPicker;
-    console.log('showEmojiPicker:', this.showEmojiPicker);
-    }
-
-    addEmoji(event: any) {
-    this.newMessage = (this.newMessage || '') + event.emoji.native;
-    this.showEmojiPicker = false;
+    addEmoji(emoji: string) {
+        this.newMessage += emoji;
+        this.showEmojiPicker = false;
     }
 
     onCreatePoll() {
@@ -457,16 +377,15 @@ export class GroupChatComponent implements OnInit {
         }
     }
 
-    showMomentPublish = false;
     onMomentPublished() {
-  // Logic to refresh moments, show a success message, etc.
-  console.log('Moment published!');
-  this.toggleMomentPublish(); // Optionally hide the dialog after publishing
-}
+    console.log('Moment published!');
+    this.toggleMomentPublish(); // Optionally hide the dialog after publishing
+    this.momentPublishedEvent.emit();
+    }
 
 
-toggleMomentPublish() {
-  this.showMomentPublish = !this.showMomentPublish;
-}
+    toggleMomentPublish() {
+    this.showMomentPublish = !this.showMomentPublish;
+    }
 
 }

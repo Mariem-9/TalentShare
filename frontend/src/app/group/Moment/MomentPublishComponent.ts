@@ -8,21 +8,28 @@ import { FloatLabelModule } from 'primeng/floatlabel';
 import { InputTextModule } from 'primeng/inputtext';
 import { TextareaModule } from 'primeng/textarea';
 import { Moment,MomentService } from '../../services/MomentService';
+import { EmojiPickerComponent } from '../../components/EmojiPickerComponent';
 
 @Component({
     selector: 'app-moment-publish',
     standalone: true,
-    imports: [ FormsModule, CommonModule, DialogModule, FloatLabelModule, FileUploadModule, ButtonModule, InputTextModule,TextareaModule],
+    imports: [ FormsModule, CommonModule, DialogModule, FloatLabelModule, FileUploadModule, ButtonModule, InputTextModule,
+        TextareaModule, EmojiPickerComponent],
     template: `
         <p-dialog header="Publish a Moment" [(visible)]="visible" [modal]="true" [style]="{ width: '40vw' }" (onHide)="onClose()">
-            <div class="flex flex-col gap-8 pt-6">
-                <p-floatlabel>
-                <textarea pTextarea id="momentContent" [(ngModel)]="momentText" [autoResize]="true" rows="5" cols="30" style="width: 100%;" maxlength="500"></textarea>
-                <label for="momentContent">What do you want to share?</label>
-                </p-floatlabel>
+            <div class="flex flex-col gap-8 pt-6 relative">
+                <div style="display: flex; align-items: center; gap: 0.5rem; width: 100%;">
+                    <p-floatlabel style="flex-grow: 1; margin-bottom: 0;">
+                    <textarea pTextarea id="momentContent" [(ngModel)]="momentText" [autoResize]="true" rows="1" cols="30" style="width: 100%;" maxlength="500"></textarea>
+                    <label for="momentContent">What do you want to share?</label>
+                    </p-floatlabel>
+                    <button type="button" (click)="showEmojiPicker = !showEmojiPicker"
+                    class="text-yellow-500 hover:text-yellow-600 focus:outline-none"
+                    style="background: transparent; border: none; padding: 0; cursor: pointer;"
+                    aria-label="Toggle emoji picker" ><i class="pi pi-thumbs-up text-2xl"></i> </button>
+                </div >
             </div>
             <hr class="my-2 border-t border-gray-300" />
-
             <div class="font-semibold text-xl mb-4 px-2">Add Media (optional)</div>
             <p-fileupload name="file" [customUpload]="true" [auto]="true" [multiple]="false" accept="image/*,video/*"
             maxFileSize="10000000" (uploadHandler)="onMediaUpload($event)">
@@ -42,7 +49,9 @@ import { Moment,MomentService } from '../../services/MomentService';
                     (click)="close()">Cancel</button>
                 </div>
             </ng-template>
+            <div *ngIf="showEmojiPicker" class="absolute bottom-16 right-4 z-10"> <app-emoji-picker (emojiSelected)="addEmoji($event)"></app-emoji-picker></div>
         </p-dialog>
+
 
     `
 })
@@ -54,6 +63,8 @@ export class MomentPublishComponent implements OnChanges {
     momentText: string = '';
     uploadedFiles: File[] = [];
     selectedFile?: File;
+    showEmojiPicker = false;
+
 
     @Output() momentPublished = new EventEmitter<void>();
     @Output() momentUpdated = new EventEmitter<Moment>();
@@ -122,8 +133,9 @@ export class MomentPublishComponent implements OnChanges {
         this.momentService.publishMoment(this.momentText, this.groupeId, mediaFileId).subscribe({
             next: (response) => {
             console.log('Moment published successfully, response:', response);
+            this.momentPublished.emit()
             this.close();
-            this.momentPublished.emit();
+            ;
             },
             error: (err) => {
             console.error('Failed to publish moment:', err);
@@ -154,5 +166,10 @@ export class MomentPublishComponent implements OnChanges {
 
     onClose() {
         this.close();
-        }
+    }
+
+    addEmoji(emoji: string) {
+        this.momentText += emoji;
+        this.showEmojiPicker = false;
+    }
 }

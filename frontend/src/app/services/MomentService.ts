@@ -4,15 +4,34 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 
-export interface Moment {
-  id: number;
-  texte: string;
-  groupe: any;
-  auteur: any;
-  media: any;
-  isPublic: boolean;
-  isApprovedByCreator: boolean;
-}
+    export interface Moment {
+        id: number;
+        texte: string;
+        groupe: any;
+        auteur: any;
+        media: any;
+        isPublic: boolean;
+        isApprovedByCreator: boolean;
+    }
+    export interface Commentaire {
+        id: number;
+        contenu: string;
+        dateCommentaire: string; // ISO string from backend
+        auteur: {
+            user: {
+            username: string;
+            }
+        };
+        moment: Moment;
+    }
+
+    export interface MomentReaction {
+        id: number;
+        type: string;
+        username: string;
+        momentId: number;
+    }
+
 
     @Injectable({
     providedIn: 'root'
@@ -39,24 +58,47 @@ export interface Moment {
         return this.http.get<Moment[]>(`${this.apiUrl}/group/${groupeId}`);
     }
 
-editMoment(momentId: number, texte: string, mediaId: number | null): Observable<Moment> {
-  const body = {
-    texte,
-    mediaId
-  };
-  return this.http.put<Moment>(`${this.apiUrl}/${momentId}`, body);
-}
-
-
+    editMoment(momentId: number, texte: string, mediaId: number | null): Observable<Moment> {
+        const body = { texte,  mediaId};
+        return this.http.put<Moment>(`${this.apiUrl}/${momentId}`, body);
+    }
 
     deleteMoment(momentId: number): Observable<void> {
         return this.http.delete<void>(`${this.apiUrl}/${momentId}`);
     }
 
+    getCommentsForMoment(momentId: number) {
+        return this.http.get<Commentaire[]>(`${this.apiUrl}/${momentId}/comments`);
+    }
 
-  getMomentsPublics(): Observable<Moment[]> {
-    return this.http.get<Moment[]>(`${this.apiUrl}/public`);
-  }
+    addCommentToMoment(momentId: number, contenu: string) {
+        return this.http.post<Commentaire>(`${this.apiUrl}/${momentId}/comments`, { contenu });
+    }
+
+    updateComment(momentId: number, commentId: number, contenu: string): Observable<any> {
+        return this.http.put(`${this.apiUrl}/${momentId}/comments/${commentId}`, { contenu });
+    }
+
+    deleteComment(momentId: number, commentId: number): Observable<any> {
+        return this.http.delete(`${this.apiUrl}/${momentId}/comments/${commentId}`);
+    }
+
+    reactToMoment(momentId: number, reactionType: string): Observable<MomentReaction> {
+        const params = new HttpParams().set('reaction', reactionType);
+        return this.http.post<MomentReaction>(`${this.apiUrl}/${momentId}/reactions`, null, { params });
+    }
+
+    removeReaction(momentId: number): Observable<void> {
+        return this.http.delete<void>(`${this.apiUrl}/${momentId}/reactions`);
+    }
+
+    getReactionsForMoment(momentId: number): Observable<MomentReaction[]> {
+        return this.http.get<MomentReaction[]>(`${this.apiUrl}/${momentId}/reactions`);
+    }
+
+    getMomentsPublics(): Observable<Moment[]> {
+        return this.http.get<Moment[]>(`${this.apiUrl}/public`);
+    }
 
   //file service
     uploadMomentFile(file: File): Observable<any> {

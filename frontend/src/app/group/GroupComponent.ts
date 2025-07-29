@@ -12,14 +12,14 @@ import { GroupChatComponent } from "../components/GroupChatComponent";
 import { PollResponse } from "../services/poll.service";
 import { PollListComponent } from "./Poll/PollListComponent";
 import { GroupeService } from "../services/GroupeService";
-import { PendingGroupListComponent } from "./Dashboard/PendingGroupListComponent";
 import { MomentCarouselComponent } from "./Moment/MomentListComponent";
+import { MomentPublishComponent } from "./Moment/MomentPublishComponent";
 
 @Component({
     selector: 'app-group',
     standalone: true,
     imports: [CommonModule,SplitterModule,FormsModule,DialogModule,FileUploadModule,ButtonModule,Treewidget,GroupDetailsWidget,
-        GroupChatComponent,PollListComponent,MomentCarouselComponent],
+        GroupChatComponent,PollListComponent,MomentCarouselComponent,MomentPublishComponent],
     template: `
     <div class="card" style="height: 100vh; width: 100vw;" >
     <p-splitter [style]="{ height: '100%', width: '100%' }" [panelSizes]="[40, 67]" [minSizes]="[40, 30]" styleClass="mb-8 h-full">
@@ -41,7 +41,7 @@ import { MomentCarouselComponent } from "./Moment/MomentListComponent";
         </ng-template>
         <ng-template pTemplate="panel">
         <div class="flex flex-col h-full w-full" style="min-height: 0;">
-            <app-group-chat-widget class="flex-grow h-full w-full"[groupId]="groupId" (pollCreated)="onPollCreated($event.poll, $event.type)" ></app-group-chat-widget>
+            <app-group-chat-widget class="flex-grow h-full w-full"[groupId]="groupId" (pollCreated)="onPollCreated($event.poll, $event.type)" (momentPublishedEvent)="reloadMoments()" ></app-group-chat-widget>
         </div>
         </ng-template>
         <ng-template pTemplate="panel">
@@ -54,7 +54,6 @@ import { MomentCarouselComponent } from "./Moment/MomentListComponent";
                     </ng-template>
                     <ng-template pTemplate="panel">
   <div class="flex flex-col h-full min-h-0 w-full p-4">
-    <h3 class="mb-4 text-lg font-semibold">Moments</h3>
     <app-moment-carousel [groupeId]="groupId"></app-moment-carousel>
   </div>
 </ng-template>
@@ -73,6 +72,8 @@ import { MomentCarouselComponent } from "./Moment/MomentListComponent";
         style="position: fixed; top: 10px; left: 50%; transform: translateX(-50%); z-index: 1000; width: 97%;
         background: linear-gradient(to right, #bfdbfe, #93c5fd, #60a5fa, #93c5fd, #bfdbfe); color: white; font-weight: bold; border-radius: 0.5rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);border: 2px solid #60a5fa;"
         type="button"></button>
+
+
     `,
     styles: [`
 
@@ -102,6 +103,7 @@ export class GroupComponent implements OnInit {
 
     @ViewChild('treeWidget') treeWidget!: Treewidget;
     @ViewChild(PollListComponent) pollListComponent!: PollListComponent;
+    @ViewChild(MomentCarouselComponent) momentCarousel!: MomentCarouselComponent;
 
     constructor(private route: ActivatedRoute , private groupeService: GroupeService ,private router: Router) {}
     ngOnInit() {
@@ -121,5 +123,10 @@ export class GroupComponent implements OnInit {
     onPollCreated(poll: PollResponse, type: string) {
         this.pollListComponent?.loadPolls();
     }
+    reloadMoments() {
+        this.momentCarousel.loadMoments();
+    }
+
+
 
 }
