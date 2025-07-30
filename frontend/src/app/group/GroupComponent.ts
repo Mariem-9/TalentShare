@@ -13,13 +13,11 @@ import { PollResponse } from "../services/poll.service";
 import { PollListComponent } from "./Poll/PollListComponent";
 import { GroupeService } from "../services/GroupeService";
 import { MomentCarouselComponent } from "./Moment/MomentListComponent";
-import { MomentPublishComponent } from "./Moment/MomentPublishComponent";
-
 @Component({
     selector: 'app-group',
     standalone: true,
     imports: [CommonModule,SplitterModule,FormsModule,DialogModule,FileUploadModule,ButtonModule,Treewidget,GroupDetailsWidget,
-        GroupChatComponent,PollListComponent,MomentCarouselComponent,MomentPublishComponent],
+        GroupChatComponent,PollListComponent,MomentCarouselComponent],
     template: `
     <div class="card" style="height: 100vh; width: 100vw;" >
     <p-splitter [style]="{ height: '100%', width: '100%' }" [panelSizes]="[40, 67]" [minSizes]="[40, 30]" styleClass="mb-8 h-full">

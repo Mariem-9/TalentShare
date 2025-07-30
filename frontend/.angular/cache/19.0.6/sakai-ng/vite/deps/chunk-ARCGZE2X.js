@@ -1,9 +1,4 @@
 import {
-  equals,
-  removeAccents,
-  resolveFieldData
-} from "./chunk-KGZ7KM4L.js";
-import {
   CommonModule
 } from "./chunk-DTN2HQ6V.js";
 import {
@@ -26,6 +21,11 @@ import {
 import {
   Subject
 } from "./chunk-OLYLR3PL.js";
+import {
+  equals,
+  removeAccents,
+  resolveFieldData
+} from "./chunk-I4GRS3VG.js";
 
 // node_modules/primeng/fesm2022/primeng-api.mjs
 var _c0 = ["*"];
@@ -943,4 +943,4 @@ export {
   TranslationKeys,
   TreeDragDropService
 };
-//# sourceMappingURL=chunk-GYVKHKXY.js.map
+//# sourceMappingURL=chunk-ARCGZE2X.js.map

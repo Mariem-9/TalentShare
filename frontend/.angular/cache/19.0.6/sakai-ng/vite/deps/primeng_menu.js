@@ -1,7 +1,16 @@
 import {
+  Tooltip,
+  TooltipModule
+} from "./chunk-FHZVWAYY.js";
+import {
+  RouterLink,
+  RouterLinkActive,
+  RouterModule
+} from "./chunk-WZPNNNJH.js";
+import {
   Badge,
   BadgeModule
-} from "./chunk-OXFH43ZQ.js";
+} from "./chunk-FT2FVYLZ.js";
 import {
   animate,
   style,
@@ -10,11 +19,7 @@ import {
 } from "./chunk-5BXJWBZI.js";
 import {
   Ripple
-} from "./chunk-52XFHVSP.js";
-import {
-  Tooltip,
-  TooltipModule
-} from "./chunk-6YO5524U.js";
+} from "./chunk-5U4LME4W.js";
 import {
   zindexutils
 } from "./chunk-A77VGEMF.js";
@@ -23,15 +28,15 @@ import {
 } from "./chunk-ARGAFGVT.js";
 import {
   BaseComponent
-} from "./chunk-VGW42CYQ.js";
+} from "./chunk-CZMB2PYF.js";
 import {
   BaseStyle
-} from "./chunk-EIU2ZUMI.js";
+} from "./chunk-5SJYZSHW.js";
 import {
   OverlayService,
   PrimeTemplate,
   SharedModule
-} from "./chunk-GYVKHKXY.js";
+} from "./chunk-ARCGZE2X.js";
 import {
   absolutePosition,
   appendChild,
@@ -42,13 +47,6 @@ import {
   relativePosition,
   uuid
 } from "./chunk-PW4W4WIX.js";
-import "./chunk-PUQ7QXU5.js";
-import "./chunk-KGZ7KM4L.js";
-import {
-  RouterLink,
-  RouterLinkActive,
-  RouterModule
-} from "./chunk-WZPNNNJH.js";
 import {
   DomSanitizer
 } from "./chunk-ZAPAWEBR.js";
@@ -127,6 +125,8 @@ import {
   ɵɵviewQuery
 } from "./chunk-DLLQ2QWL.js";
 import "./chunk-OLYLR3PL.js";
+import "./chunk-XZINNT2E.js";
+import "./chunk-I4GRS3VG.js";
 import "./chunk-3OV72XIM.js";
 
 // node_modules/primeng/fesm2022/primeng-menu.mjs

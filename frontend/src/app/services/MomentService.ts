@@ -16,7 +16,7 @@ import { Observable } from 'rxjs';
     export interface Commentaire {
         id: number;
         contenu: string;
-        dateCommentaire: string; // ISO string from backend
+        dateCommentaire: string;
         auteur: {
             user: {
             username: string;
@@ -42,10 +42,11 @@ import { Observable } from 'rxjs';
 
     constructor(private http: HttpClient) { }
 
-    publishMoment(texte: string, groupeId: number, mediaFileId?: number): Observable<Moment> {
+    publishMoment(texte: string, groupeId: number, mediaFileId?: number, isPublic: boolean = false): Observable<Moment> {
         let params = new HttpParams()
         .set('texte', texte)
-        .set('groupeId', groupeId);
+        .set('groupeId', groupeId)
+        .set('isPublic', isPublic.toString());
 
         if (mediaFileId !== undefined) {
         params = params.set('mediaFileId', mediaFileId);
@@ -58,9 +59,9 @@ import { Observable } from 'rxjs';
         return this.http.get<Moment[]>(`${this.apiUrl}/group/${groupeId}`);
     }
 
-    editMoment(momentId: number, texte: string, mediaId: number | null): Observable<Moment> {
-        const body = { texte,  mediaId};
-        return this.http.put<Moment>(`${this.apiUrl}/${momentId}`, body);
+    editMoment(momentId: number, texte: string, mediaId: number | null, isPublic: boolean): Observable<Moment> {
+    const body = { texte, mediaId, isPublic };
+    return this.http.put<Moment>(`${this.apiUrl}/${momentId}`, body);
     }
 
     deleteMoment(momentId: number): Observable<void> {
@@ -96,9 +97,17 @@ import { Observable } from 'rxjs';
         return this.http.get<MomentReaction[]>(`${this.apiUrl}/${momentId}/reactions`);
     }
 
-    getMomentsPublics(): Observable<Moment[]> {
-        return this.http.get<Moment[]>(`${this.apiUrl}/public`);
+    approveMoment(momentId: number): Observable<Moment> {
+        return this.http.put<Moment>(`${this.apiUrl}/${momentId}/approve`, {});
     }
+
+    rejectMoment(momentId: number): Observable<void> {
+        return this.http.put<void>(`${this.apiUrl}/${momentId}/reject`, {});
+    }
+
+    getMomentsPublics(): Observable<Moment[]> {
+            return this.http.get<Moment[]>(`${this.apiUrl}/public`);
+        }
 
   //file service
     uploadMomentFile(file: File): Observable<any> {

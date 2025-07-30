@@ -3,7 +3,6 @@ import {
   hasClass,
   removeClass
 } from "./chunk-PW4W4WIX.js";
-import "./chunk-KGZ7KM4L.js";
 import {
   Directive,
   ElementRef,
@@ -22,6 +21,7 @@ import {
   ɵɵlistener
 } from "./chunk-DLLQ2QWL.js";
 import "./chunk-OLYLR3PL.js";
+import "./chunk-I4GRS3VG.js";
 import "./chunk-3OV72XIM.js";
 
 // node_modules/primeng/fesm2022/primeng-styleclass.mjs

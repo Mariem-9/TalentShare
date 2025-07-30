@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component} from '@angular/core';
 import { NestedMenuComponent } from '../../group/Navbar/nested-menu-items.component';
 import {GroupRecommendationsComponent} from '../../group/Dashboard/group-recommendations.component';
 import { PendingGroupListComponent } from '../../group/Dashboard/PendingGroupListComponent';
@@ -6,10 +6,12 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { AuditLogListComponent } from '../../group/Dashboard/AuditLogListComponent';
+import { PublicMomentsComponent } from '../../group/Dashboard/PublicMomentsComponent';
 
 @Component({
     selector: 'app-home',
-    imports: [CommonModule, FormsModule, NestedMenuComponent, GroupRecommendationsComponent,PendingGroupListComponent,AuditLogListComponent],
+    imports: [CommonModule, FormsModule, NestedMenuComponent, GroupRecommendationsComponent,PendingGroupListComponent,
+            AuditLogListComponent,PublicMomentsComponent],
     template: `
     <div class="min-h-screen bg-gray-50 dark:bg-gray-900 p-4">
         <div class="card min-h-32 p-4 pl-16 pr-16 rounded-lg shadow-md text-center bg-white dark:bg-gray-800 ">
@@ -38,6 +40,9 @@ import { AuditLogListComponent } from '../../group/Dashboard/AuditLogListCompone
                 <div class="card p-4 min-h-80 rounded-lg shadow-md bg-white dark:bg-gray-800 animate-fadeIn order-2">
                 <app-group-recommendations></app-group-recommendations>
                 </div>
+                <div class="card p-4 min-h-80 rounded-lg shadow-md bg-white dark:bg-gray-800 animate-fadeIn order-2">
+                <app-public-moments></app-public-moments>
+                </div>
             </div>
 
         </div>
@@ -45,7 +50,10 @@ import { AuditLogListComponent } from '../../group/Dashboard/AuditLogListCompone
             <div class="space-y-6 mt-6 gap-6">
                 <app-nested-menu></app-nested-menu>
                 <div class="h-4"></div>
-                <app-group-recommendations></app-group-recommendations>
+                <div class="grid grid-cols-12 gap-2">
+                    <div class="col-span-12 xl:col-span-6"> <app-group-recommendations></app-group-recommendations></div>
+                    <div class="col-span-12 xl:col-span-6"> <app-public-moments></app-public-moments></div>
+                </div>
             </div>
         </ng-template>
     </div>

@@ -27,6 +27,10 @@ import { EmojiPickerComponent } from '../../components/EmojiPickerComponent';
                     class="text-yellow-500 hover:text-yellow-600 focus:outline-none"
                     style="background: transparent; border: none; padding: 0; cursor: pointer;"
                     aria-label="Toggle emoji picker" ><i class="pi pi-thumbs-up text-2xl"></i> </button>
+                    <button type="button" (click)="toggleVisibility()"
+                    [title]="isPublic ? 'Moment will be public' : 'Moment will be private'" class="text-blue-500 hover:text-blue-600 focus:outline-none"
+                    style="background: transparent; border: none; padding: 0; cursor: pointer;">
+                    <i [ngClass]="isPublic ? 'pi pi-eye' : 'pi pi-lock'" class="text-2xl"></i> </button>
                 </div >
             </div>
             <hr class="my-2 border-t border-gray-300" />
@@ -65,6 +69,9 @@ export class MomentPublishComponent implements OnChanges {
     selectedFile?: File;
     showEmojiPicker = false;
 
+    public isPublic: boolean = false;
+
+
 
     @Output() momentPublished = new EventEmitter<void>();
     @Output() momentUpdated = new EventEmitter<Moment>();
@@ -74,12 +81,19 @@ export class MomentPublishComponent implements OnChanges {
 
     ngOnChanges(changes: SimpleChanges) {
     if (changes['momentToEdit'] && this.momentToEdit) {
-      this.momentText = this.momentToEdit.texte;
-      this.uploadedFiles = [];
-      this.selectedFile = undefined;
+        // console.log('momentToEdit object:', this.momentToEdit);
+        this.momentText = this.momentToEdit.texte;
+        this.isPublic = (this.momentToEdit as any).public ?? this.momentToEdit.isPublic;
+        // console.log('Editing moment isPublic:', this.isPublic);
+        this.uploadedFiles = [];
+        this.selectedFile = undefined;
       // You may also want to handle existing media display if needed
     }
-  }
+    }
+    toggleVisibility() {
+        this.isPublic = !this.isPublic;
+    // console.log("isPublic toggled to:", this.isPublic);
+    }
 
     onMediaUpload(event: any) {
         const file = event.files?.[0];
@@ -125,12 +139,13 @@ export class MomentPublishComponent implements OnChanges {
     }
 
     private _publishWithMedia(mediaFileId?: number) {
-        console.log('Preparing to call publishMoment API with:');
-        console.log('Texte:', this.momentText);
-        console.log('GroupeId:', this.groupeId);
-        console.log('MediaFileId:', mediaFileId);
+        // console.log('🔼 Sending NEW moment:');
+        // console.log('Texte:', this.momentText);
+        // console.log('GroupeId:', this.groupeId);
+        // console.log('MediaFileId:', mediaFileId);
+        // console.log('isPublic:', this.isPublic);
 
-        this.momentService.publishMoment(this.momentText, this.groupeId, mediaFileId).subscribe({
+        this.momentService.publishMoment(this.momentText, this.groupeId, mediaFileId,this.isPublic).subscribe({
             next: (response) => {
             console.log('Moment published successfully, response:', response);
             this.momentPublished.emit()
@@ -144,7 +159,13 @@ export class MomentPublishComponent implements OnChanges {
         });
     }
     private _editMoment(mediaId: number | null) {
-        this.momentService.editMoment(this.momentToEdit!.id, this.momentText, mediaId).subscribe({
+        // console.log('✏️ Editing moment with:');
+        // console.log('MomentId:', this.momentToEdit!.id);
+        // console.log('Texte:', this.momentText);
+        // console.log('MediaId:', mediaId);
+        // console.log('isPublic:', this.isPublic);
+
+        this.momentService.editMoment(this.momentToEdit!.id, this.momentText, mediaId,this.isPublic).subscribe({
             next: (updatedMoment) => {
             this.momentUpdated.emit(updatedMoment);
             this.close();

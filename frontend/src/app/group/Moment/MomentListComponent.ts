@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Moment, MomentService } from '../../services/MomentService';
 import { CarouselModule } from 'primeng/carousel';
@@ -11,41 +11,59 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { MomentPublishComponent } from './MomentPublishComponent';
 import { MomentCommentsComponent } from './MomentCommentsComponent';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
 
 
 @Component({
     selector: 'app-moment-carousel',
     standalone: true,
     imports: [CommonModule, CarouselModule,DialogModule ,ButtonModule, ConfirmDialogModule ,MomentPublishComponent,
-        MomentCommentsComponent],
+        MomentCommentsComponent,OverlayPanelModule],
     template: `
-<div class="w-[400px] mx-auto  flex flex-col items-center justify-center mb-2 border border-blue-200 rounded-md p-2">
-  <p class="text-2xl font-semibold text-gray-800 mb-0">Moments</p>
-  <p class="text-sm text-gray-500 mt-0">Capture. React. Remember.</p>
-</div>
-
-
-
-
-
+    <div class="w-[400px] mx-auto  flex flex-col items-center justify-center mb-2 border border-blue-200 rounded-md p-2">
+        <p class="text-2xl font-semibold text-gray-800 mb-0">Moments</p>
+        <p class="text-sm text-gray-500 mt-0">Capture. React. Remember.</p>
+    </div>
 
     <p-carousel [value]="moments" [numVisible]="1" [numScroll]="1" [circular]="false"
     [autoplayInterval]="0" [showIndicators]="true" [style.margin]="'auto'" *ngIf="moments.length > 0">
         <ng-template let-moment pTemplate="item">
-            <div class="card flex flex-col gap-4 p-4 shadow-md rounded-md max-w-md mx-auto">
-                <div *ngIf="mediaUrls[moment.id] && moment.media" class="mb-4 border rounded-lg ">
-                    <div class="relative mx-auto h-52 bg-gray-100 rounded-lg overflow-hidden">
-                        <ng-container *ngIf="mediaUrls[moment.id]">
-                            <img *ngIf="moment.media.fileType?.startsWith('image/')" [src]="mediaUrls[moment.id]" [alt]="moment.texte"
-                            class="w-full h-full object-cover rounded-lg cursor-pointer" (click)="openMediaModal(mediaUrls[moment.id], 'image')" />
-                            <video *ngIf="moment.media.fileType?.startsWith('video/')" controls class="w-full h-full object-cover rounded-lg cursor-pointer"
-                            (click)="openMediaModal(mediaUrls[moment.id], 'video')">
-                            <source [src]="mediaUrls[moment.id]" [type]="moment.media.fileType" /> Votre navigateur ne supporte pas la vidéo.</video>
-                        </ng-container>
+            <div class="card flex flex-col gap-1 p-2 shadow-md rounded-md max-w-md mx-auto w-[28rem] h-96  ">
+                <div class="flex-grow ">
+                    <div *ngIf="mediaUrls[moment.id] && moment.media" class="mb-4 border rounded-lg ">
+                        <div  class="relative mx-auto h-48 bg-gray-100 rounded-lg overflow-hidden">
+                            <ng-container *ngIf="mediaUrls[moment.id]">
+                                <img *ngIf="moment.media.fileType?.startsWith('image/')" [src]="mediaUrls[moment.id]" [alt]="moment.texte"
+                                class="w-full h-full object-cover rounded-lg cursor-pointer" (click)="openMediaModal(mediaUrls[moment.id], 'image')" />
+                                <video *ngIf="moment.media.fileType?.startsWith('video/')" controls class="w-full h-full object-cover rounded-lg cursor-pointer"
+                                (click)="openMediaModal(mediaUrls[moment.id], 'video')">
+                                <source [src]="mediaUrls[moment.id]" [type]="moment.media.fileType" /> Votre navigateur ne supporte pas la vidéo.</video>
+                            </ng-container>
+                            </div>
                         </div>
+                        <div class="w-full h-full flex" [ngClass]="{ 'justify-center items-center text-center': !moment.media || !mediaUrls[moment.id] }">
+                            <ng-container >
+                                <div class="text-base text-gray-800 leading-relaxed mb-1">
+                                    <span class="font-semibold">{{ getTruncatedText(moment) }}</span>
+                                    <button *ngIf="shouldShowReadMore(moment)" (click)="openReadMoreModal(moment)"
+                                        class="text-blue-600 text-sm mt-1 underline hover:text-blue-800"> Read more </button>
+
+                                    <div class="text-sm text-gray-600 mt-1 italic flex justify-end items-center gap-1">
+                                        <ng-container *ngIf="isAuthor(moment); else notAuthor">
+                                            <i *ngIf="!moment.public" class="pi pi-lock text-red-400 ml-2" title="Private"></i>
+                                            <i *ngIf="moment.public && !moment.approvedByCreator" class="pi pi-clock text-yellow-500 ml-2" title="Pending approval"></i>
+                                            <i *ngIf="moment.public && moment.approvedByCreator" class="pi pi-globe text-blue-500 ml-2" title="Public"></i>
+                                        </ng-container>
+                                        <ng-template #notAuthor>
+                                            <i class="pi pi-user mr-1 text-[8px]" title="Author"></i>
+                                        </ng-template>
+                                            {{ moment.auteur.user.username }}, {{ moment.groupe?.nom || 'Not specified' }} · {{ moment.datePublication | date:'longDate' }}
+                                    </div>
+                                </div>
+                            </ng-container>
                     </div>
-                    <div class="mb-4 font-medium">{{ moment.texte }}</div>
-                    <div class="flex items-center justify-between text-sm text-gray-600 mt-4">
+                </div>
+                    <div class="flex items-center justify-end text-sm text-gray-600 mt-4">
                         <div class="flex items-center gap-3">
                             <ng-container>
                                 <div class="relative">
@@ -65,8 +83,19 @@ import { MomentCommentsComponent } from './MomentCommentsComponent';
                                 <button pButton type="button" icon="pi pi-trash" class="p-button p-button-sm p-button-outlined p-button-danger"
                                     (click)="deleteMoment(moment)"> </button>
                             </ng-container>
+                             <ng-container *ngIf="moment.public && !moment.approvedByCreator && isGroupCreator(moment)">
+                                <button type="button" pButton icon="pi pi-ellipsis-v" class="p-button p-button-sm p-button-outlined p-button-secondary"
+                                    (click)="menu.toggle($event)" title="Actions"> </button>
+                                <p-overlayPanel #menu [showCloseIcon]="true">
+                                    <div class="flex flex-col gap-2">
+                                        <button pButton type="button" icon="pi pi-globe" class="p-button p-button-sm p-button-outlined p-button-success"
+                                            (click)="approveMoment(moment.id); menu.hide()"> Go Public </button>
+                                        <button pButton type="button" icon="pi pi-times" class="p-button p-button-sm p-button-outlined p-button-danger"
+                                            (click)="rejectMoment(moment.id); menu.hide()"> Keep Private </button>
+                                    </div>
+                                </p-overlayPanel>
+                            </ng-container>
                         </div>
-                        <div class="text-center"> <i class="pi pi-user mr-1 text-[8px]"></i> Par {{ moment.auteur.user.username }}<br> {{ moment.datePublication | date:'short' }} </div>
                 </div>
             </div>
         </ng-template>
@@ -78,7 +107,10 @@ import { MomentCommentsComponent } from './MomentCommentsComponent';
     </div>
 
     <p-dialog [(visible)]="isMediaModalVisible" modal="true" [closable]="true" (onHide)="closeMediaModal()" [style]="{width: '80vw', maxWidth: '700px'}">
-        <ng-container *ngIf="selectedMediaType === 'image'">
+        <div *ngIf="selectedText?.trim()" class="mb-4 text-gray-800 text-base whitespace-pre-line border border-gray-300 rounded-md p-3 bg-gray-50">
+            {{ selectedText }}
+        </div>
+    <ng-container *ngIf="selectedMediaType === 'image'">
             <img [src]="selectedMedia" alt="Image agrandie" class="w-full h-auto rounded-lg" />
         </ng-container>
         <ng-container *ngIf="selectedMediaType === 'video'">
@@ -132,6 +164,8 @@ export class MomentCarouselComponent implements OnInit {
         '😢': 'SAD',
         '👎': 'ANGRY'
     };
+    selectedText: string = '';
+    selectedMoment: Moment | null = null;
 
     constructor(private momentService: MomentService, private groupeService: GroupeService
         ,private sanitizer: DomSanitizer ,  private confirmationService: ConfirmationService,
@@ -144,6 +178,9 @@ export class MomentCarouselComponent implements OnInit {
     isAuthor(moment: Moment): boolean {
         return moment.auteur.user.username === this.currentUsername;
     }
+    isGroupCreator(moment: Moment): boolean {
+        return moment.groupe?.createur?.username === this.currentUsername;
+    }
 
     loadMoments() {
         if (!this.groupeId) {
@@ -154,6 +191,7 @@ export class MomentCarouselComponent implements OnInit {
         this.momentService.getMomentsDuGroupe(this.groupeId).subscribe({
             next: (data) => {
             this.moments = data;
+            console.log('Loaded moments:', this.moments);
             this.loadMediaBlobs();
 
             // Load reactions for each moment
@@ -349,6 +387,67 @@ export class MomentCarouselComponent implements OnInit {
         this.showReactionsDialog = true;
         }
     });
+    }
+
+
+    approveMoment(momentId: number) {
+    this.momentService.approveMoment(momentId).subscribe({
+        next: () => {
+
+        this.loadMoments();
+        },
+        error: (err) => {
+        console.error('Error approving moment:', err);
+        // optionally show error message
+        }
+    });
+    }
+
+    rejectMoment(momentId: number) {
+        this.momentService.rejectMoment(momentId).subscribe({
+            next: () => {
+            this.loadMoments();
+            },
+            error: (err) => {
+            console.error('Error rejecting moment:', err);
+            }
+        });
+    }
+
+    shouldShowReadMore(moment: Moment): boolean {
+    const hasMedia = moment.media != null;
+    const maxLength = hasMedia ?   85 :343;
+    return moment.texte.length > maxLength;
+    }
+    getTruncatedText(moment: Moment): string {
+    const hasMedia = moment.media != null;
+    const maxLength = hasMedia ? 85 : 343;
+
+    if (moment.texte.length <= maxLength) {
+        return moment.texte;
+    }
+
+    return moment.texte.substring(0, maxLength) + '...';
+    }
+
+
+    openReadMoreModal(moment: Moment) {
+    this.selectedText = moment.texte;
+    this.selectedMoment = moment;
+
+    const mediaUrl = this.mediaUrls[moment.id] || null;
+
+    if (moment.media && mediaUrl) {
+        this.selectedMedia = mediaUrl;
+        this.selectedMediaType = moment.media.fileType.startsWith('image/')
+        ? 'image'
+        : 'video';
+    } else {
+        this.selectedMedia = null;
+        this.selectedMediaType = null;
+    }
+
+    this.isMediaModalVisible = true;
     }
 
 }

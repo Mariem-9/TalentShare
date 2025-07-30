@@ -6,11 +6,17 @@ import {
   trigger
 } from "./chunk-5BXJWBZI.js";
 import {
+  Ripple
+} from "./chunk-5U4LME4W.js";
+import {
   zindexutils
 } from "./chunk-A77VGEMF.js";
 import {
   ConnectedOverlayScrollHandler
 } from "./chunk-ARGAFGVT.js";
+import {
+  TimesIcon
+} from "./chunk-5ADOWNFR.js";
 import {
   BaseComponent
 } from "./chunk-CZMB2PYF.js";
@@ -67,6 +73,8 @@ import {
   ɵɵdefineInjectable,
   ɵɵdefineInjector,
   ɵɵdefineNgModule,
+  ɵɵdirectiveInject,
+  ɵɵelementContainer,
   ɵɵelementEnd,
   ɵɵelementStart,
   ɵɵgetCurrentView,
@@ -77,7 +85,6 @@ import {
   ɵɵprojection,
   ɵɵprojectionDef,
   ɵɵproperty,
-  ɵɵpureFunction1,
   ɵɵpureFunction2,
   ɵɵqueryRefresh,
   ɵɵresetView,
@@ -92,65 +99,61 @@ import {
 import "./chunk-I4GRS3VG.js";
 import "./chunk-3OV72XIM.js";
 
-// node_modules/primeng/fesm2022/primeng-popover.mjs
+// node_modules/primeng/fesm2022/primeng-overlaypanel.mjs
 var _c0 = ["content"];
-var _c1 = ["*"];
-var _c2 = (a0, a1) => ({
+var _c1 = ["closeicon"];
+var _c2 = ["*"];
+var _c3 = (a0, a1) => ({
   showTransitionParams: a0,
   hideTransitionParams: a1
 });
-var _c3 = (a0, a1) => ({
+var _c4 = (a0, a1) => ({
   value: a0,
   params: a1
 });
-var _c4 = (a0) => ({
-  closeCallback: a0
-});
-function Popover_div_0_3_ng_template_0_Template(rf, ctx) {
-}
-function Popover_div_0_3_Template(rf, ctx) {
+function OverlayPanel_div_0_ng_container_3_Template(rf, ctx) {
   if (rf & 1) {
-    ɵɵtemplate(0, Popover_div_0_3_ng_template_0_Template, 0, 0, "ng-template");
+    ɵɵelementContainer(0);
   }
 }
-function Popover_div_0_Template(rf, ctx) {
+function OverlayPanel_div_0_Template(rf, ctx) {
   if (rf & 1) {
     const _r1 = ɵɵgetCurrentView();
     ɵɵelementStart(0, "div", 1);
-    ɵɵlistener("click", function Popover_div_0_Template_div_click_0_listener($event) {
+    ɵɵlistener("click", function OverlayPanel_div_0_Template_div_click_0_listener($event) {
       ɵɵrestoreView(_r1);
       const ctx_r1 = ɵɵnextContext();
       return ɵɵresetView(ctx_r1.onOverlayClick($event));
-    })("@animation.start", function Popover_div_0_Template_div_animation_animation_start_0_listener($event) {
+    })("@animation.start", function OverlayPanel_div_0_Template_div_animation_animation_start_0_listener($event) {
       ɵɵrestoreView(_r1);
       const ctx_r1 = ɵɵnextContext();
       return ɵɵresetView(ctx_r1.onAnimationStart($event));
-    })("@animation.done", function Popover_div_0_Template_div_animation_animation_done_0_listener($event) {
+    })("@animation.done", function OverlayPanel_div_0_Template_div_animation_animation_done_0_listener($event) {
       ɵɵrestoreView(_r1);
       const ctx_r1 = ɵɵnextContext();
       return ɵɵresetView(ctx_r1.onAnimationEnd($event));
     });
     ɵɵelementStart(1, "div", 2);
-    ɵɵlistener("click", function Popover_div_0_Template_div_click_1_listener($event) {
+    ɵɵlistener("click", function OverlayPanel_div_0_Template_div_click_1_listener($event) {
       ɵɵrestoreView(_r1);
       const ctx_r1 = ɵɵnextContext();
       return ɵɵresetView(ctx_r1.onContentClick($event));
-    })("mousedown", function Popover_div_0_Template_div_mousedown_1_listener($event) {
+    })("mousedown", function OverlayPanel_div_0_Template_div_mousedown_1_listener($event) {
       ɵɵrestoreView(_r1);
       const ctx_r1 = ɵɵnextContext();
       return ɵɵresetView(ctx_r1.onContentClick($event));
     });
     ɵɵprojection(2);
-    ɵɵtemplate(3, Popover_div_0_3_Template, 1, 0, null, 3);
+    ɵɵtemplate(3, OverlayPanel_div_0_ng_container_3_Template, 1, 0, "ng-container", 3);
     ɵɵelementEnd()();
   }
   if (rf & 2) {
     const ctx_r1 = ɵɵnextContext();
     ɵɵclassMap(ctx_r1.styleClass);
-    ɵɵproperty("ngClass", "p-popover p-component")("ngStyle", ctx_r1.style)("@animation", ɵɵpureFunction2(13, _c3, ctx_r1.overlayVisible ? "open" : "close", ɵɵpureFunction2(10, _c2, ctx_r1.showTransitionOptions, ctx_r1.hideTransitionOptions)));
+    ɵɵproperty("ngClass", "p-popover p-component")("ngStyle", ctx_r1.style)("@animation", ɵɵpureFunction2(12, _c4, ctx_r1.overlayVisible ? "open" : "close", ɵɵpureFunction2(9, _c3, ctx_r1.showTransitionOptions, ctx_r1.hideTransitionOptions)));
     ɵɵattribute("aria-modal", ctx_r1.overlayVisible)("aria-label", ctx_r1.ariaLabel)("aria-labelledBy", ctx_r1.ariaLabelledBy);
     ɵɵadvance(3);
-    ɵɵproperty("ngTemplateOutlet", ctx_r1.contentTemplate || ctx_r1._contentTemplate)("ngTemplateOutletContext", ɵɵpureFunction1(16, _c4, ctx_r1.onCloseClick.bind(ctx_r1)));
+    ɵɵproperty("ngTemplateOutlet", ctx_r1.contentTemplate || ctx_r1._contentTemplate);
   }
 }
 var theme = ({
@@ -260,7 +263,14 @@ var PopoverStyle = class _PopoverStyle extends BaseStyle {
     type: Injectable
   }], null, null);
 })();
-var Popover = class _Popover extends BaseComponent {
+var PopoverClasses;
+(function(PopoverClasses2) {
+  PopoverClasses2["root"] = "p-popover";
+  PopoverClasses2["content"] = "p-popover-content";
+})(PopoverClasses || (PopoverClasses = {}));
+var OverlayPanel = class _OverlayPanel extends BaseComponent {
+  zone;
+  overlayService;
   /**
    * Defines a string that labels the input for accessibility.
    * @group Props
@@ -277,6 +287,11 @@ var Popover = class _Popover extends BaseComponent {
    */
   dismissable = true;
   /**
+   * When enabled, displays a close icon at top right corner.
+   * @group Props
+   */
+  showCloseIcon;
+  /**
    * Inline style of the component.
    * @group Props
    */
@@ -287,7 +302,7 @@ var Popover = class _Popover extends BaseComponent {
    */
   styleClass;
   /**
-   * Target element to attach the panel, valid values are "body" or a local ng-template variable of another element (note: use binding with brackets for template variables, e.g. [appendTo]="mydiv" for a div element having #mydiv as variable name).
+   *  Target element to attach the panel, valid values are "body" or a local ng-template variable of another element (note: use binding with brackets for template variables, e.g. [appendTo]="mydiv" for a div element having #mydiv as variable name).
    * @group Props
    */
   appendTo = "body";
@@ -341,26 +356,31 @@ var Popover = class _Popover extends BaseComponent {
   willHide;
   scrollHandler;
   documentResizeListener;
-  /**
-   * Custom content template.
-   * @group Templates
-   */
   contentTemplate;
+  closeIconTemplate;
   templates;
   _contentTemplate;
   destroyCallback;
   overlayEventListener;
   overlaySubscription;
   _componentStyle = inject(PopoverStyle);
-  zone = inject(NgZone);
-  overlayService = inject(OverlayService);
+  constructor(zone, overlayService) {
+    super();
+    this.zone = zone;
+    this.overlayService = overlayService;
+    console.log("OverlayPanel is deprecated. Use Popover instead.");
+  }
   ngAfterContentInit() {
-    this.templates.forEach((item) => {
+    this.templates?.forEach((item) => {
       switch (item.getType()) {
         case "content":
           this._contentTemplate = item.template;
           break;
+        default:
+          this._contentTemplate = item.template;
+          break;
       }
+      this.cd.markForCheck();
     });
   }
   bindDocumentClickListener() {
@@ -466,12 +486,14 @@ var Popover = class _Popover extends BaseComponent {
     if (containerOffset.top < targetOffset.top) {
       this.container.setAttribute("data-p-popover-flipped", "true");
       addClass(this.container, "p-popover-flipped");
+      if (this.showCloseIcon) {
+        this.renderer.setStyle(this.container, "margin-top", "-30px");
+      }
     }
   }
   onAnimationStart(event) {
     if (event.toState === "open") {
       this.container = event.element;
-      this.container?.setAttribute(this.attrSelector, "");
       this.appendContainer();
       this.align();
       this.bindDocumentClickListener();
@@ -603,29 +625,28 @@ var Popover = class _Popover extends BaseComponent {
     }
     super.ngOnDestroy();
   }
-  static ɵfac = /* @__PURE__ */ (() => {
-    let ɵPopover_BaseFactory;
-    return function Popover_Factory(__ngFactoryType__) {
-      return (ɵPopover_BaseFactory || (ɵPopover_BaseFactory = ɵɵgetInheritedFactory(_Popover)))(__ngFactoryType__ || _Popover);
-    };
-  })();
+  static ɵfac = function OverlayPanel_Factory(__ngFactoryType__) {
+    return new (__ngFactoryType__ || _OverlayPanel)(ɵɵdirectiveInject(NgZone), ɵɵdirectiveInject(OverlayService));
+  };
   static ɵcmp = ɵɵdefineComponent({
-    type: _Popover,
-    selectors: [["p-popover"]],
-    contentQueries: function Popover_ContentQueries(rf, ctx, dirIndex) {
+    type: _OverlayPanel,
+    selectors: [["p-overlayPanel"], ["p-overlaypanel"]],
+    contentQueries: function OverlayPanel_ContentQueries(rf, ctx, dirIndex) {
       if (rf & 1) {
         ɵɵcontentQuery(dirIndex, _c0, 4);
+        ɵɵcontentQuery(dirIndex, _c1, 4);
         ɵɵcontentQuery(dirIndex, PrimeTemplate, 4);
       }
       if (rf & 2) {
         let _t;
         ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.contentTemplate = _t.first);
+        ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.closeIconTemplate = _t.first);
         ɵɵqueryRefresh(_t = ɵɵloadQuery()) && (ctx.templates = _t);
       }
     },
-    hostBindings: function Popover_HostBindings(rf, ctx) {
+    hostBindings: function OverlayPanel_HostBindings(rf, ctx) {
       if (rf & 1) {
-        ɵɵlistener("keydown.escape", function Popover_keydown_escape_HostBindingHandler($event) {
+        ɵɵlistener("keydown.escape", function OverlayPanel_keydown_escape_HostBindingHandler($event) {
           return ctx.onEscapeKeydown($event);
         }, false, ɵɵresolveDocument);
       }
@@ -634,6 +655,7 @@ var Popover = class _Popover extends BaseComponent {
       ariaLabel: "ariaLabel",
       ariaLabelledBy: "ariaLabelledBy",
       dismissable: [2, "dismissable", "dismissable", booleanAttribute],
+      showCloseIcon: [2, "showCloseIcon", "showCloseIcon", booleanAttribute],
       style: "style",
       styleClass: "styleClass",
       appendTo: "appendTo",
@@ -648,21 +670,22 @@ var Popover = class _Popover extends BaseComponent {
       onShow: "onShow",
       onHide: "onHide"
     },
+    standalone: false,
     features: [ɵɵProvidersFeature([PopoverStyle]), ɵɵInputTransformsFeature, ɵɵInheritDefinitionFeature],
-    ngContentSelectors: _c1,
+    ngContentSelectors: _c2,
     decls: 1,
     vars: 1,
-    consts: [["role", "dialog", 3, "ngClass", "ngStyle", "class", "click", 4, "ngIf"], ["role", "dialog", 3, "click", "ngClass", "ngStyle"], [1, "p-popover-content", 3, "click", "mousedown"], [4, "ngTemplateOutlet", "ngTemplateOutletContext"]],
-    template: function Popover_Template(rf, ctx) {
+    consts: [["role", "dialog", 3, "ngClass", "ngStyle", "class", "click", 4, "ngIf"], ["role", "dialog", 3, "click", "ngClass", "ngStyle"], [1, "p-popover-content", 3, "click", "mousedown"], [4, "ngTemplateOutlet"]],
+    template: function OverlayPanel_Template(rf, ctx) {
       if (rf & 1) {
         ɵɵprojectionDef();
-        ɵɵtemplate(0, Popover_div_0_Template, 4, 18, "div", 0);
+        ɵɵtemplate(0, OverlayPanel_div_0_Template, 4, 15, "div", 0);
       }
       if (rf & 2) {
         ɵɵproperty("ngIf", ctx.render);
       }
     },
-    dependencies: [CommonModule, NgClass, NgIf, NgTemplateOutlet, NgStyle, SharedModule],
+    dependencies: [NgClass, NgIf, NgTemplateOutlet, NgStyle],
     encapsulation: 2,
     data: {
       animation: [trigger("animation", [state("void", style({
@@ -679,12 +702,11 @@ var Popover = class _Popover extends BaseComponent {
   });
 };
 (() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(Popover, [{
+  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(OverlayPanel, [{
     type: Component,
     args: [{
-      selector: "p-popover",
-      standalone: true,
-      imports: [CommonModule, SharedModule],
+      selector: "p-overlayPanel, p-overlaypanel",
+      standalone: false,
       template: `
         <div
             *ngIf="render"
@@ -705,7 +727,7 @@ var Popover = class _Popover extends BaseComponent {
         >
             <div class="p-popover-content" (click)="onContentClick($event)" (mousedown)="onContentClick($event)">
                 <ng-content></ng-content>
-                <ng-template *ngTemplateOutlet="contentTemplate || _contentTemplate; context: { closeCallback: onCloseClick.bind(this) }"></ng-template>
+                <ng-container *ngTemplateOutlet="contentTemplate || _contentTemplate"></ng-container>
             </div>
         </div>
     `,
@@ -722,7 +744,11 @@ var Popover = class _Popover extends BaseComponent {
       encapsulation: ViewEncapsulation.None,
       providers: [PopoverStyle]
     }]
-  }], null, {
+  }], () => [{
+    type: NgZone
+  }, {
+    type: OverlayService
+  }], {
     ariaLabel: [{
       type: Input
     }],
@@ -730,6 +756,12 @@ var Popover = class _Popover extends BaseComponent {
       type: Input
     }],
     dismissable: [{
+      type: Input,
+      args: [{
+        transform: booleanAttribute
+      }]
+    }],
+    showCloseIcon: [{
       type: Input,
       args: [{
         transform: booleanAttribute
@@ -783,6 +815,12 @@ var Popover = class _Popover extends BaseComponent {
         descendants: false
       }]
     }],
+    closeIconTemplate: [{
+      type: ContentChild,
+      args: ["closeicon", {
+        descendants: false
+      }]
+    }],
     templates: [{
       type: ContentChildren,
       args: [PrimeTemplate]
@@ -793,31 +831,34 @@ var Popover = class _Popover extends BaseComponent {
     }]
   });
 })();
-var PopoverModule = class _PopoverModule {
-  static ɵfac = function PopoverModule_Factory(__ngFactoryType__) {
-    return new (__ngFactoryType__ || _PopoverModule)();
+var OverlayPanelModule = class _OverlayPanelModule {
+  static ɵfac = function OverlayPanelModule_Factory(__ngFactoryType__) {
+    return new (__ngFactoryType__ || _OverlayPanelModule)();
   };
   static ɵmod = ɵɵdefineNgModule({
-    type: _PopoverModule,
-    imports: [Popover, SharedModule],
-    exports: [Popover, SharedModule]
+    type: _OverlayPanelModule,
+    declarations: [OverlayPanel],
+    imports: [CommonModule, Ripple, SharedModule, TimesIcon],
+    exports: [OverlayPanel, SharedModule]
   });
   static ɵinj = ɵɵdefineInjector({
-    imports: [Popover, SharedModule, SharedModule]
+    imports: [CommonModule, SharedModule, TimesIcon, SharedModule]
   });
 };
 (() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(PopoverModule, [{
+  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(OverlayPanelModule, [{
     type: NgModule,
     args: [{
-      imports: [Popover, SharedModule],
-      exports: [Popover, SharedModule]
+      imports: [CommonModule, Ripple, SharedModule, TimesIcon],
+      exports: [OverlayPanel, SharedModule],
+      declarations: [OverlayPanel]
     }]
   }], null, null);
 })();
 export {
-  Popover,
-  PopoverModule,
+  OverlayPanel,
+  OverlayPanelModule,
+  PopoverClasses,
   PopoverStyle
 };
-//# sourceMappingURL=primeng_popover.js.map
+//# sourceMappingURL=primeng_overlaypanel.js.map

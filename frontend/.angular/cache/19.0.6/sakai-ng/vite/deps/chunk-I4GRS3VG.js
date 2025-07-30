@@ -266,6 +266,7 @@ function EventBus() {
 }
 
 export {
+  EventBus,
   isEmpty,
   deepEquals,
   isFunction,
@@ -288,7 +289,6 @@ export {
   removeAccents,
   reorderArray,
   toKebabCase,
-  toTokenKey,
-  EventBus
+  toTokenKey
 };
-//# sourceMappingURL=chunk-KGZ7KM4L.js.map
+//# sourceMappingURL=chunk-I4GRS3VG.js.map

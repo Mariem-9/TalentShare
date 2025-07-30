@@ -2,17 +2,10 @@ import {
   BaseStyle,
   PrimeNG,
   base
-} from "./chunk-EIU2ZUMI.js";
+} from "./chunk-5SJYZSHW.js";
 import {
   uuid
 } from "./chunk-PW4W4WIX.js";
-import {
-  config_default,
-  service_default
-} from "./chunk-PUQ7QXU5.js";
-import {
-  getKeyValue
-} from "./chunk-KGZ7KM4L.js";
 import {
   DOCUMENT,
   isPlatformServer
@@ -34,6 +27,13 @@ import {
   ɵɵdefineInjectable,
   ɵɵgetInheritedFactory
 } from "./chunk-DLLQ2QWL.js";
+import {
+  config_default,
+  service_default
+} from "./chunk-XZINNT2E.js";
+import {
+  getKeyValue
+} from "./chunk-I4GRS3VG.js";
 import {
   __spreadValues
 } from "./chunk-3OV72XIM.js";
@@ -262,4 +262,4 @@ var BaseComponent = class _BaseComponent {
 export {
   BaseComponent
 };
-//# sourceMappingURL=chunk-VGW42CYQ.js.map
+//# sourceMappingURL=chunk-CZMB2PYF.js.map
