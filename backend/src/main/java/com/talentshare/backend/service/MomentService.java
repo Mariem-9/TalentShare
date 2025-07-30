@@ -18,7 +18,7 @@ public class MomentService {
     private final FileRepository fileRepository;
 
     @Transactional
-    public Moment publierMoment(String texte, Long groupeId, Long fileId, String username) {
+    public Moment publierMoment(String texte, Long groupeId, Long fileId,boolean isPublic, String username) {
         Groupe groupe = groupeRepository.findById(groupeId)
             .orElseThrow(() -> new BusinessException("Groupe introuvable"));
 
@@ -36,7 +36,8 @@ public class MomentService {
         moment.setGroupe(groupe);
         moment.setAuteur(auteur);
         moment.setMedia(media);
-        moment.setPublic(false);
+
+        moment.setPublic(isPublic);
         moment.setApprovedByCreator(false);
 
         return momentRepository.save(moment);
@@ -50,17 +51,17 @@ public class MomentService {
     }
 
     public List<Moment> getMomentsPublics() {
-        return momentRepository.findByIsPublicTrueAndIsApprovedByCreatorTrue();
+        return momentRepository.findByIsPublicTrueAndIsApprovedByCreatorTrueWithMedia();
     }
     @Transactional
-    public Moment editMoment(Long momentId, String newTexte, Long mediaId, String username) {
+    public Moment editMoment(Long momentId, String newTexte, Long mediaId, boolean isPublic, String username) {
         Moment moment = momentRepository.findById(momentId)
             .orElseThrow(() -> new BusinessException("Moment introuvable"));
 
         if (!moment.getAuteur().getUser().getUsername().equals(username)) {
             throw new BusinessException("Vous n'êtes pas autorisé à modifier ce moment");
         }
-
+        moment.setPublic(isPublic);
         moment.setTexte(newTexte);
 
         if (mediaId != null) {
@@ -86,6 +87,34 @@ public class MomentService {
 
         momentRepository.delete(moment);
     }
+
+    @Transactional
+    public Moment approveMoment(Long momentId, String username) {
+        Moment moment = momentRepository.findById(momentId)
+            .orElseThrow(() -> new BusinessException("Moment introuvable"));
+
+        if (!moment.getGroupe().getCreateur().getUsername().equals(username)) {
+            throw new BusinessException("Vous n'êtes pas autorisé à approuver ce moment");
+        }
+
+        moment.setApprovedByCreator(true);
+        return momentRepository.save(moment);
+    }
+
+    @Transactional
+    public void rejectMoment(Long momentId, String username) {
+        Moment moment = momentRepository.findById(momentId)
+            .orElseThrow(() -> new BusinessException("Moment introuvable"));
+
+        if (!moment.getGroupe().getCreateur().getUsername().equals(username)) {
+            throw new BusinessException("Vous n'êtes pas autorisé à rejeter ce moment");
+        }
+
+        moment.setPublic(false);
+        moment.setApprovedByCreator(false);
+        momentRepository.save(moment);
+    }
+
 
 }
 

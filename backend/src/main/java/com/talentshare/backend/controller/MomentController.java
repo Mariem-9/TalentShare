@@ -21,10 +21,12 @@ public class MomentController {
         @RequestParam String texte,
         @RequestParam Long groupeId,
         @RequestParam(required = false) Long mediaFileId,
+        @RequestParam(defaultValue = "false") boolean isPublic,
+
         Principal principal) {
         System.out.println("Received mediaFileId: " + mediaFileId);
 
-        Moment moment = momentService.publierMoment(texte, groupeId, mediaFileId, principal.getName());
+        Moment moment = momentService.publierMoment(texte, groupeId, mediaFileId, isPublic, principal.getName());
         return ResponseEntity.ok(moment);
     }
 
@@ -43,15 +45,17 @@ public class MomentController {
     public static class MomentEditRequest {
         public String texte;
         public Long mediaId;
+        public boolean isPublic;
     }
 
     @PutMapping("/{momentId}")
     public ResponseEntity<Moment> editMoment(
         @PathVariable Long momentId,
         @RequestBody MomentEditRequest request,
+//        @RequestParam(defaultValue = "false") boolean isPublic,
         Principal principal) {
 
-        Moment updatedMoment = momentService.editMoment(momentId, request.texte, request.mediaId, principal.getName());
+        Moment updatedMoment = momentService.editMoment(momentId, request.texte, request.mediaId,request.isPublic, principal.getName());
         return ResponseEntity.ok(updatedMoment);
     }
 
@@ -64,6 +68,19 @@ public class MomentController {
         momentService.deleteMoment(momentId, principal.getName());
         return ResponseEntity.noContent().build();
     }
+
+    @PutMapping("/{momentId}/approve")
+    public ResponseEntity<Moment> approveMoment(@PathVariable Long momentId, Principal principal) {
+        Moment approved = momentService.approveMoment(momentId, principal.getName());
+        return ResponseEntity.ok(approved);
+    }
+
+    @PutMapping("/{momentId}/reject")
+    public ResponseEntity<Void> rejectMoment(@PathVariable Long momentId, Principal principal) {
+        momentService.rejectMoment(momentId, principal.getName());
+        return ResponseEntity.noContent().build();
+    }
+
 
 }
 

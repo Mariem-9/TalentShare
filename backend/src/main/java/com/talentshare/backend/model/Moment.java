@@ -22,7 +22,7 @@ public class Moment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    @Column(columnDefinition = "TEXT")
     private String texte;
 
     private boolean isPublic = false;
