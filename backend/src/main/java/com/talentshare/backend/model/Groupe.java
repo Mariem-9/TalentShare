@@ -35,6 +35,7 @@ public class Groupe {
     @Column(nullable = false)
     private String nom;
 
+    @Column(columnDefinition = "TEXT")
     private String description;
 
     @ManyToOne
