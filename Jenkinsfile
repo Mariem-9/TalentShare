@@ -4,25 +4,25 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/Mariem-9/TalentShare.git'
+                git branch: 'main', url: 'https://github.com/Mariem-9/TalentShare.git'
             }
         }
 
         stage('Build') {
             steps {
-                sh 'mvn clean install'
+                bat 'mvn clean install'
             }
         }
 
         stage('Test') {
             steps {
-                sh 'mvn test'
+                bat 'mvn test'
             }
         }
 
         stage('Package') {
             steps {
-                sh 'mvn package'
+                bat 'mvn package'
             }
         }
     }
