@@ -9,6 +9,7 @@ import com.talentshare.backend.repository.UtilisateurRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
+
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -88,6 +89,7 @@ class UtilisateurServiceTest {
                 u.getBio().equals("NewBio")
         ));
     }
+
     @Test
     void testGetGroupRecommendations_UserNotFound() {
         when(utilisateurRepository.findByUser_Username("invalidUser"))
@@ -125,13 +127,17 @@ class UtilisateurServiceTest {
         groupe1.setNom("Backend Devs");
         groupe1.setTags(Set.of("backend"));
         groupe1.setStatus(Groupe.GroupStatus.APPROVED);
-        groupe1.setCreateur(new User()); // creator username should differ from user in real test
+        User creator1 = new User();
+        creator1.setUsername("creator1");
+        groupe1.setCreateur(creator1);
 
         Groupe groupe2 = new Groupe();
         groupe2.setNom("Leadership Circle");
         groupe2.setTags(Set.of("management"));
         groupe2.setStatus(Groupe.GroupStatus.APPROVED);
-        groupe2.setCreateur(new User());
+        User creator2 = new User();
+        creator2.setUsername("creator2");
+        groupe2.setCreateur(creator2);
 
         when(groupeRepository.findAll())
             .thenReturn(List.of(groupe1, groupe2));
@@ -140,7 +146,6 @@ class UtilisateurServiceTest {
 
         assertEquals(2, result.size());
     }
-
 
     @Test
     void testGetGroupRecommendations_Fallback() {
@@ -156,7 +161,9 @@ class UtilisateurServiceTest {
         Groupe g1 = new Groupe();
         g1.setNom("Art Group");
         g1.setStatus(Groupe.GroupStatus.APPROVED);
-        g1.setCreateur(new User());
+        User creator = new User();
+        creator.setUsername("creatorX");
+        g1.setCreateur(creator);
         g1.setTags(Set.of("art", "painting"));
 
         when(userRepository.findByUsername("user1")).thenReturn(Optional.of(user));
@@ -170,4 +177,3 @@ class UtilisateurServiceTest {
         assertFalse(result.isEmpty());
     }
 }
-
