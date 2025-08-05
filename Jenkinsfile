@@ -87,35 +87,21 @@ pipeline {
         }
    // ========== FRONTEND CI/CD ==========
 
-   stage('Build Frontend') {
+stage('Build Frontend') {
   steps {
     dir('frontend') {
-      sh 'tar -cf ../frontend.tar .'
       sh '''
-      docker run --rm -i -w /app node:18-alpine sh -c "
-  apk add --no-cache tar bash && \
-  npm install -g @angular/cli && \
-  mkdir -p /app && \
-  tar -xf - -C /app && \
-  cd /app && \
-  npm install && \
-  ng build
-" < ../frontend.tar
+      docker run --rm -v $PWD:/app -w /app node:18-alpine sh -c "
+        apk add --no-cache bash && \
+        npm install -g @angular/cli && \
+        npm install && \
+        ng build
+      "
+      '''
+    }
+  }
+}
 
-      '''
-    }
-  }
-}
-stage('Copy Frontend Build Output') {
-  steps {
-    dir('frontend') {
-      sh '''
-        docker run --rm -v $PWD:/app -w /app node:18-alpine cp -r dist/sakai-ng ./dist-sakai-ng-host
-      '''
-      sh 'mv dist-sakai-ng-host dist'
-    }
-  }
-}
 
 
 
