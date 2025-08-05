@@ -6,6 +6,10 @@ pipeline {
         maven 'Maven 3.9.6'
     }
 
+    environment {
+        IMAGE_NAME = 'talentshare-backend-java24'
+    }
+
     stages {
         stage('Checkout') {
             steps {
@@ -29,7 +33,7 @@ pipeline {
             }
         }
 
-       stage('Sonar Analysis') {
+        stage('Sonar Analysis') {
             steps {
                 dir('backend') {
                     withCredentials([string(credentialsId: 'SONAR_TOKEN', variable: 'SONAR_TOKEN')]) {
@@ -45,12 +49,23 @@ pipeline {
             }
         }
 
-
         stage('Package') {
             steps {
                 dir('backend') {
                     sh 'mvn package'
                 }
+            }
+        }
+
+        stage('Docker Build') {
+            steps {
+                sh 'docker build -t $IMAGE_NAME .'
+            }
+        }
+
+        stage('Docker Run') {
+            steps {
+                sh 'docker run -d --network talentshare-net -p 8081:8080 --name backend $IMAGE_NAME'
             }
         }
     }
