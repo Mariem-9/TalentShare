@@ -103,10 +103,20 @@ pipeline {
 " < ../frontend.tar
 
       '''
-sh 'docker run --rm -v $PWD:/app -w /app node:18-alpine cp -r dist ./'
     }
   }
 }
+stage('Copy Frontend Build Output') {
+  steps {
+    dir('frontend') {
+      sh '''
+        docker run --rm -v $PWD:/app -w /app node:18-alpine cp -r dist/sakai-ng ./dist-sakai-ng-host
+      '''
+      sh 'mv dist-sakai-ng-host dist'
+    }
+  }
+}
+
 
 
 
