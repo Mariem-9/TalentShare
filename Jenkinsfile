@@ -76,9 +76,12 @@ pipeline {
             }
         }
 
-        stage('Docker Run') {
+         stage('Docker Run') {
             steps {
-                sh 'docker run -d --network talentshare-net -p 8081:8080 --name backend $IMAGE_NAME'
+                sh '''
+                  docker rm -f backend || true
+                  docker run -d --network talentshare-net -p 8081:8080 --name backend $IMAGE_NAME
+                '''
             }
         }
     }
