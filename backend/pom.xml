@@ -31,7 +31,7 @@
         <sonar.projectKey>Mariem-9_TalentShare</sonar.projectKey>
         <sonar.organization>mariem-9</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
-        <sonar.login>8d232da14f2651d4b8e629a799c46d57d43dc842</sonar.login>
+<!--        <sonar.login>8d232da14f2651d4b8e629a799c46d57d43dc842</sonar.login>-->
 	</properties>
 
 	<dependencies>
