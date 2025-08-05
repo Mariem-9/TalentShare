@@ -32,6 +32,13 @@ pipeline {
                 }
             }
         }
+	stage('Jacoco Report') {
+    		steps {
+        		dir('backend') {
+            			sh 'mvn verify'
+       			 }
+  		  }
+	}
 
         stage('Sonar Analysis') {
             steps {
@@ -42,6 +49,7 @@ pipeline {
                           -Dsonar.projectKey=Mariem-9_TalentShare \
                           -Dsonar.organization=mariem-9 \
                           -Dsonar.host.url=https://sonarcloud.io \
+			  -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml \
                           -Dsonar.login=$SONAR_TOKEN
                         '''
                     }
