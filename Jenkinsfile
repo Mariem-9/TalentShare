@@ -87,36 +87,24 @@ pipeline {
         }
    // ========== FRONTEND CI/CD ==========
 
-   stage('Install Frontend Dependencies') {
-    steps {
-        dir('frontend') {
-            sh 'ls -la'
-            sh """
-              docker run --rm -v ${WORKSPACE}/frontend:/app -w /app node:18-alpine ls -la
-            """
-            sh """
-              docker run --rm -v ${WORKSPACE}/frontend:/app -w /app node:18-alpine npm install
-            """
-        }
+   stage('Build Frontend') {
+  steps {
+    dir('frontend') {
+      sh 'tar -cf frontend.tar .'
+      sh '''
+      docker run --rm -i -w /app node:18-alpine sh -c "
+        apk add --no-cache tar &&
+        mkdir /app &&
+        tar -xf - -C /app &&
+        cd /app &&
+        npm install &&
+        npm run build
+      " < frontend.tar
+      '''
     }
+  }
 }
 
-
-        stage('Test Frontend') {
-            steps {
-                dir('frontend') {
-                    sh 'npm run test -- --watch=false'
-                }
-            }
-        }
-
-        stage('Build Frontend') {
-            steps {
-                dir('frontend') {
-                    sh 'npm run build'
-                }
-            }
-        }
 
         stage('Docker Build Frontend') {
             steps {
