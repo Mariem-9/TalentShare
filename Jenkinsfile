@@ -2,8 +2,12 @@ pipeline {
     agent any
 
     tools {
-        jdk 'jdk-24'
+        jdk 'jdk-24'         
         maven 'Maven 3.9.6'
+    }
+
+    environment {
+        SONAR_TOKEN = credentials('SONAR_TOKEN')
     }
 
     stages {
@@ -25,6 +29,20 @@ pipeline {
             steps {
                 dir('backend') {
                     sh 'mvn test'
+                }
+            }
+        }
+
+        stage('Sonar Analysis') {
+            steps {
+                dir('backend') {
+                    sh """
+                      mvn sonar:sonar \
+                      -Dsonar.projectKey=Mariem-9_TalentShare \
+                      -Dsonar.organization=mariem-9 \
+                      -Dsonar.host.url=https://sonarcloud.io \
+                      -Dsonar.login=$SONAR_TOKEN
+                    """
                 }
             }
         }
