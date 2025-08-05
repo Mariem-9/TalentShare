@@ -88,15 +88,9 @@ pipeline {
    // ========== FRONTEND CI/CD ==========
 
        stage('Install Frontend Dependencies') {
-  agent {
-    docker {
-      image 'node:18-alpine'
-      args '-u root:root' // optionnel si permission importante
-    }
-  }
   steps {
     dir('frontend') {
-      sh 'npm install'
+      sh 'docker run --rm -v $PWD:/app -w /app node:18-alpine npm install'
     }
   }
 }
