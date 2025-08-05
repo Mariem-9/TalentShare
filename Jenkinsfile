@@ -93,13 +93,15 @@ pipeline {
       sh 'tar -cf ../frontend.tar .'
       sh '''
       docker run --rm -i -w /app node:18-alpine sh -c "
-        apk add --no-cache tar &&
-        mkdir -p /app &&
-        tar -xf - -C /app &&
-        cd /app &&
-        npm install &&
-        npm run build
-      " < ../frontend.tar
+  apk add --no-cache tar bash && \
+  npm install -g @angular/cli && \
+  mkdir -p /app && \
+  tar -xf - -C /app && \
+  cd /app && \
+  npm install && \
+  ng build
+" < ../frontend.tar
+
       '''
     }
   }
