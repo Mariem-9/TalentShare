@@ -1,5 +1,5 @@
 pipeline {
-   agent { label 'docker-agent' }
+   agent any
 
     tools {
         jdk 'jdk-24'         
