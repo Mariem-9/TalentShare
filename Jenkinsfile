@@ -86,51 +86,24 @@ pipeline {
             }
         }
    // ========== FRONTEND CI/CD ==========
-stage('Build Frontend') {
-  steps {
-    dir('frontend') {
-      sh '''
-      docker run --rm -v $PWD:/app -w /app node:18-alpine sh -c "
-        apk add --no-cache bash && \
-        npm install -g @angular/cli && \
-        npm install && \
-        ng build
-      "
-      '''
-    }
-  }
-}
 
-stage('Copy Frontend Build Output') {
-  steps {
-    dir('frontend') {
-      sh '''
-      # Move the build output to a predictable folder if needed
-      mv dist/sakai-ng ../dist-sakai-ng-host
-      '''
-    }
-  }
-}
-
-
-
-
-
+   
         stage('Docker Build Frontend') {
-            steps {
-                dir('frontend') {
-                    sh 'docker build -t talentshare-frontend .'
-                }
-            }
+    steps {
+        dir('frontend') {
+            sh 'docker build -t talentshare-frontend .'
         }
+    }
+}
 
-        stage('Docker Run Frontend') {
-            steps {
-                sh '''
-                  docker rm -f frontend || true
-                  docker run -d --network talentshare-net -p 4200:80 --name frontend talentshare-frontend
-                '''
-            }
-        }
+stage('Docker Run Frontend') {
+    steps {
+        sh '''
+          docker rm -f frontend || true
+          docker run -d --network talentshare-net -p 4200:80 --name frontend talentshare-frontend
+        '''
+    }
+}
+
     }
 }
