@@ -86,7 +86,6 @@ pipeline {
             }
         }
    // ========== FRONTEND CI/CD ==========
-
 stage('Build Frontend') {
   steps {
     dir('frontend') {
@@ -97,6 +96,17 @@ stage('Build Frontend') {
         npm install && \
         ng build
       "
+      '''
+    }
+  }
+}
+
+stage('Copy Frontend Build Output') {
+  steps {
+    dir('frontend') {
+      sh '''
+      # Move the build output to a predictable folder if needed
+      mv dist/sakai-ng ../dist-sakai-ng-host
       '''
     }
   }
