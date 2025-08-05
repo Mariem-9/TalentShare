@@ -90,20 +90,21 @@ pipeline {
    stage('Build Frontend') {
   steps {
     dir('frontend') {
-      sh 'tar -cf frontend.tar .'
+      sh 'tar -cf ../frontend.tar .'
       sh '''
       docker run --rm -i -w /app node:18-alpine sh -c "
         apk add --no-cache tar &&
-        mkdir /app &&
+        mkdir -p /app &&
         tar -xf - -C /app &&
         cd /app &&
         npm install &&
         npm run build
-      " < frontend.tar
+      " < ../frontend.tar
       '''
     }
   }
 }
+
 
 
         stage('Docker Build Frontend') {
