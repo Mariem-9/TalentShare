@@ -11,6 +11,7 @@ pipeline {
     }
 
     stages {
+	// ========== BACKEND ==========
         stage('Checkout') {
             steps {
                 git branch: 'main', url: 'https://github.com/Mariem-9/TalentShare.git'
@@ -81,6 +82,48 @@ pipeline {
                 sh '''
                   docker rm -f backend || true
                   docker run -d --network talentshare-net -p 8081:8080 --name backend $IMAGE_NAME
+                '''
+            }
+        }
+   // ========== FRONTEND CI/CD ==========
+
+        stage('Install Frontend Dependencies') {
+            steps {
+                dir('frontend') {
+                    sh 'npm install'
+                }
+            }
+        }
+
+        stage('Test Frontend') {
+            steps {
+                dir('frontend') {
+                    sh 'npm run test -- --watch=false'
+                }
+            }
+        }
+
+        stage('Build Frontend') {
+            steps {
+                dir('frontend') {
+                    sh 'npm run build'
+                }
+            }
+        }
+
+        stage('Docker Build Frontend') {
+            steps {
+                dir('frontend') {
+                    sh 'docker build -t talentshare-frontend .'
+                }
+            }
+        }
+
+        stage('Docker Run Frontend') {
+            steps {
+                sh '''
+                  docker rm -f frontend || true
+                  docker run -d --network talentshare-net -p 4200:80 --name frontend talentshare-frontend
                 '''
             }
         }
