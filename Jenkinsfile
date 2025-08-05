@@ -103,6 +103,7 @@ pipeline {
 " < ../frontend.tar
 
       '''
+sh 'docker run --rm -v $PWD:/app -w /app node:18-alpine cp -r dist ./'
     }
   }
 }
