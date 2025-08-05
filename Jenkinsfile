@@ -87,9 +87,13 @@ pipeline {
         }
    // ========== FRONTEND CI/CD ==========
 
-     stage('Install Frontend Dependencies') {
+   stage('Install Frontend Dependencies') {
     steps {
         dir('frontend') {
+            sh 'ls -la'
+            sh """
+              docker run --rm -v ${WORKSPACE}/frontend:/app -w /app node:18-alpine ls -la
+            """
             sh """
               docker run --rm -v ${WORKSPACE}/frontend:/app -w /app node:18-alpine npm install
             """
