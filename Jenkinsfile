@@ -6,10 +6,6 @@ pipeline {
         maven 'Maven 3.9.6'
     }
 
-    environment {
-        SONAR_TOKEN = credentials('SONAR_TOKEN')
-    }
-
     stages {
         stage('Checkout') {
             steps {
@@ -33,19 +29,22 @@ pipeline {
             }
         }
 
-        stage('Sonar Analysis') {
+       stage('Sonar Analysis') {
             steps {
                 dir('backend') {
-                    sh """
-                      mvn sonar:sonar \
-                      -Dsonar.projectKey=Mariem-9_TalentShare \
-                      -Dsonar.organization=mariem-9 \
-                      -Dsonar.host.url=https://sonarcloud.io \
-                      -Dsonar.login=$SONAR_TOKEN
-                    """
+                    withCredentials([string(credentialsId: 'SONAR_TOKEN', variable: 'SONAR_TOKEN')]) {
+                        sh '''
+                          mvn sonar:sonar \
+                          -Dsonar.projectKey=Mariem-9_TalentShare \
+                          -Dsonar.organization=mariem-9 \
+                          -Dsonar.host.url=https://sonarcloud.io \
+                          -Dsonar.login=$SONAR_TOKEN
+                        '''
+                    }
                 }
             }
         }
+
 
         stage('Package') {
             steps {
