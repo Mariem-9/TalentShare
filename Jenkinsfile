@@ -73,8 +73,8 @@ pipeline {
 stage('Fix Docker Socket Permissions') {
     steps {
         sh '''
-        sudo chown root:docker /var/run/docker.sock || true
-        sudo chmod 660 /var/run/docker.sock || true
+        chown root:docker /var/run/docker.sock || true
+        chmod 660 /var/run/docker.sock || true
         '''
     }
 }
