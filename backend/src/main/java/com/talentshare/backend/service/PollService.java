@@ -136,6 +136,7 @@ public class PollService {
     }
 
     private PollResponse mapToDto(Poll poll, Long votedChoiceId) {
+        String creatorUsername = poll.getGroupe().getCreateur().getUsername();///
         return new PollResponse(
                 poll.getId(),
                 poll.getQuestion(),
@@ -143,7 +144,8 @@ public class PollService {
                 poll.getChoices().stream()
                         .map(c -> new PollChoiceDTO(c.getId(), c.getText(), c.getVoteCount()))
                         .toList(),
-                votedChoiceId
+                votedChoiceId,
+            creatorUsername
         );
     }
     public PollResponse editPoll(Long pollId, PollRequest updatedRequest, String username) {
