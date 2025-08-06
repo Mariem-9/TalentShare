@@ -78,32 +78,33 @@ pipeline {
         }
 
          stage('Docker Run') {
-            steps {
-                sh '''
-                  docker rm -f backend || true
-                  docker run -d --network talentshare-net -p 8081:8080 --name backend $IMAGE_NAME
-                '''
-            }
-        }
-   // ========== FRONTEND CI/CD ==========
-
-   
-        stage('Docker Build Frontend') {
-    steps {
-        dir('frontend') {
-            sh 'docker build -t talentshare-frontend .'
-        }
-    }
-}
-
-stage('Docker Run Frontend') {
     steps {
         sh '''
-          docker rm -f frontend || true
-          docker run -d --network talentshare-net -p 4200:80 --name frontend talentshare-frontend
+          docker rm -f backend || true
+          docker run -d --network talentshare-net -p 8081:8080 \
+            -e SPRING_PROFILES_ACTIVE=docker \
+            --name backend $IMAGE_NAME
         '''
     }
 }
 
+   // ========== FRONTEND CI/CD ==========
+
+        stage('Docker Build Frontend') {
+            steps {
+                dir('frontend') {
+                    sh 'docker build -t talentshare-frontend .'
+                }
+            }
+        }
+
+        stage('Docker Run Frontend') {
+            steps {
+                sh '''
+                  docker rm -f frontend || true
+                  docker run -d --network talentshare-net -p 4200:80 --name frontend talentshare-frontend
+                '''
+            }
+        }
     }
 }
