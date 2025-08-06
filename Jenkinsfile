@@ -70,14 +70,6 @@ pipeline {
                 sh 'docker --version'
             }
         }
-stage('Fix Docker Socket Permissions') {
-    steps {
-        sh '''
-        chown root:docker /var/run/docker.sock || true
-        chmod 660 /var/run/docker.sock || true
-        '''
-    }
-}
 
         stage('Docker Build') {
             steps {
