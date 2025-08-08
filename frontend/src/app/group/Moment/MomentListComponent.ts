@@ -22,85 +22,83 @@ import { OverlayPanelModule } from 'primeng/overlaypanel';
     template: `
     <div class="w-[400px] mx-auto  flex flex-col items-center justify-center mb-2 border border-blue-200 rounded-md p-2">
         <p class="text-2xl font-semibold text-gray-800 mb-0">Moments</p>
-        <p class="text-sm text-gray-500 mt-0">Capture. React. Remember.</p>
+        <p class="text-md text-gray-500 mt-0">Capture. React. Remember.</p>
     </div>
-
-    <p-carousel [value]="moments" [numVisible]="1" [numScroll]="1" [circular]="false"
-    [autoplayInterval]="0" [showIndicators]="true" [style.margin]="'auto'" *ngIf="moments.length > 0">
-        <ng-template let-moment pTemplate="item">
-            <div class="card flex flex-col gap-1 p-2 shadow-md rounded-md max-w-md mx-auto w-[28rem] h-96  ">
-                <div class="flex-grow ">
-                    <div *ngIf="mediaUrls[moment.id] && moment.media" class="mb-4 border rounded-lg ">
-                        <div  class="relative mx-auto h-48 bg-gray-100 rounded-lg overflow-hidden">
-                            <ng-container *ngIf="mediaUrls[moment.id]">
-                                <img *ngIf="moment.media.fileType?.startsWith('image/')" [src]="mediaUrls[moment.id]" [alt]="moment.texte"
-                                class="w-full h-full object-cover rounded-lg cursor-pointer" (click)="openMediaModal(mediaUrls[moment.id], 'image')" />
-                                <video *ngIf="moment.media.fileType?.startsWith('video/')" controls class="w-full h-full object-cover rounded-lg cursor-pointer"
-                                (click)="openMediaModal(mediaUrls[moment.id], 'video')">
-                                <source [src]="mediaUrls[moment.id]" [type]="moment.media.fileType" /> Votre navigateur ne supporte pas la vidéo.</video>
-                            </ng-container>
-                            </div>
-                        </div>
-                        <div class="w-full h-full flex" [ngClass]="{ 'justify-center items-center text-center': !moment.media || !mediaUrls[moment.id] }">
-                            <ng-container >
-                                <div class="text-base text-gray-800 leading-relaxed mb-1">
-                                    <span class="font-semibold">{{ getTruncatedText(moment) }}</span>
-                                    <button *ngIf="shouldShowReadMore(moment)" (click)="openReadMoreModal(moment)"
-                                        class="text-blue-600 text-sm mt-1 underline hover:text-blue-800"> Read more </button>
-
-                                    <div class="text-sm text-gray-600 mt-1 italic flex justify-end items-center gap-1">
-                                        <ng-container *ngIf="isAuthor(moment); else notAuthor">
-                                            <i *ngIf="!moment.public" class="pi pi-lock text-red-400 ml-2" title="Private"></i>
-                                            <i *ngIf="moment.public && !moment.approvedByCreator" class="pi pi-clock text-yellow-500 ml-2" title="Pending approval"></i>
-                                            <i *ngIf="moment.public && moment.approvedByCreator" class="pi pi-globe text-blue-500 ml-2" title="Public"></i>
-                                        </ng-container>
-                                        <ng-template #notAuthor>
-                                            <i class="pi pi-user mr-1 text-[8px]" title="Author"></i>
-                                        </ng-template>
-                                            {{ moment.auteur.user.username }}, {{ moment.groupe?.nom || 'Not specified' }} · {{ moment.datePublication | date:'longDate' }}
-                                    </div>
+        <p-carousel [value]="moments" [numVisible]="1" [numScroll]="1" [circular]="false"
+        [autoplayInterval]="0" [showIndicators]="true" [style.margin]="'auto'" *ngIf="moments.length > 0">
+            <ng-template let-moment pTemplate="item">
+                <div class="card flex flex-col gap-1 p-2 shadow-md rounded-md max-w-md mx-auto w-[28rem] h-96  ">
+                    <div class="flex-grow ">
+                        <div *ngIf="mediaUrls[moment.id] && moment.media" class="mb-4 border rounded-lg ">
+                            <div  class="relative mx-auto h-48 bg-gray-100 rounded-lg overflow-hidden">
+                                <ng-container *ngIf="mediaUrls[moment.id]">
+                                    <img *ngIf="moment.media.fileType?.startsWith('image/')" [src]="mediaUrls[moment.id]" [alt]="moment.texte"
+                                    class="w-full h-full object-cover rounded-lg cursor-pointer" (click)="openMediaModal(mediaUrls[moment.id], 'image')" />
+                                    <video *ngIf="moment.media.fileType?.startsWith('video/')" controls class="w-full h-full object-cover rounded-lg cursor-pointer"
+                                    (click)="openMediaModal(mediaUrls[moment.id], 'video')">
+                                    <source [src]="mediaUrls[moment.id]" [type]="moment.media.fileType" /> Votre navigateur ne supporte pas la vidéo.</video>
+                                </ng-container>
                                 </div>
-                            </ng-container>
+                            </div>
+                            <div class="w-full h-full flex" [ngClass]="{ 'justify-center items-center text-center': !moment.media || !mediaUrls[moment.id] }">
+                                <ng-container >
+                                    <div class="text-base text-gray-800 leading-relaxed mb-1">
+                                        <span class="font-semibold">{{ getTruncatedText(moment) }}</span>
+                                        <button *ngIf="shouldShowReadMore(moment)" (click)="openReadMoreModal(moment)"
+                                            class="text-blue-600 text-sm mt-1 underline hover:text-blue-800"> Read more </button>
+
+                                        <div class="text-sm text-gray-600 mt-1 italic flex justify-end items-center gap-1">
+                                            <ng-container *ngIf="isAuthor(moment); else notAuthor">
+                                                <i *ngIf="!moment.public" class="pi pi-lock text-red-400 ml-2" title="Private"></i>
+                                                <i *ngIf="moment.public && !moment.approvedByCreator" class="pi pi-clock text-yellow-500 ml-2" title="Pending approval"></i>
+                                                <i *ngIf="moment.public && moment.approvedByCreator" class="pi pi-globe text-blue-500 ml-2" title="Public"></i>
+                                            </ng-container>
+                                            <ng-template #notAuthor>
+                                                <i class="pi pi-user mr-1 text-[8px]" title="Author"></i>
+                                            </ng-template>
+                                                {{ moment.auteur.user.username }}, {{ moment.groupe?.nom || 'Not specified' }} · {{ moment.datePublication | date:'longDate' }}
+                                        </div>
+                                    </div>
+                                </ng-container>
+                        </div>
+                    </div>
+                        <div class="flex items-center justify-end text-sm text-gray-600 mt-4">
+                            <div class="flex items-center gap-3">
+                                <ng-container>
+                                    <div class="relative">
+                                        <div *ngIf="showReactionPickerForMomentId === moment.id" class="absolute bottom-full mb-2 left-1/2  -translate-x-[40%] bg-white border rounded shadow-lg p-2 z-50 flex gap-2">
+                                            <button *ngFor="let emoji of allowedReactions" class="text-2xl hover:scale-110 transition-transform" (click)="submitReaction(moment, emoji)"> {{ emoji }} </button>
+                                        </div>
+                                        <button pButton type="button" [label]="selectedReactions[moment.id] || ''" [icon]="selectedReactions[moment.id] ? '' : 'pi pi-heart'"
+                                        class="p-button p-button-sm p-button-outlined p-button-success" (click)="reactToMoment(moment)" (dblclick)="deleteReaction(moment)"></button>
+                                    </div>
+                                    <button pButton type="button"  icon="pi pi-comments" class="p-button p-button-sm p-button-outlined p-button-secondary"
+                                    (click)="commentOnMoment(moment)" ></button>
+                                    <button pButton type="button" icon="pi pi-eye" class="p-button p-button-sm p-button-outlined p-button-help" (click)="openReactionsDialog(moment)"></button>
+                                </ng-container>
+                                <ng-container *ngIf="isAuthor(moment)">
+                                    <button pButton type="button" icon="pi pi-pencil" class="p-button p-button-sm p-button-outlined p-button-info"
+                                        (click)="editMoment(moment)"> </button>
+                                    <button pButton type="button" icon="pi pi-trash" class="p-button p-button-sm p-button-outlined p-button-danger"
+                                        (click)="deleteMoment(moment)"> </button>
+                                </ng-container>
+                                <ng-container *ngIf="moment.public && !moment.approvedByCreator && isGroupCreator(moment)">
+                                    <button type="button" pButton icon="pi pi-ellipsis-v" class="p-button p-button-sm p-button-outlined p-button-secondary"
+                                        (click)="menu.toggle($event)" title="Actions"> </button>
+                                    <p-overlayPanel #menu [showCloseIcon]="true">
+                                        <div class="flex flex-col gap-2">
+                                            <button pButton type="button" icon="pi pi-globe" class="p-button p-button-sm p-button-outlined p-button-success"
+                                                (click)="approveMoment(moment.id); menu.hide()"> Go Public </button>
+                                            <button pButton type="button" icon="pi pi-times" class="p-button p-button-sm p-button-outlined p-button-danger"
+                                                (click)="rejectMoment(moment.id); menu.hide()"> Keep Private </button>
+                                        </div>
+                                    </p-overlayPanel>
+                                </ng-container>
+                            </div>
                     </div>
                 </div>
-                    <div class="flex items-center justify-end text-sm text-gray-600 mt-4">
-                        <div class="flex items-center gap-3">
-                            <ng-container>
-                                <div class="relative">
-                                    <div *ngIf="showReactionPickerForMomentId === moment.id" class="absolute bottom-full mb-2 left-1/2  -translate-x-[22%] bg-white border rounded shadow-lg p-2 z-50 flex gap-2">
-                                        <button *ngFor="let emoji of allowedReactions" class="text-2xl hover:scale-110 transition-transform" (click)="submitReaction(moment, emoji)"> {{ emoji }} </button>
-                                    </div>
-                                    <button pButton type="button" [label]="selectedReactions[moment.id] || ''" [icon]="selectedReactions[moment.id] ? '' : 'pi pi-heart'"
-                                    class="p-button p-button-sm p-button-outlined p-button-success" (click)="reactToMoment(moment)" (dblclick)="deleteReaction(moment)"></button>
-                                </div>
-                                <button pButton type="button"  icon="pi pi-comments" class="p-button p-button-sm p-button-outlined p-button-secondary"
-                                (click)="commentOnMoment(moment)" ></button>
-                                <button pButton type="button" icon="pi pi-eye" class="p-button p-button-sm p-button-outlined p-button-help" (click)="openReactionsDialog(moment)"></button>
-                            </ng-container>
-                            <ng-container *ngIf="isAuthor(moment)">
-                                <button pButton type="button" icon="pi pi-pencil" class="p-button p-button-sm p-button-outlined p-button-info"
-                                    (click)="editMoment(moment)"> </button>
-                                <button pButton type="button" icon="pi pi-trash" class="p-button p-button-sm p-button-outlined p-button-danger"
-                                    (click)="deleteMoment(moment)"> </button>
-                            </ng-container>
-                             <ng-container *ngIf="moment.public && !moment.approvedByCreator && isGroupCreator(moment)">
-                                <button type="button" pButton icon="pi pi-ellipsis-v" class="p-button p-button-sm p-button-outlined p-button-secondary"
-                                    (click)="menu.toggle($event)" title="Actions"> </button>
-                                <p-overlayPanel #menu [showCloseIcon]="true">
-                                    <div class="flex flex-col gap-2">
-                                        <button pButton type="button" icon="pi pi-globe" class="p-button p-button-sm p-button-outlined p-button-success"
-                                            (click)="approveMoment(moment.id); menu.hide()"> Go Public </button>
-                                        <button pButton type="button" icon="pi pi-times" class="p-button p-button-sm p-button-outlined p-button-danger"
-                                            (click)="rejectMoment(moment.id); menu.hide()"> Keep Private </button>
-                                    </div>
-                                </p-overlayPanel>
-                            </ng-container>
-                        </div>
-                </div>
-            </div>
-        </ng-template>
-    </p-carousel>
-
+            </ng-template>
+        </p-carousel>
     <div *ngIf="moments.length === 0" class="text-center italic text-gray-500 space-y-4">
         <div>No moments yet. Why not create the first one?</div>
         <img src="assets/images/NoMoment.png" alt="NoMoment" class="max-h-64 max-w-6xl object-contain transition-transform duration-300 hover:scale-105 mx-auto block" />
@@ -119,17 +117,17 @@ import { OverlayPanelModule } from 'primeng/overlaypanel';
     </p-dialog>
 
     <p-dialog header="Reactions Overview" [(visible)]="showReactionsDialog" [modal]="true" [style]="{width: '400px'}" (onHide)="selectedReactionsList = []">
-    <ng-container *ngIf="selectedReactionsList?.length ?? 0 > 0; else noReactions">
-        <ul class="list-none p-0">
-        <li *ngFor="let reaction of selectedReactionsList" class="mb-2">
-            <span class="text-xl mr-2">{{ getEmojiFromReactionType(reaction.type) }}</span>
-            <strong>{{ reaction.username }}</strong>
-        </li>
-        </ul>
-    </ng-container>
-    <ng-template #noReactions>
-        <div class="text-center text-gray-500">No reactions for this moment yet.</div>
-    </ng-template>
+        <ng-container *ngIf="selectedReactionsList?.length ?? 0 > 0; else noReactions">
+            <ul class="list-none p-0">
+                <li *ngFor="let reaction of selectedReactionsList" class="mb-2">
+                    <span class="text-xl mr-2">{{ getEmojiFromReactionType(reaction.type) }}</span>
+                    <strong>{{ reaction.username }}</strong>
+                </li>
+            </ul>
+        </ng-container>
+        <ng-template #noReactions>
+            <div class="text-center text-gray-500">No reactions for this moment yet.</div>
+        </ng-template>
     </p-dialog>
 
     <app-moment-publish *ngIf="editingMoment" [groupeId]="groupeId" [momentToEdit]="editingMoment" (momentUpdated)="onMomentUpdated($event)"

@@ -44,10 +44,11 @@ import { GroupDetailsWidget } from '../GroupInfo/group-details-widget';
                         <p-iconfield style="width: 100%;">
                             <p-inputicon class="pi pi-search" />
                             <input type="text" pInputText  [(ngModel)]="searchText" (ngModelChange)="filterGroups()" placeholder="Search groups..."
-                            class=" w-full min-w-[280px] w-[280px] bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded px-2 py-1" />
+                            class=" w-full min-w-[280px] bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded px-2 py-1" />
                         </p-iconfield>
                     </ng-template>
                 </p-menubar>
+
                 </div>
             </div>
             <div *ngIf="searchText.trim() !== '' && filteredGroups.length > 0" class="col-span-12 xl:col-span-6 mt-6">
@@ -215,8 +216,9 @@ export class NestedMenuComponent implements OnInit {
             .map(([role]) => role);
 
         const isPending = userRoles.includes('en_attente');
+        const isNotMember = userRoles.length === 0;
 
-        if (isPending) {
+        if (isPending || isNotMember) {
             // this.groupallowed  = group;
             // this.displayDialogDetails = true;
             this.groupallowed = { ...group, id: group.id };

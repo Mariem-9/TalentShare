@@ -20,16 +20,15 @@ import { MomentCarouselComponent } from "./Moment/MomentListComponent";
         GroupChatComponent,PollListComponent,MomentCarouselComponent],
     template: `
     <div class="card" style="height: 100vh; width: 100vw;" >
-    <p-splitter [style]="{ height: '100%', width: '100%' }" [panelSizes]="[40, 67]" [minSizes]="[40, 30]" styleClass="mb-8 h-full">
+    <p-splitter [style]="{ height: '100%', width: '100%' }" [panelSizes]="[45, 52]" [minSizes]="[45, 52]" styleClass="mb-8 h-full">
         <ng-template pTemplate="panel">
             <div class="flex flex-col h-full">
                 <app-group-details-widget [groupId]="groupId" (membershipChanged)="onMembershipChanged()"></app-group-details-widget>
                 <img src="assets/images/groups.png" alt="groups" class="max-h-64 max-w-6xl object-contain transition-transform duration-300 hover:scale-105" />
                 <div class="flex flex-col h-full justify-center items-center p-4 text-center">
-                    <div class="flex items-center justify-center mb-6">
-                        <div class="h-0.5 w-20 bg-gradient-to-r from-blue-200 to-blue-400 mr-4"></div>
-                            <span class="text-blue-500 font-extrabold text-2xl select-none">Uncover Group Members</span>
-                        <div class="h-0.5 w-20 bg-gradient-to-l from-blue-200 to-blue-400 ml-4"></div>
+                    <div class="w-[470px] mx-auto  flex flex-col items-center justify-center mb-2 border border-blue-200 rounded-md p-2">
+                        <p class="text-2xl font-semibold text-gray-800 mb-0">Network</p>
+                        <p class="text-md text-gray-500 mt-0">Connecting talents . sharing visions.</p>
                     </div>
                 <div class="flex-grow overflow-auto">
                     <app-tree-widget #treeWidget [groupId]="groupId"></app-tree-widget>
@@ -38,31 +37,26 @@ import { MomentCarouselComponent } from "./Moment/MomentListComponent";
             </div>
         </ng-template>
         <ng-template pTemplate="panel">
-        <div class="flex flex-col h-full w-full" style="min-height: 0;">
+        <div class="flex flex-col h-full w-full  chat-background-pattern" style="min-height: 0;">
             <app-group-chat-widget class="flex-grow h-full w-full"[groupId]="groupId" (pollCreated)="onPollCreated($event.poll, $event.type)" (momentPublishedEvent)="reloadMoments()" ></app-group-chat-widget>
         </div>
         </ng-template>
         <ng-template pTemplate="panel">
+            <div class="flex flex-col h-full overflow-y-auto overflow-x-hidden">
                 <p-splitter layout="vertical" [panelSizes]="[50, 50]" [minSizes]="[50, 50]" >
                     <ng-template pTemplate="panel">
-                        <div class="flex flex-col h-full min-h-0 w-full p-4">
+                        <div class="flex flex-col h-full min-h-0 w-full p-4 ">
                             <app-poll-list [groupId]="groupId"></app-poll-list>
 
                         </div>
                     </ng-template>
                     <ng-template pTemplate="panel">
-  <div class="flex flex-col h-full min-h-0 w-full p-4">
-    <app-moment-carousel [groupeId]="groupId"></app-moment-carousel>
-  </div>
-</ng-template>
-                    <!-- <ng-template pTemplate="panel">
-                        <p-splitter [panelSizes]="[50, 50]" >
-                            <ng-template pTemplate="panel">
-                                <div class="col flex items-center justify-center">Panel 4</div>
-                            </ng-template>
-                        </p-splitter>
-                    </ng-template> -->
+                        <div class="flex flex-col h-full min-h-0 w-full p-4 ">
+                            <app-moment-carousel [groupeId]="groupId"></app-moment-carousel>
+                        </div>
+                    </ng-template>
                 </p-splitter>
+            </div>
         </ng-template>
         </p-splitter>
     </div>
@@ -74,6 +68,14 @@ import { MomentCarouselComponent } from "./Moment/MomentListComponent";
 
     `,
     styles: [`
+
+    .chat-background-pattern {
+    background-image:
+        radial-gradient(circle 20px at 10px 20px, #dbeafe 15%, transparent 16%),
+        radial-gradient(circle 20px at 30px 0, #dbeafe 15%, transparent 16%);
+    background-size: 20px 20px;
+    background-repeat: repeat;
+    }
 
     ::ng-deep .p-splitter-gutter {
         background-color:  	#93c5fd !important;

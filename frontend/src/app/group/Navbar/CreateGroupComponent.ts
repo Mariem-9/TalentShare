@@ -27,7 +27,8 @@ import { GroupeService } from '../../services/GroupeService';
             <label for="groupTags">Add Tags</label>
             </p-floatlabel>
             <p-floatlabel>
-            <textarea pTextarea id="Description" [(ngModel)]="newGroup.description" [autoResize]="true" rows="5" cols="30" style="width: 100%;" maxlength="200"></textarea>
+            <textarea pTextarea id="Description" [(ngModel)]="newGroup.description" [autoResize]="true" rows="5" cols="30"
+            style="width: 100%;" maxlength="500"></textarea>
             <label for="Description">Description</label>
             </p-floatlabel>
         </div>
@@ -45,8 +46,10 @@ import { GroupeService } from '../../services/GroupeService';
         </p-fileupload>
         <ng-template pTemplate="footer">
             <div class="flex justify-end gap-2 w-full">
-            <p-button icon="pi pi-check" severity="success" rounded outlined (click)="createGroup()"></p-button>
-            <p-button icon="pi pi-times" severity="danger" rounded outlined (click)="close()"></p-button>
+                <button pButton type="button" icon="i pi pi-check" class="p-button p-button-sm p-button-outlined p-button-info"
+                                (click)="createGroup()" >Create</button>
+                <button pButton type="button" icon="i pi pi-times" class="p-button p-button-sm p-button-outlined p-button-danger"
+                                (click)="close()" >Close</button>
             </div>
         </ng-template>
         </p-dialog>

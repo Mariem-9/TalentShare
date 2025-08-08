@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
-import { Notfound } from './app/pages/notfound/notfound';
-import { Home } from './app/pages/Home/Home';
+import { Notfound } from './app/auth/notfound';
+import { Home } from './app/group/Home';
 import { AuthGuard } from './app/guards/auth.guard';
 import { NoAuthGuard } from './app/guards/no-auth.guard';
 import { RoleGuard } from './app/guards/role.guard';

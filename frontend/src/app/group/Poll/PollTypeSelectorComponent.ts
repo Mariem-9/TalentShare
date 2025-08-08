@@ -28,7 +28,7 @@ import { RadioButtonModule } from 'primeng/radiobutton';
             </div>
         </div>
         <div class="flex justify-end mt-6">
-            <button (click)="next()" [disabled]="!selectedType" class="bg-green-600 text-white px-4 py-2 rounded disabled:opacity-50 hover:bg-green-700"> Next </button>
+            <button (click)="next()" [disabled]="!selectedType" class="bg-blue-600 text-white px-4 py-2 rounded disabled:opacity-50 hover:bg-blue-700"> Next </button>
         </div>
     </div>
 </div>

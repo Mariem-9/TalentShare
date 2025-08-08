@@ -2,6 +2,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 export interface PollRequest {
     question: string;
@@ -22,6 +23,7 @@ export interface PollResponse {
     endDate: string;
     choices: PollChoiceDTO[];
     votedChoiceId?: number;
+    creatorUsername ?: number;
 
 }
 
@@ -29,58 +31,58 @@ export interface PollResponse {
     providedIn: 'root',
 })
 export class PollService {
-    private baseUrl = 'http://localhost:8080/api/polls';
+    private apiUrl = environment.apiUrl;
 
     constructor(private http: HttpClient) {}
 
     createPoll(poll: PollRequest): Observable<PollResponse> {
-        return this.http.post<PollResponse>(`${this.baseUrl}/create`, poll);
+        return this.http.post<PollResponse>(`${this.apiUrl}/polls/create`, poll);
     }
 
     vote(pollId: number, choiceId: number): Observable<void> {
-        return this.http.post<void>(`${this.baseUrl}/${pollId}/vote`, null, {
+        return this.http.post<void>(`${this.apiUrl}/polls/${pollId}/vote`, null, {
         params: { choiceId: choiceId.toString() },
         });
     }
 
     getResults(pollId: number): Observable<PollResponse> {
-        return this.http.get<PollResponse>(`${this.baseUrl}/${pollId}`);
+        return this.http.get<PollResponse>(`${this.apiUrl}/polls/${pollId}`);
     }
 
     editPoll(pollId: number, updatedPoll: PollRequest): Observable<PollResponse> {
-        return this.http.put<PollResponse>(`${this.baseUrl}/${pollId}/edit`, updatedPoll);
+        return this.http.put<PollResponse>(`${this.apiUrl}/polls/${pollId}/edit`, updatedPoll);
     }
 
     deletePoll(pollId: number): Observable<void> {
-        return this.http.delete<void>(`${this.baseUrl}/${pollId}`);
+        return this.http.delete<void>(`${this.apiUrl}/polls/${pollId}`);
     }
 
     editChoice(choiceId: number, newText: string): Observable<void> {
-        return this.http.put<void>(`${this.baseUrl}/choices/${choiceId}/edit`, null, {
+        return this.http.put<void>(`${this.apiUrl}/polls/choices/${choiceId}/edit`, null, {
         params: { newText },
         });
     }
 
     deleteChoice(choiceId: number): Observable<void> {
-        return this.http.delete<void>(`${this.baseUrl}/choices/${choiceId}`);
+        return this.http.delete<void>(`${this.apiUrl}/polls/choices/${choiceId}`);
     }
 
     editVote(pollId: number, newChoiceId: number): Observable<void> {
-        return this.http.put<void>(`${this.baseUrl}/${pollId}/vote/edit`, null, {
+        return this.http.put<void>(`${this.apiUrl}/polls/${pollId}/vote/edit`, null, {
         params: { newChoiceId: newChoiceId.toString() },
         });
     }
 
     deleteVote(pollId: number): Observable<void> {
-        return this.http.delete<void>(`${this.baseUrl}/${pollId}/vote`);
+        return this.http.delete<void>(`${this.apiUrl}/polls/${pollId}/vote`);
     }
 
     getPollsByGroup(groupId: number): Observable<PollResponse[]> {
-    return this.http.get<PollResponse[]>(`${this.baseUrl}/group/${groupId}`);
+    return this.http.get<PollResponse[]>(`${this.apiUrl}/polls/group/${groupId}`);
     }
 
     getClosedPollsByGroup(groupId: number): Observable<PollResponse[]> {
-    return this.http.get<PollResponse[]>(`${this.baseUrl}/group/${groupId}/closed`);
+    return this.http.get<PollResponse[]>(`${this.apiUrl}/polls/group/${groupId}/closed`);
     }
 
 

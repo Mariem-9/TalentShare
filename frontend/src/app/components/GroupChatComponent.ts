@@ -76,36 +76,38 @@ import { EmojiPickerComponent } from './EmojiPickerComponent';
             <i class="pi pi-times text-sm"></i>
             </button>
         </div>
-        <div class="relative w-full">
-            <textarea pTextarea [(ngModel)]="newMessage" name="message" placeholder="Type your message..."
-            class="w-full p-2 pr-12  rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent "
-            rows="1" [autoResize]="true" maxlength="115" (input)="onInput($event)"></textarea>
-
-            <div class="absolute right-6 top-1/2 transform -translate-y-1/2 flex items-center space-x-3 ">
+        <div class="flex w-full space-x-3 items-center">
+            <div class="flex-grow">
+                <textarea pTextarea [(ngModel)]="newMessage" name="message" placeholder="Type your message..."
+                class="w-full p-2 pr-12  rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent "
+                rows="1" [autoResize]="true" maxlength="500" (input)="onInput($event)"></textarea>
+            </div>
+            <div class="flex space-x-3">
 
                 <button *ngIf="canCreatePoll" type="button" (click)="onCreatePoll()" class="text-purple-600 hover:text-purple-800 focus:outline-none"
-                style="background: transparent; border: none; padding: 0; cursor: pointer;" aria-label="Créer un sondage">
+                style="background: transparent; border: none; padding: 0; cursor: pointer;" aria-label="Créer un sondage" title="Create a poll">
                 <i class="pi pi-chart-bar text-2xl"></i>
                 </button>
 
                 <button type="button" (click)="toggleMomentPublish()" class="text-gray-500 hover:text-gray-600 focus:outline-none" style="background: transparent; border: none; padding: 0; cursor: pointer;"
-                aria-label="Publier un moment" > <i class="pi pi-paperclip text-2xl"></i></button>
+                aria-label="Publier un moment" title="Attach a moment" > <i class="pi pi-paperclip text-2xl"></i></button>
 
                 <button type="button" (click)="showEmojiPicker = !showEmojiPicker" class="text-yellow-500 hover:text-yellow-600 focus:outline-none"
-                style="background: transparent; border: none; padding: 0; cursor: pointer;" aria-label="Toggle emoji picker" ><i class="pi pi-thumbs-up text-2xl"></i> </button>
+                style="background: transparent; border: none; padding: 0; cursor: pointer;" aria-label="Toggle emoji picker" title="Add an emoji"
+                ><i class="pi pi-thumbs-up text-2xl"></i> </button>
 
                 <button
                 type="submit"
                 [disabled]="!websocketReady"
                 class="text-blue-600 hover:text-blue-800 focus:outline-none"
                 style="background: transparent; border: none; padding: 0; cursor: pointer;"
-                aria-label="Send message"
+                aria-label="Send message" title="Send message"
                 >
                 <i class="pi pi-send text-2xl"></i>
                 </button>
             </div>
             <div *ngIf="showEmojiPicker" class="absolute bottom-16 right-4 z-10"> <app-emoji-picker (emojiSelected)="addEmoji($event)"></app-emoji-picker></div>
-            </div>
+        </div>
     </form>
 
     <app-poll-type-selector
@@ -253,11 +255,14 @@ export class GroupChatComponent implements OnInit {
     //     this.newMessage = '';
     // }
     // }
-    onSendMessage(event?: Event) {
+        onSendMessage(event?: Event) {
     if (event) event.preventDefault();
+    console.log('Send clicked:', this.websocketReady, this.newMessage);
 
-    if (!this.websocketReady || !this.newMessage.trim()) return;
-
+    if (!this.websocketReady || !this.newMessage.trim()) {
+        console.log('Send aborted: websocket not ready or message empty');
+        return;
+    }
     if (this.editingMessageId !== null) {
         this.saveEdit();
     } else {
@@ -271,6 +276,7 @@ export class GroupChatComponent implements OnInit {
         this.newMessage = '';
     }
     }
+
     toggleSelected(msg: ChatMessage): void {
         if (msg.senderUsername !== this.currentUsername) return;
 
@@ -371,8 +377,8 @@ export class GroupChatComponent implements OnInit {
 
     onInput(event: Event) {
         const input = event.target as HTMLTextAreaElement;
-        if (input.value.length > 115) {
-            input.value = input.value.slice(0, 115);
+        if (input.value.length > 500) {
+            input.value = input.value.slice(0, 500);
             this.newMessage = input.value;
         }
     }

@@ -10,6 +10,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
+import { TextareaModule } from 'primeng/textarea';
 
 @Component({
     selector: 'app-poll-popup',
@@ -21,7 +22,7 @@ import { MessageService } from 'primeng/api';
         CalendarModule,
         FloatLabelModule,
         InputTextModule,
-        ButtonModule,ToastModule
+        ButtonModule,ToastModule,TextareaModule
     ],
     template: `
         <p-toast></p-toast>
@@ -29,7 +30,7 @@ import { MessageService } from 'primeng/api';
             <div class="bg-white rounded-lg p-6 w-full max-w-md shadow-lg relative">
                 <h2 class="text-xl font-bold mb-6">Create {{ pollType | titlecase }} Poll</h2>
                 <p-floatLabel class="mb-6">
-                    <input pInputText id="question" type="text" [(ngModel)]="question" class="w-full"/>
+                    <textarea pTextarea [(ngModel)]="question" id="question" class="w-full" [autoResize]="true" rows="1"></textarea>
                     <label for="question">Poll Question </label>
                 </p-floatLabel>
                 <p-floatLabel class="mb-6 w-full">
@@ -47,7 +48,7 @@ import { MessageService } from 'primeng/api';
                         <button *ngIf="options.length > 2" pButton type="button" icon="pi pi-times" class="p-button-rounded p-button-text p-button-danger"
                             (click)="removeOption(i)" title="Remove option" ></button>
                     </div>
-                    <button pButton type="button" icon="pi pi-plus" label="Add another option" class="p-button-text p-button-sm mb-3" (click)="addOption()" ></button>
+                    <button pButton type="button" icon="pi pi-plus" label="Add another option" class="p-button-text p-button-sm mb-3 " (click)="addOption()" ></button>
                 </div>
                 <div *ngIf="pollType === 'decision'" class="mb-6">
                     <div class="flex flex-col gap-6">
@@ -80,11 +81,11 @@ import { MessageService } from 'primeng/api';
                         <button *ngIf="options.length > 2" pButton type="button" icon="pi pi-times" class="p-button-rounded p-button-text p-button-danger"
                             (click)="removeOption(i)" title="Remove option" ></button>
                     </div>
-                    <button pButton type="button" icon="pi pi-plus" label="Add another option" class="p-button-text p-button-sm mb-3" (click)="addOption()" ></button>
+                    <button pButton type="button" icon="pi pi-plus" label="Add another option" class="p-button-text p-button-sm mb-3 " (click)="addOption()" ></button>
                 </div>
                 <div class="flex justify-end space-x-3 mt-6">
                     <button pButton type="button" label="Back" icon="pi pi-arrow-left" class="p-button-secondary" (click)="onCancel()" ></button>
-                    <button pButton type="button" label="Créer" icon="pi pi-check" class="p-button-success" (click)="onCreate()"></button>
+                    <button pButton type="button" label="Créer" icon="pi pi-check" class="p-button-primary" (click)="onCreate()"></button>
                 </div>
             </div>
         </div>

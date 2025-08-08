@@ -24,7 +24,7 @@ import { forkJoin, Observable } from 'rxjs';
     <div *ngIf="poll" class="card flex flex-col gap-4 p-4 shadow-md rounded-md max-w-md mx-auto">
     <div class="font-semibold text-xl mb-3 flex justify-between items-center">
         <span>Poll Question: {{ poll.question }}</span>
-        <div class="flex items-center gap-1" *ngIf="!readonly">
+        <div class="flex items-center gap-1" *ngIf="!readonly && currentUsername === creatorUsername">
             <button pButton icon="pi pi-pencil" class="p-button-text p-button-sm" #editBtn (click)="openEditPopup(); op.toggle($event)"></button>
             <button pButton class="p-button-text p-button-sm" (click)="confirmDelete()">
                 <i class="pi pi-trash" style="color: red;"></i>
@@ -150,6 +150,8 @@ export class PollDisplayComponent implements OnInit {
     @Input() pollType!: string;
     @Output() pollDeleted = new EventEmitter<void>();
     @Input() readonly: boolean = false;
+    @Input() currentUsername!: string;
+    @Input() creatorUsername!: string;
 
     poll?: PollResponse;
     voted = false;
@@ -170,6 +172,8 @@ export class PollDisplayComponent implements OnInit {
     constructor(private pollService: PollService , private confirmationService: ConfirmationService ,private messageService: MessageService) {}
 
     ngOnInit() {
+        // console.log('PollDisplayComponent: currentUsername =', this.currentUsername);
+        // console.log('PollDisplayComponent: creatorUsername =', this.creatorUsername);
         this.loadPoll();
     }
 

@@ -2,28 +2,29 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class ProfileService {
-    private apiUrl = 'http://localhost:8080/api/utilisateur';
+    private apiUrl = environment.apiUrl;
     constructor(private http: HttpClient) { }
     getUserProfile(): Observable<any> {
-        return this.http.get(`${this.apiUrl}/me`);
+        return this.http.get(`${this.apiUrl}/utilisateur/me`);
     }
     updateUserProfile(data: any): Observable<any> {
-    return this.http.put(`${this.apiUrl}/me`, data);}
+    return this.http.put(`${this.apiUrl}/utilisateur/me`, data);}
 
     getGroupRecommendations(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/recommendations`);
+    return this.http.get(`${this.apiUrl}/utilisateur/recommendations`);
     }
         getTalentOptions() {
-    return this.http.get<string[]>(`${this.apiUrl}/talents`);
+    return this.http.get<string[]>(`${this.apiUrl}/utilisateur/talents`);
     }
 
     getSkillOptions() {
-    return this.http.get<string[]>(`${this.apiUrl}/skills`);
+    return this.http.get<string[]>(`${this.apiUrl}/utilisateur/skills`);
     }
     getLanguageOptions() {
-    return this.http.get<string[]>(`${this.apiUrl}/languages`);
+    return this.http.get<string[]>(`${this.apiUrl}/utilisateur/languages`);
     }
 }

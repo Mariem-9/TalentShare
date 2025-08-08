@@ -1,12 +1,12 @@
 import { Component} from '@angular/core';
-import { NestedMenuComponent } from '../../group/Navbar/nested-menu-items.component';
-import {GroupRecommendationsComponent} from '../../group/Dashboard/group-recommendations.component';
-import { PendingGroupListComponent } from '../../group/Dashboard/PendingGroupListComponent';
+import { NestedMenuComponent } from './Navbar/nested-menu-items.component';
+import {GroupRecommendationsComponent} from './Dashboard/group-recommendations.component';
+import { PendingGroupListComponent } from './Dashboard/PendingGroupListComponent';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { AuthService } from '../../services/auth.service';
-import { AuditLogListComponent } from '../../group/Dashboard/AuditLogListComponent';
-import { PublicMomentsComponent } from '../../group/Dashboard/PublicMomentsComponent';
+import { AuthService } from '../services/auth.service';
+import { AuditLogListComponent } from './Dashboard/AuditLogListComponent';
+import { PublicMomentsComponent } from './Dashboard/PublicMomentsComponent';
 
 @Component({
     selector: 'app-home',

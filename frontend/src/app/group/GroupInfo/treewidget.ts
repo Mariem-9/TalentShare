@@ -18,66 +18,47 @@ import { GroupeService } from '../../services/GroupeService';
     standalone: true,
     imports: [CommonModule, FormsModule, TreeModule, TreeTableModule, AvatarModule, ConfirmDialogModule, ToastModule ,ButtonModule],
     template: `
-    <p-tree [value]="treeValue">
-        <ng-template let-node pTemplate="default">
-            <div  class="flex items-center" style="height: 28px;">
-                <!-- <i *ngIf="!node.data" class="pi" [ngClass]="{
-                'pi-star': node.label.startsWith('Group Owner'),
-                'pi-shield': node.label.startsWith('Group Moderators'),
-                'pi-users': node.label.startsWith('Active Members'),
-                'pi-clock': node.label.startsWith('Review Pending Requests')
-                }"
-                [ngStyle]="{'color': '#74726eff', 'font-size': '1.2rem', 'margin-right': '0.5rem'}"></i> -->
-                <p-avatar *ngIf="node.data" [image]="node.data.avatarSafeUrl" [label]="!node.data.avatarSafeUrl ? node.data.initial : null" shape="circle" styleClass="bg-primary"
-                [style]="{ 'width': '24px', 'height': '24px', 'font-size': '12px', 'margin-right': '0.5rem', 'display': 'flex', 'align-items': 'center','justify-content': 'center'}"> </p-avatar>
-                <!-- Afficher l'image si avatarUrl existe -->
-                <div class="grid" style="grid-template-columns: 180px auto; align-items: center; gap: 8px;">
-                    <div  class="text-left">{{ node.label }}</div>
-                    <div class="flex items-center gap-1 ">
-                        <ng-container *ngIf="isCreator && node.data?.type === 'pending'">
-                            <button pButton type="button" icon="pi pi-check" class="p-button p-button-sm p-button-outlined p-button-success"
-                            (click)="onAccept(node.data.id)" title="Accept Request">Accept</button>
-                            <button pButton type="button" icon="pi pi-times" class="p-button p-button-sm p-button-outlined p-button-danger"
-                            (click)="onRefuse(node.data.id)" title="Reject Request">Decline</button>
-                        </ng-container>
-                        <ng-container *ngIf="isCreator && node.data?.type === 'moderator'">
-                            <button pButton type="button" icon="pi pi-user-minus" class="p-button p-button-sm p-button-outlined p-button-warning"
-                            (click)="demoteToMember(node.data.id)" title="Demote to Member" >Demote</button>
-                        </ng-container>
-                        <ng-container *ngIf="isCreator && node.data?.type === 'member'">
-                            <button pButton type="button" icon="pi pi-shield" class="p-button p-button-sm p-button-outlined p-button-info"
-                            (click)="promoteToModerator(node.data.id)" title="Promote to Moderator" >Promote</button>
-                        </ng-container>
+    <div style="height: 360px; overflow-y: auto;">
+        <p-tree [value]="treeValue">
+            <ng-template let-node pTemplate="default">
+                <div  class="flex items-center" style="height: 28px;">
+                    <!-- <i *ngIf="!node.data" class="pi" [ngClass]="{
+                    'pi-star': node.label.startsWith('Group Owner'),
+                    'pi-shield': node.label.startsWith('Group Moderators'),
+                    'pi-users': node.label.startsWith('Active Members'),
+                    'pi-clock': node.label.startsWith('Review Pending Requests')
+                    }"
+                    [ngStyle]="{'color': '#74726eff', 'font-size': '1.2rem', 'margin-right': '0.5rem'}"></i> -->
+                    <p-avatar *ngIf="node.data" [image]="node.data.avatarSafeUrl" [label]="!node.data.avatarSafeUrl ? node.data.initial : null" shape="circle" styleClass="bg-primary"
+                    [style]="{ 'width': '24px', 'height': '24px', 'font-size': '12px', 'margin-right': '0.5rem', 'display': 'flex', 'align-items': 'center','justify-content': 'center'}"> </p-avatar>
+                    <!-- Afficher l'image si avatarUrl existe -->
+                    <div class="grid" style="grid-template-columns: 180px auto; align-items: center; gap: 8px;">
+                        <div  class="text-left">{{ node.label }}</div>
+                        <div class="flex items-center gap-1 ">
+                            <ng-container *ngIf="isCreator && node.data?.type === 'pending'">
+                                <button pButton type="button" icon="pi pi-check" class="p-button p-button-sm p-button-outlined p-button-success"
+                                (click)="onAccept(node.data.id)" title="Accept Request">Accept</button>
+                                <button pButton type="button" icon="pi pi-times" class="p-button p-button-sm p-button-outlined p-button-danger"
+                                (click)="onRefuse(node.data.id)" title="Reject Request">Decline</button>
+                            </ng-container>
+                            <ng-container *ngIf="isCreator && node.data?.type === 'moderator'">
+                                <button pButton type="button" icon="pi pi-user-minus" class="p-button p-button-sm p-button-outlined p-button-warning"
+                                (click)="demoteToMember(node.data.id)" title="Demote to Member" >Demote</button>
+                            </ng-container>
+                            <ng-container *ngIf="isCreator && node.data?.type === 'member'">
+                                <button pButton type="button" icon="pi pi-shield" class="p-button p-button-sm p-button-outlined p-button-info"
+                                (click)="promoteToModerator(node.data.id)" title="Promote to Moderator" >Promote</button>
+                            </ng-container>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </ng-template>
-    </p-tree>
+            </ng-template>
+        </p-tree>
+    </div>
     <p-toast></p-toast>
     <p-confirmDialog [style]="{width: '40em'}" styleClass="custom-confirm-dialog"></p-confirmDialog>
 
     `,
-    styles: [`
-//     ::ng-deep .custom-confirm-dialog .p-confirm-dialog-message,
-// ::ng-deep .custom-confirm-dialog .p-confirm-dialog-header {
-//   font-size: 3rem !important; /* increase this for larger text */
-// }
-
-// ::ng-deep .custom-confirm-dialog .p-button {
-//   font-size: 1rem !important; /* make buttons text larger too */
-// }
-.p-confirm-dialog .p-confirm-dialog-message {
-  font-size: 1.2rem;
-  font-style: italic;
-}
-
-.p-confirm-dialog .p-dialog-header {
-  font-size: 1.3rem;
-  color: #003366;
-}
-
-
-    `],
     providers: [NodeService,ConfirmationService, MessageService]
 })
 export class Treewidget implements OnInit {
@@ -153,10 +134,8 @@ export class Treewidget implements OnInit {
             ...(this.isCreator ? [{
             label: `Review Pending Requests ${formatCount(data.en_attente?.length || 0)}`,
             expanded: true,
-            children: data.en_attente?.map((u: any) => ({
-                label: u.username,
-                data: { ...mapUserToNode(u, 'pending'), type: 'pending' }
-            })) ?? []
+            children: data.en_attente?.map((u: any) => this.toNode(mapUserToNode(u, 'pending'), 'pending')) ?? []
+
             }] : [])
         ];
         this.loadAvatarBlobs(this.treeValue);

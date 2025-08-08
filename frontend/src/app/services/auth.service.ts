@@ -3,13 +3,17 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError, map, Observable, tap, throwError } from 'rxjs';
 import { Router } from '@angular/router';
+import { environment } from '../../environments/environment';
 
 @Injectable({
     providedIn: 'root'
 })
 export class AuthService {
-    private apiUrl = 'http://localhost:8080/api/auth'; // Spring Boot backend URL
+    private apiUrl = environment.apiUrl;
+
+
     constructor(private http: HttpClient, private router: Router) { }
+
     private setAuthData(token: string, role: string, refreshToken?: string ,username?: string): void {
         sessionStorage.setItem('token', token);
         sessionStorage.setItem('role', role);
@@ -37,8 +41,9 @@ export class AuthService {
 
     login(username: string, password: string): Observable<any> {
         // Clear any existing tokens
+        console.log('Login API URL:', `${this.apiUrl}/auth/authenticate`);
         this.clearAuthData();
-        return this.http.post(`${this.apiUrl}/authenticate`, { username, password }).pipe(
+        return this.http.post(`${this.apiUrl}/auth/authenticate`, { username, password }).pipe(
 
             tap((response: any) => {
                 if (!response?.jwtToken || !response?.refreshToken) {
@@ -60,7 +65,7 @@ export class AuthService {
         }
 
     register(registerData: any): Observable<any> {
-        return this.http.post(`${this.apiUrl}/register`, registerData).pipe(
+        return this.http.post(`${this.apiUrl}/auth/register`, registerData).pipe(
             tap((response: any) => {
             if (response?.jwtToken && response?.refreshToken) {
                 this.setAuthData(response.jwtToken, response.role, response.refreshToken, response.username);
@@ -89,7 +94,7 @@ export class AuthService {
 
 
         return this.http.post<{ accessToken: string }>(
-            `${this.apiUrl}/refreshtoken`,
+            `${this.apiUrl}/auth/refreshtoken`,
             {},
             {
             headers: {
@@ -121,11 +126,11 @@ export class AuthService {
         return sessionStorage.getItem('refreshToken');
     }
     requestPasswordReset(email: string) {
-        return this.http.post(`${this.apiUrl}/request-password-reset`, { email });
+        return this.http.post(`${this.apiUrl}/auth/request-password-reset`, { email });
     }
 
     resetPassword(token: string, newPassword: string) {
-        return this.http.post(`${this.apiUrl}/reset-password`, { token, newPassword });
+        return this.http.post(`${this.apiUrl}/auth/reset-password`, { token, newPassword });
     }
 }
 

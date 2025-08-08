@@ -2,6 +2,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 
     export interface Moment {
@@ -38,7 +39,8 @@ import { Observable } from 'rxjs';
     })
     export class MomentService {
 
-    private apiUrl = 'http://localhost:8080/api/moments';
+
+    private apiUrl = environment.apiUrl;
 
     constructor(private http: HttpClient) { }
 
@@ -52,68 +54,68 @@ import { Observable } from 'rxjs';
         params = params.set('mediaFileId', mediaFileId);
         }
 
-        return this.http.post<Moment>(`${this.apiUrl}/publish`, null, { params });
+        return this.http.post<Moment>(`${this.apiUrl}/moments/publish`, null, { params });
     }
 
     getMomentsDuGroupe(groupeId: number): Observable<Moment[]> {
-        return this.http.get<Moment[]>(`${this.apiUrl}/group/${groupeId}`);
+        return this.http.get<Moment[]>(`${this.apiUrl}/moments/group/${groupeId}`);
     }
 
     editMoment(momentId: number, texte: string, mediaId: number | null, isPublic: boolean): Observable<Moment> {
     const body = { texte, mediaId, isPublic };
-    return this.http.put<Moment>(`${this.apiUrl}/${momentId}`, body);
+    return this.http.put<Moment>(`${this.apiUrl}/moments/${momentId}`, body);
     }
 
     deleteMoment(momentId: number): Observable<void> {
-        return this.http.delete<void>(`${this.apiUrl}/${momentId}`);
+        return this.http.delete<void>(`${this.apiUrl}/moments/${momentId}`);
     }
 
     getCommentsForMoment(momentId: number) {
-        return this.http.get<Commentaire[]>(`${this.apiUrl}/${momentId}/comments`);
+        return this.http.get<Commentaire[]>(`${this.apiUrl}/moments/${momentId}/comments`);
     }
 
     addCommentToMoment(momentId: number, contenu: string) {
-        return this.http.post<Commentaire>(`${this.apiUrl}/${momentId}/comments`, { contenu });
+        return this.http.post<Commentaire>(`${this.apiUrl}/moments/${momentId}/comments`, { contenu });
     }
 
     updateComment(momentId: number, commentId: number, contenu: string): Observable<any> {
-        return this.http.put(`${this.apiUrl}/${momentId}/comments/${commentId}`, { contenu });
+        return this.http.put(`${this.apiUrl}/moments/${momentId}/comments/${commentId}`, { contenu });
     }
 
     deleteComment(momentId: number, commentId: number): Observable<any> {
-        return this.http.delete(`${this.apiUrl}/${momentId}/comments/${commentId}`);
+        return this.http.delete(`${this.apiUrl}/moments/${momentId}/comments/${commentId}`);
     }
 
     reactToMoment(momentId: number, reactionType: string): Observable<MomentReaction> {
         const params = new HttpParams().set('reaction', reactionType);
-        return this.http.post<MomentReaction>(`${this.apiUrl}/${momentId}/reactions`, null, { params });
+        return this.http.post<MomentReaction>(`${this.apiUrl}/moments/${momentId}/reactions`, null, { params });
     }
 
     removeReaction(momentId: number): Observable<void> {
-        return this.http.delete<void>(`${this.apiUrl}/${momentId}/reactions`);
+        return this.http.delete<void>(`${this.apiUrl}/moments/${momentId}/reactions`);
     }
 
     getReactionsForMoment(momentId: number): Observable<MomentReaction[]> {
-        return this.http.get<MomentReaction[]>(`${this.apiUrl}/${momentId}/reactions`);
+        return this.http.get<MomentReaction[]>(`${this.apiUrl}/moments/${momentId}/reactions`);
     }
 
     approveMoment(momentId: number): Observable<Moment> {
-        return this.http.put<Moment>(`${this.apiUrl}/${momentId}/approve`, {});
+        return this.http.put<Moment>(`${this.apiUrl}/moments/${momentId}/approve`, {});
     }
 
     rejectMoment(momentId: number): Observable<void> {
-        return this.http.put<void>(`${this.apiUrl}/${momentId}/reject`, {});
+        return this.http.put<void>(`${this.apiUrl}/moments/${momentId}/reject`, {});
     }
 
     getMomentsPublics(): Observable<Moment[]> {
-            return this.http.get<Moment[]>(`${this.apiUrl}/public`);
+            return this.http.get<Moment[]>(`${this.apiUrl}/moments/public`);
         }
 
   //file service
     uploadMomentFile(file: File): Observable<any> {
     const formData = new FormData();
     formData.append('file', file);
-    return this.http.post<any>('http://localhost:8080/api/files/upload/moment', formData);
+    return this.http.post<any>(`${this.apiUrl}/files/upload/moment`, formData);
     }
 
 }
