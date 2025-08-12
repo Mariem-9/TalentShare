@@ -17,10 +17,10 @@ export interface ChatMessage {
 
 @Injectable({ providedIn: 'root' })
 export class ChatService {
-    private apiUrl = environment.apiUrl;
-
     private stompClient!: Client;
     private connected = false;
+    private baseUrl = environment.apiUrl;
+
 
 
     constructor(private http: HttpClient) {}
@@ -28,8 +28,7 @@ export class ChatService {
     connect(groupId: number, onMessage: (msg: ChatMessage) => void, onConnected?: () => void): void {
     console.log('Attempting to connect to WebSocket...');
     const token = sessionStorage.getItem('token');
-    const socket = new SockJS(`${this.apiUrl.replace('/api', '')}/ws?token=${token}`);
-
+    const socket = new SockJS(`${this.baseUrl.replace('/api', '')}/ws?token=${token}`);
 
     this.stompClient = new Client({
         webSocketFactory: () => socket,
@@ -70,19 +69,20 @@ export class ChatService {
     }
 
     editMessage(messageId: number, newContent: string): Observable<ChatMessage> {
-    return this.http.put<ChatMessage>(`${this.apiUrl}/message/${messageId}`, newContent, {
-        headers: { 'Content-Type': 'text/plain' }
-    });
+
+    return this.http.put<ChatMessage>(`${this.baseUrl}/message/${messageId}`, newContent, {
+            headers: { 'Content-Type': 'text/plain' }
+        });
     }
 
     deleteMessage(messageId: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/message/${messageId}`);
+    return this.http.delete<void>(`${this.baseUrl}/message/${messageId}`);
     }
 
     getMessageHistory(groupId: number): Observable<ChatMessage[]> {
     if (!groupId) {
         throw new Error('Group ID is required');
     }
-    return this.http.get<ChatMessage[]>(`${this.apiUrl}/group/${groupId}/messages`);
+    return this.http.get<ChatMessage[]>(`${this.baseUrl}/group/${groupId}/messages`);
     }
     }

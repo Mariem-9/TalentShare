@@ -39,7 +39,6 @@ import { environment } from '../../environments/environment';
     })
     export class MomentService {
 
-
     private apiUrl = environment.apiUrl;
 
     constructor(private http: HttpClient) { }

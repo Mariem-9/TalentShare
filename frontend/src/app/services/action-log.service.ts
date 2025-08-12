@@ -4,14 +4,16 @@ import { environment } from "../../environments/environment";
 
 @Injectable({ providedIn: 'root' })
 export class ActionLogService {
-    private apiUrl = environment.apiUrl;
 
+
+    private baseUrl = environment.apiUrl;
+    private apiUrl =`${this.baseUrl}/action-logs`;
     constructor(private http: HttpClient) {}
 
     log(action: string, context: string) {
-        return this.http.post(`${this.apiUrl}/action-logs`, { action, context });
+        return this.http.post(this.apiUrl, { action, context });
     }
     getLogs() {
-        return this.http.get<any[]>(`${this.apiUrl}/action-logs`);
+        return this.http.get<any[]>(this.apiUrl);
         }
 }

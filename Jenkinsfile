@@ -12,20 +12,7 @@ pipeline {
 
     stages {
 	// ========== BACKEND ==========
-        stage('Checkout') {
-            steps {
-                git branch: 'main', url: 'https://github.com/Mariem-9/TalentShare.git'
-            }
-        }
-
-        stage('Build') {
-            steps {
-                dir('backend') {
-                    sh 'mvn clean install'
-                }
-            }
-        }
-
+        
         stage('Test') {
             steps {
                 dir('backend') {
@@ -65,28 +52,27 @@ pipeline {
                 }
             }
         }
-	stage('Check Docker Version') {
-            steps {
-                sh 'docker --version'
-            }
-        }
+	
 
-        stage('Docker Build') {
-            steps {
-                sh 'docker build -t $IMAGE_NAME .'
-            }
-        }
-
-         stage('Docker Run') {
-    steps {
-        sh '''
-          docker rm -f backend || true
-          docker run -d --network talentshare-net -p 8081:8080 \
-            -e SPRING_PROFILES_ACTIVE=docker \
-            --name backend $IMAGE_NAME
-        '''
+      stage('Docker Build Backend') {
+  steps {
+    dir('backend') {
+      sh 'docker build -t ${IMAGE_NAME}:latest .'
     }
+  }
 }
+
+stage('Docker Run Backend') {
+  steps {
+    sh '''
+      docker rm -f backend || true
+      docker run -d --network talentshare-net -p 8081:8080 \\
+        -e SPRING_PROFILES_ACTIVE=docker \\
+        --name backend ${IMAGE_NAME}:latest
+    '''
+  }
+}
+
 
    // ========== FRONTEND CI/CD ==========
 

@@ -6,25 +6,27 @@ import { environment } from '../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class ProfileService {
-    private apiUrl = environment.apiUrl;
+    private baseUrl = environment.apiUrl;
+    private apiUrl =`${this.baseUrl}/utilisateur`;
+    // private apiUrl = '/api/utilisateur';
     constructor(private http: HttpClient) { }
     getUserProfile(): Observable<any> {
-        return this.http.get(`${this.apiUrl}/utilisateur/me`);
+        return this.http.get(`${this.apiUrl}/me`);
     }
     updateUserProfile(data: any): Observable<any> {
-    return this.http.put(`${this.apiUrl}/utilisateur/me`, data);}
+    return this.http.put(`${this.apiUrl}/me`, data);}
 
     getGroupRecommendations(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/utilisateur/recommendations`);
+    return this.http.get(`${this.apiUrl}/recommendations`);
     }
         getTalentOptions() {
-    return this.http.get<string[]>(`${this.apiUrl}/utilisateur/talents`);
+    return this.http.get<string[]>(`${this.apiUrl}/talents`);
     }
 
     getSkillOptions() {
-    return this.http.get<string[]>(`${this.apiUrl}/utilisateur/skills`);
+    return this.http.get<string[]>(`${this.apiUrl}/skills`);
     }
     getLanguageOptions() {
-    return this.http.get<string[]>(`${this.apiUrl}/utilisateur/languages`);
+    return this.http.get<string[]>(`${this.apiUrl}/languages`);
     }
 }
