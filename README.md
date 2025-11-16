@@ -99,9 +99,9 @@ docker run -d -p 4200:80 --network=talentshare-net \
   --name frontend talentshare-frontend
 ```
 ### 6️⃣ Accéder à l'application
-Frontend : http://localhost:4200
-Backend API : http://localhost:8080
-MinIO Console : http://localhost:9001
+- Frontend : http://localhost:4200
+- Backend API : http://localhost:8080
+- MinIO Console : http://localhost:9001
 ---
 ### 🧪 Qualité & Tests
 - Couverture de code via JaCoCo
@@ -123,6 +123,7 @@ MinIO Console : http://localhost:9001
   - Qualité de code maintenue
 ---
 ### 📚 Structure du projet
+```bash
 talentshare/
  ├── backend/
  │   ├── src/
@@ -134,6 +135,7 @@ talentshare/
  │   └── package.json
  ├── Jenkinsfile
  └── README.md
+```
 ---
 ### 🛡️ Sécurité
 - JWT Access Token + Refresh Token
